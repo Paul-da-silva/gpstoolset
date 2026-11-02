@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * The only tile provider. Do not hardcode a tile URL in page JS.
- * public/assets/js/tiles.js reads this array (json_encode) and is the
+ * public/assets/js/map/tiles.js reads this array (json_encode) and is the
  * only place that may construct a Leaflet tileLayer.
  *
  * OpenStreetMap tile usage for this host:

@@ -13,7 +13,8 @@ $GLOBALS['page'] = $page;
 
 $isMapPage = !empty($page['isMapPage']);
 $wantMapAssets = $isMapPage || !empty($page['mapAssets']);
-$bodyClass = $isMapPage ? ' class="is-map"' : '';
+// Landing-first map tools stay a document until JS adds is-map.
+$bodyClass = '';
 $viewport = 'width=device-width, initial-scale=1';
 if ($wantMapAssets) {
     $viewport .= ', viewport-fit=cover';
@@ -21,7 +22,11 @@ if ($wantMapAssets) {
 $extraStyles = [];
 if (!empty($page['styles']) && is_array($page['styles'])) {
     foreach ($page['styles'] as $href) {
-        if (is_string($href) && str_starts_with($href, '/assets/')) {
+        if (
+            is_string($href)
+            && str_starts_with($href, '/assets/')
+            && !str_contains($href, '..')
+        ) {
             $extraStyles[] = $href;
         }
     }

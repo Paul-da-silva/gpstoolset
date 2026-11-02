@@ -126,7 +126,7 @@ function route_page(array $route): array
         'path' => (string) $route['path'],
         'title' => (string) $route['title'],
         'description' => (string) $route['description'],
-        'isMapPage' => false,
+        'isMapPage' => !empty($flags['map']),
         'mapAssets' => !empty($flags['map']),
         'allowAds' => !empty($flags['ads']),
         'styles' => is_array($route['styles']) ? $route['styles'] : [],

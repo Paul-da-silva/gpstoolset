@@ -5,7 +5,8 @@ declare(strict_types=1);
  * Print one ad slot, or nothing.
  *
  * No-op when ads are disabled, the slot id is unknown, the page is a
- * map/viewer (isMapPage), or this response already printed max_slots.
+ * map/viewer ($page['isMapPage'] from flags.map), flags.ads is false
+ * ($page['allowAds']), or this response already printed max_slots.
  * Enabled slots are an empty reserved box. This file does not load an
  * ad network.
  */

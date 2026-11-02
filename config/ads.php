@@ -4,9 +4,10 @@ declare(strict_types=1);
 /**
  * Ads are off until this flag is flipped.
  *
- * Map and viewer pages must set $page['isMapPage'] = true and must not
- * call render_ad(). includes/partials/ads.php also refuses to print
- * anything when isMapPage is set, so a mistaken call still shows no ad.
+ * Map and viewer pages get $page['isMapPage'] = true from flags.map
+ * (includes/router.php) and must not call render_ad(). The ads partial
+ * also refuses to print when isMapPage is set, or when flags.ads is
+ * false (allowAds), so a mistaken call still shows no ad.
  *
  * Slots are a whitelist. At most max_slots boxes are printed per response.
  * When enabled is false, render_ad() is a no-op: no markup and no reserved

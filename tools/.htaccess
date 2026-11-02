@@ -1,0 +1,3 @@
+# Tools PHP lives above the document root. Refuse HTTP access if a
+# parent vhost ever points at the repo instead of public/.
+Require all denied

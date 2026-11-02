@@ -8,6 +8,9 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # tools/ lives above the document root. Never serve it as a URL.
+    RewriteRule ^tools(/|$) - [F,L]
+
     # /index.php -> /
     # THE_REQUEST avoids a loop with the internal rewrite below.
     RewriteCond %{THE_REQUEST} \s/+index\.php[\s?] [NC]

@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 /**
- * Footer for ordinary pages. Map tools omit it unless this include is
- * pulled into the pre-upload block ($footerInPreamble). That block is
- * hidden after a file loads. close.php runs only for a normal page footer.
+ * Footer for ordinary pages and map-tool landings. After a file loads,
+ * the tool JS hides this footer. Ads stay off map pages because
+ * render_ad() no-ops when isMapPage is set or allowAds is false.
  */
-$showFooter = empty($page['isMapPage']) || !empty($footerInPreamble);
+$showFooter = true;
 ?>
 <?php if ($showFooter): ?>
 <footer class="site-footer">
