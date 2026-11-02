@@ -17,10 +17,14 @@ Options -Indexes
     RewriteCond %{THE_REQUEST} \s/+about\.php[\s?] [NC]
     RewriteRule ^about\.php$ /about [R=301,L]
 
+    RewriteCond %{THE_REQUEST} \s/+map-demo\.php[\s?] [NC]
+    RewriteRule ^map-demo\.php$ /map-demo [R=301,L]
+
     # One canonical path without a trailing slash.
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.+)/$ /$1 [R=301,L]
 
     RewriteRule ^privacy/?$ privacy.php [L]
     RewriteRule ^about/?$ about.php [L]
+    RewriteRule ^map-demo/?$ map-demo.php [L]
 </IfModule>

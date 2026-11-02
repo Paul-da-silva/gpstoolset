@@ -1,0 +1,429 @@
+/* Full-screen map shell. Separation is spacing and tint, never a border or shadow. */
+
+body.is-map {
+  min-height: 0;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+body.is-map .topbar {
+  flex-shrink: 0;
+  height: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+body.is-map .topbar-inner {
+  max-width: none;
+}
+
+body.is-map .nav-note {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  color: var(--brand);
+  font-size: 0.8rem;
+  font-weight: 650;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+body.is-map .map-app,
+body.is-map .chip,
+body.is-map .chip-static,
+body.is-map .empty-card,
+body.is-map .empty-state,
+body.is-map .file-overlay,
+body.is-map .map-popover,
+body.is-map .graph-dock,
+body.is-map .dock-handle,
+body.is-map .dock-pane,
+body.is-map .leaflet-bar,
+body.is-map .leaflet-bar a,
+body.is-map .leaflet-touch .leaflet-bar,
+body.is-map .leaflet-container .leaflet-control-attribution {
+  border: 0;
+  box-shadow: none;
+}
+
+.map-app {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--bg);
+}
+
+#map {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+body.is-map .leaflet-container {
+  background: var(--bg);
+  font-family: var(--font-sans);
+}
+
+body.is-map .leaflet-bar {
+  background: transparent;
+}
+
+body.is-map .leaflet-bar a,
+body.is-map .leaflet-touch .leaflet-bar a {
+  width: 2.25rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
+  margin-bottom: 0.35rem;
+  border-radius: 8px;
+  background: var(--tint);
+  color: var(--text);
+}
+
+body.is-map .leaflet-bar a:last-child {
+  margin-bottom: 0;
+}
+
+body.is-map .leaflet-bar a:hover,
+body.is-map .leaflet-bar a:focus {
+  background: var(--tint-strong);
+}
+
+body.is-map .leaflet-container .leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--text);
+  margin: 0;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  max-width: min(70vw, 28rem);
+}
+
+body.is-map .leaflet-control-attribution a {
+  color: var(--link);
+}
+
+.map-chips {
+  position: absolute;
+  z-index: 3;
+  top: 0.75rem;
+  right: 0.75rem;
+  left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  max-width: calc(100% - 4.75rem);
+  pointer-events: none;
+}
+
+.chip-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+
+.map-chips .chip,
+.map-chips .map-popover,
+.chip-bar .chip {
+  pointer-events: auto;
+}
+
+.chip {
+  appearance: none;
+  margin: 0;
+  background: var(--tint);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.2;
+  padding: 0.55rem 0.9rem;
+  min-height: 2.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.chip:hover,
+.chip.is-active,
+.chip[aria-pressed="true"] {
+  background: var(--tint-strong);
+}
+
+.chip-static {
+  display: inline-flex;
+  align-items: center;
+  cursor: default;
+  font-weight: 650;
+}
+
+#file-name {
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip-static:hover {
+  background: var(--tint);
+}
+
+.map-popover {
+  width: min(16rem, 100%);
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: var(--tint);
+  pointer-events: auto;
+}
+
+.map-popover p {
+  margin: 0;
+}
+
+.map-popover p + p {
+  margin-top: 0.35rem;
+}
+
+.popover-kicker {
+  font-weight: 700;
+}
+
+.map-popover[hidden],
+.empty-state[hidden],
+.file-overlay[hidden],
+.graph-dock[hidden],
+.chip[hidden] {
+  display: none;
+}
+
+.empty-state {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  pointer-events: none;
+}
+
+.empty-card {
+  width: min(22rem, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.35rem 1.25rem 1.15rem;
+  border-radius: 16px;
+  background: var(--tint);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.empty-lead {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.empty-privacy {
+  color: var(--brand);
+}
+
+.file-overlay {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: color-mix(in srgb, var(--brand) 32%, var(--bg));
+  pointer-events: none;
+}
+
+.map-stage.is-dragover .file-overlay {
+  background: color-mix(in srgb, var(--brand) 42%, var(--bg));
+}
+
+.file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.graph-dock {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  min-height: 120px;
+  max-height: 45vh;
+  background: var(--tint);
+  color: var(--text);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.dock-handle {
+  flex: 0 0 2rem;
+  height: 2rem;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--tint-strong);
+  cursor: ns-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.dock-handle::before {
+  content: "";
+  width: 2.75rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 38%, transparent);
+}
+
+body.is-resizing .dock-handle {
+  background: color-mix(in srgb, var(--accent) 24%, var(--surface));
+}
+
+body.is-resizing #map {
+  pointer-events: none;
+}
+
+.dock-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.55rem 0.75rem 0.35rem;
+}
+
+.dock-panes {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.15rem 1rem 0.85rem;
+}
+
+.dock-placeholder {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  body.is-map .nav-toggle:focus-visible + .nav-burger {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  body.is-map .nav-burger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-left: auto;
+    min-height: 2.25rem;
+    padding: 0 0.35rem;
+    color: var(--text);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  body.is-map .nav-burger-bar,
+  body.is-map .nav-burger-bar::before,
+  body.is-map .nav-burger-bar::after {
+    display: block;
+    width: 1.05rem;
+    height: 2px;
+    background: var(--brand);
+    position: relative;
+    content: "";
+  }
+
+  body.is-map .nav-burger-bar::before {
+    position: absolute;
+    top: -5px;
+  }
+
+  body.is-map .nav-burger-bar::after {
+    position: absolute;
+    top: 5px;
+  }
+
+  body.is-map .site-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0.35rem;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--tint);
+    border: 0;
+    box-shadow: none;
+  }
+
+  body.is-map .nav-toggle:checked ~ .site-nav {
+    display: flex;
+  }
+
+  body.is-map .nav-link,
+  body.is-map .nav-note {
+    padding: 0.65rem 0.75rem;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 720px) {
+
+  .map-chips {
+    top: auto;
+    right: 0.6rem;
+    left: 0.6rem;
+    bottom: calc(0.65rem + env(safe-area-inset-bottom, 0px));
+    max-width: none;
+    align-items: stretch;
+  }
+
+  .map-app:has(.graph-dock:not([hidden])) .map-chips {
+    bottom: 0.65rem;
+  }
+
+  .chip-bar {
+    justify-content: flex-start;
+  }
+
+  .graph-dock {
+    max-height: 40vh;
+  }
+
+  body.is-map .leaflet-bottom.leaflet-right {
+    top: 0;
+    bottom: auto;
+  }
+}

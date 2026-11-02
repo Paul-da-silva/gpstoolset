@@ -11,6 +11,10 @@ declare(strict_types=1);
       <span class="nav-link is-soon" title="Coming soon">Guides</span>
       <a class="nav-link<?= nav_active('/about') ?>" href="/about">About</a>
       <a class="nav-link<?= nav_active('/privacy') ?>" href="/privacy">Privacy</a>
+<?php if (!empty($page['isMapPage'])): ?>
+      <a class="nav-link" href="https://www.openstreetmap.org/fixthemap">Report a map issue</a>
+      <span class="nav-note">Your file never leaves your device.</span>
+<?php endif; ?>
     </nav>
   </div>
 </header>

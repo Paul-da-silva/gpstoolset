@@ -25,7 +25,12 @@ if ($description === '') {
 }
 
 $canonical = base_url(current_path());
-$bodyClass = !empty($page['isMapPage']) ? ' class="is-map"' : '';
+$isMapPage = !empty($page['isMapPage']);
+$bodyClass = $isMapPage ? ' class="is-map"' : '';
+$viewport = 'width=device-width, initial-scale=1';
+if ($isMapPage) {
+    $viewport .= ', viewport-fit=cover';
+}
 
 // Do not add a Referrer-Policy tag. Map tiles need the browser to send Referer.
 ?>
@@ -33,7 +38,7 @@ $bodyClass = !empty($page['isMapPage']) ? ' class="is-map"' : '';
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="<?= e($viewport) ?>">
 <title><?= e($fullTitle) ?></title>
 <meta name="description" content="<?= e($description) ?>">
 <link rel="canonical" href="<?= e($canonical) ?>">
@@ -44,5 +49,9 @@ $bodyClass = !empty($page['isMapPage']) ? ' class="is-map"' : '';
 <meta property="og:url" content="<?= e($canonical) ?>">
 <link rel="stylesheet" href="/assets/css/tokens.css">
 <link rel="stylesheet" href="/assets/css/base.css">
+<?php if ($isMapPage): ?>
+<link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="/assets/css/map-shell.css">
+<?php endif; ?>
 </head>
 <body<?= $bodyClass ?>>

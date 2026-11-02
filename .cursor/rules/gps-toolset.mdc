@@ -1,0 +1,84 @@
+---
+description: What GPS Toolset is — product intent, stack, and non-negotiables for every change
+alwaysApply: true
+---
+
+# GPS Toolset
+
+Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side parsing (no uploads). Clear · Private · Practical. Ads later via a central partial (off at launch).
+
+## Environments
+
+- **Dev:** http://gpstoolset.lan/ → `/var/www/gpstoolset/public/`
+- **Prod:** https://gpstoolset.com
+- `base_url` must be **env-aware** (detect host / env). Never hardcode prod URL for local.
+
+## Docs (read these)
+
+- `docs/plan.md` — features, rollout, hard rules
+- `docs/cursor-prompts.md` — ordered Cursor prompts
+- `docs/design-direction.md` — layout / tokens / `gpstoolset.ui.v1`
+- `docs/seo-keywords.md` — keyword notes for tools + guides
+
+## Stack
+
+- PHP 8.4 · Apache 2.4 with `.htaccess` clean URLs (not nginx)
+- Only `public/` is the docroot; `config/`, `includes/`, `docs/` stay above it
+- No framework, no build step, no npm app bundler — plain PHP + vanilla JS + CSS
+- Vendor libs locally under `public/assets/vendor/` (Leaflet 1.9.4, Chart.js, GoPro GPMF bundles, etc.) — no CDN for production pages
+
+## Privacy
+
+- All user-file parsing happens **in the browser**. Never upload tracks/videos to the server.
+- No analytics / tracking beyond planned ads (ads off for now).
+- Privacy line: “Your file never leaves your device.”
+
+## Maps / OSM
+
+- Tile URLs **only** from the central tile module (`config/tiles.php` + `assets/js/tiles.js`)
+- OSM street tiles: `https://tile.openstreetmap.org/{z}/{x}/{y}.png`, maxZoom 19
+- Visible attribution: © OpenStreetMap contributors
+- No restrictive `Referrer-Policy` that strips Referer; no tile prefetch / offline bulk download
+- Keep “Report a map issue” → https://www.openstreetmap.org/fixthemap
+- **No contact email** (Paul) — attribution + report link only
+
+## Layout (map tools)
+
+- Full-screen map minus slim top bar (logo + menu). No permanent side panel.
+- Graphs/stats/export dock **under** the map (map shrinks); resizable; persist in `localStorage` key `gpstoolset.ui.v1`
+- Ads: central partial only; **never on map/viewer pages at launch**; max 2 when enabled elsewhere
+
+## Design
+
+- Tokens as CSS variables (teal `#115e59`, dark brand `#2dd4a0`, orange `#c2410c`, route `#0369a1`)
+- Thin neutral borders / light shadows OK
+- **No heavy coloured one-sided accent borders** (thick coloured `border-left` stripes)
+- Drag-over = background tint (and/or normal border), not a thick accent stripe
+
+## Hard content rules
+
+- **No email address and no `mailto:`** anywhere
+- **No contact page** and no links to one
+- Never mention **FlySight** → say “GNSS logger CSV exports”
+- Never brand as **“Telemetry Extractor”**
+- GoPro / DJI = **compatibility wording only**; `/gopro` is the one allowed brand-in-URL exception
+- `/gopro` copy must be clearly different from FlySync’s page
+
+## FlySync / skylog
+
+- May **COPY** client JS from `/var/www/skylog` (e.g. `gpmf-fast.js`, `gopro-telemetry-bundle.min.js`) into this repo
+- **Never edit** FlySync / skylog files
+- Do not copy Highcharts (commercial); use Chart.js or canvas
+
+## SEO (every public page)
+
+- Unique `<title>` + meta description
+- Canonical via env-aware `base_url`
+- Add/keep sitemap entry when shipping a new URL
+- Clean URLs via `.htaccess`
+
+## Workflow
+
+- Verify at http://gpstoolset.lan/
+- Commit after each prompt / logical step
+- Do not edit `/etc/apache2` unless Paul asks

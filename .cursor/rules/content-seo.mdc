@@ -1,0 +1,31 @@
+---
+description: Copy, SEO, and brand hygiene for GPS Toolset pages
+globs: public/**/*.php,includes/**/*.php,docs/**/*.md
+alwaysApply: false
+---
+
+# Content & SEO
+
+## Never
+
+- Email addresses or `mailto:` links
+- A contact page or “Contact” nav/footer links
+- The words “Telemetry Extractor” / “telemetry extractor” as product naming
+- The name **FlySight** (say “GNSS logger CSV exports”)
+- Branding the product as GoPro or DJI (compatibility wording only)
+
+## Allowed brand-in-URL exception
+
+- `/gopro` only — copy must still differ from FlySync (privacy / multi-tool hub angle)
+
+## Every public page
+
+- Unique title (≤ ~60 chars where possible) + meta description
+- Canonical URL from env-aware `base_url`
+- Update `public/sitemap.xml` when adding a route
+- Privacy / About ok; no Contact
+
+## Guides (`/guides/`)
+
+- Prefer how-to / compare over pure definitions
+- Link tools ↔ guides both ways

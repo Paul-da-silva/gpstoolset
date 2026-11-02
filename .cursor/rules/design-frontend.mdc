@@ -1,0 +1,38 @@
+---
+description: Design tokens, map-shell UX, and CSS constraints for GPS Toolset
+globs: public/**/*.{css,js,php},includes/**/*.php
+alwaysApply: false
+---
+
+# Design & frontend
+
+## Tokens
+
+- Define colours/type in `public/assets/css/tokens.css` (light + `[data-theme="dark"]`)
+- Brand teal `#115e59` · dark brand `#2dd4a0` · accent orange `#c2410c` · route/link `#0369a1`
+- System font stacks only
+
+## Map tool pages
+
+- Slim top bar only (~48–56px); map fills the rest
+- Graph dock under the map (not overlay); drag handle ≥24px; min 120px · default 180px · max 45vh / 40vh mobile
+- Persist dock/graph/units/chips in `localStorage` key **`gpstoolset.ui.v1`**
+- Floating chips for Open / Stats / graphs / Export — never cover the fitted track by default
+- File drop: whole-map overlay; empty state centered card; privacy chip in empty state + menu
+
+## Borders & chrome
+
+- Thin neutral borders OK
+- **Forbidden:** heavy coloured one-sided borders / accent stripes (e.g. thick coloured `border-left`)
+- Drag-over / active drop = background tint (normal border OK)
+
+## Ads
+
+- Render only via the central ads partial; respect `enabled=false`
+- Map/viewer pages: `isMapPage=true` → **zero ads**
+
+## JS style
+
+- Vanilla modules or plain scripts; no React/Vue
+- Leaflet only via vendored 1.9.4 + central `tiles.js`
+- Prefer Chart.js (MIT) or canvas for graphs — not Highcharts
