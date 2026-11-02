@@ -17,6 +17,7 @@ import * as charts from '../map/track-charts.js';
 import * as panels from '../map/panels.js';
 import * as gpmf from '../parsers/gpmf.js';
 import * as overlay from '../video/overlay.js';
+import { take } from '../core/file-handoff.js';
 
 var job = 0;
 var token = { cancelled: false };
@@ -343,6 +344,11 @@ function init() {
   if (input && !input.getAttribute('accept')) {
     input.setAttribute('accept', '.mp4,.lrv,video/*');
   }
+  take('gopro-gps-extract').then(function (file) {
+    if (file) {
+      onPickedFile(file);
+    }
+  });
 }
 
 if (document.readyState === 'loading') {

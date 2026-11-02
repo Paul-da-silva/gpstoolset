@@ -18,6 +18,7 @@ import * as charts from '../map/track-charts.js';
 import * as panels from '../map/panels.js';
 import * as editTools from '../map/edit-tools.js';
 import { parse } from '../parsers/gpx.js';
+import { take } from '../core/file-handoff.js';
 
 var job = 0;
 var token = { cancelled: false };
@@ -667,6 +668,11 @@ function init() {
   if (input && !input.getAttribute('accept')) {
     input.setAttribute('accept', '.gpx,application/gpx+xml');
   }
+  take('gpx-viewer').then(function (file) {
+    if (file) {
+      onPickedFile(file);
+    }
+  });
 }
 
 if (document.readyState === 'loading') {

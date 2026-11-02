@@ -269,22 +269,58 @@ a.nav-link:hover {
 }
 
 .dropzone {
+  width: 100%;
   margin-top: 1.75rem;
   min-height: 11rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.35rem;
   padding: 2rem 1.5rem;
   border: 2px dashed var(--brand);
   border-radius: 12px;
   background: var(--surface);
   color: var(--text);
-  font-weight: 600;
+  font: inherit;
   text-align: center;
+  cursor: pointer;
 }
 
-.dropzone.is-dragover {
+.dropzone-title {
+  font-weight: 600;
+}
+
+.dropzone-note {
+  max-width: 22rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--text) 68%, transparent);
+}
+
+.dropzone:hover {
+  background: var(--tint);
+}
+
+.dropzone.is-dragover,
+.dropzone.is-busy {
   background: var(--tint-strong);
+}
+
+.dropzone:disabled {
+  cursor: progress;
+}
+
+.dropzone-error {
+  margin: 0.85rem 0 0;
+  color: #b91c1c;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+[data-theme="dark"] .dropzone-error {
+  color: #f87171;
 }
 
 @media (max-width: 720px) {

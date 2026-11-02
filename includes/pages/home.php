@@ -9,8 +9,18 @@ require APP_ROOT . '/includes/layout/topbar.php';
 <main class="home">
   <h1>GPS Toolset</h1>
   <p class="privacy-line">Your file never leaves your device.</p>
-  <div class="dropzone">Drop a file here</div>
+  <button type="button" class="dropzone" id="home-drop">
+    <span class="dropzone-title">Drop a file here</span>
+    <span class="dropzone-note">or choose one. GPX, or a GoPro .MP4 / .LRV.</span>
+  </button>
+  <p class="dropzone-error" id="home-drop-error" hidden></p>
+  <input type="file" id="home-file" accept=".gpx,.mp4,.lrv,application/gpx+xml,video/mp4" hidden>
   <?php render_ad('ad-home-mid'); ?>
 </main>
-<script src="/assets/js/dropzone.js"></script>
+<?php
+$dropzone = '/assets/js/dropzone.js';
+$dropzoneFile = APP_ROOT . '/public' . $dropzone;
+$dropzone .= '?v=' . (is_file($dropzoneFile) ? (string) filemtime($dropzoneFile) : '1');
+?>
+<script type="module" src="<?= e($dropzone) ?>"></script>
 <?php require APP_ROOT . '/includes/layout/footer.php'; ?>
