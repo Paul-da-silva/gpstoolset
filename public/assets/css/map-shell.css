@@ -791,7 +791,7 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
-  right: 16rem;
+  right: 24rem;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -882,6 +882,48 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   max-width: calc(100% - 2.6rem);
 }
 
+.video-minimap-drag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 600;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+}
+
+.video-minimap-drag:active {
+  cursor: grabbing;
+}
+
+.video-minimap-drag::before {
+  content: "";
+  position: absolute;
+  left: 0.55rem;
+  top: 0.5rem;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow:
+    7px 0 0 0 var(--text),
+    0 7px 0 0 var(--text),
+    7px 7px 0 0 var(--text),
+    0 14px 0 0 var(--text),
+    7px 14px 0 0 var(--text),
+    0 0 0 1px #fff,
+    7px 0 0 1px #fff,
+    0 7px 0 1px #fff,
+    7px 7px 0 1px #fff,
+    0 14px 0 1px #fff,
+    7px 14px 0 1px #fff;
+}
+
 .video-minimap-resize {
   position: absolute;
   right: 0;
@@ -914,9 +956,11 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   right: 0.75rem;
   z-index: 4;
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
+  justify-content: flex-end;
   align-items: flex-start;
   gap: 0.4rem;
+  max-width: calc(100% - 12rem);
   pointer-events: auto;
 }
 
@@ -956,6 +1000,7 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   .video-toolbar {
     top: 0.5rem;
     right: 0.5rem;
+    max-width: calc(100% - 11.5rem);
   }
 
   .view-switch {
@@ -964,8 +1009,9 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   }
 
   .map-app:has(#view-switch:not([hidden])) .video-metrics:not(.is-column) {
-    top: 3.6rem;
+    top: 7.4rem;
     left: 0.5rem;
+    right: 0.5rem;
   }
 
   .video-metrics {
@@ -975,10 +1021,10 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   }
 
   .video-metrics.is-column {
-    top: 3.9rem;
+    top: 7.4rem;
     right: 0.5rem;
     left: auto;
-    max-height: calc(100% - 7.3rem - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100% - 10.8rem - env(safe-area-inset-bottom, 0px));
   }
 
   .video-minimap-frame {

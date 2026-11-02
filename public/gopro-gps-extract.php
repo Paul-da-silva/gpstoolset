@@ -66,10 +66,10 @@ require APP_ROOT . '/includes/layout/topbar.php';
 
       <div class="tool-card">
         <h2>Open a GoPro video</h2>
-        <div class="tool-drop">
-          <p class="tool-drop-title">Drop a video here</p>
-          <p class="tool-drop-note">or choose a file. Nothing is uploaded.</p>
-        </div>
+        <button type="button" class="tool-drop" data-file-pick>
+          <span class="tool-drop-title">Drop a video here</span>
+          <span class="tool-drop-note">or choose a file. Nothing is uploaded.</span>
+        </button>
         <p id="landing-file" class="tool-file" hidden></p>
         <p id="landing-error" class="tool-error" role="alert" hidden></p>
         <div id="landing-progress" class="tool-progress" hidden>

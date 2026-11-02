@@ -82,6 +82,11 @@
 }
 
 .tool-drop {
+  width: 100%;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
   min-height: 11rem;
   display: flex;
   flex-direction: column;
@@ -93,6 +98,10 @@
   border-radius: 12px;
   background: var(--bg);
   text-align: center;
+}
+
+.tool-drop:hover {
+  background: var(--tint);
 }
 
 .tool-landing.is-dragover .tool-drop {

@@ -102,9 +102,11 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
           <div id="video-minimap" class="video-minimap" role="region" aria-label="Track on a map"></div>
           <p id="video-wait" class="video-wait" hidden>Waiting for GPS fix</p>
         </div>
+        <button type="button" id="video-minimap-drag" class="video-minimap-drag" aria-label="Move map"></button>
         <button type="button" id="video-minimap-resize" class="video-minimap-resize" aria-label="Resize map"></button>
       </div>
       <div class="video-toolbar">
+        <button type="button" class="chip" id="video-open" data-file-pick>Open file</button>
         <div class="video-menu-wrap">
           <button type="button" class="chip" id="video-menu-btn" aria-expanded="false" aria-controls="video-menu">Display</button>
           <div id="video-menu" class="video-menu" hidden>

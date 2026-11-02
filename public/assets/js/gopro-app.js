@@ -2052,12 +2052,13 @@
   }
 
   function bindMiniFrame() {
+    var drag = document.getElementById('video-minimap-drag');
     var resize = document.getElementById('video-minimap-resize');
     var frame = document.getElementById('video-minimap-frame');
-    if (!resize || !frame || resize.getAttribute('data-bound')) {
+    if (!drag || !resize || !frame || drag.getAttribute('data-bound')) {
       return;
     }
-    resize.setAttribute('data-bound', 'true');
+    drag.setAttribute('data-bound', 'true');
 
     function track(handle, onMove) {
       handle.addEventListener('pointerdown', function (event) {
@@ -2105,6 +2106,19 @@
         event.preventDefault();
       });
     }
+
+    track(drag, function (dx, dy, origin) {
+      var rect = stageBox();
+      if (!rect) {
+        return;
+      }
+      var left = clampBox(origin.left + dx, 8, Math.max(8, rect.width - origin.width - 8));
+      var top = clampBox(origin.top + dy, 8, Math.max(8, rect.height - origin.height - 8));
+      frame.style.left = left + 'px';
+      frame.style.top = top + 'px';
+      frame.style.right = 'auto';
+      frame.style.bottom = 'auto';
+    });
 
     track(resize, function (dx, dy, origin) {
       var rect = stageBox();
