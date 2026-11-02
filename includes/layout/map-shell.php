@@ -7,6 +7,8 @@ declare(strict_types=1);
  * then include close.php.
  *
  * Set $mapShellEmpty = false before including when the page already has a track.
+ * Optional copy: $mapShellHeading, $mapShellLead, $mapShellNote,
+ * $mapShellDropText, $mapShellAccept.
  */
 
 if (!isset($page) || !is_array($page)) {
@@ -15,6 +17,18 @@ if (!isset($page) || !is_array($page)) {
 $page['isMapPage'] = true;
 
 $showEmpty = !isset($mapShellEmpty) || (bool) $mapShellEmpty;
+
+$emptyLead = 'Drop a file or choose one. Nothing is uploaded.';
+if (isset($mapShellLead) && is_string($mapShellLead) && $mapShellLead !== '') {
+    $emptyLead = $mapShellLead;
+}
+$mapShellHeading = isset($mapShellHeading) && is_string($mapShellHeading) ? $mapShellHeading : '';
+$mapShellNote = isset($mapShellNote) && is_string($mapShellNote) ? $mapShellNote : '';
+$mapShellDrop = 'Drop a file to open it. Nothing is uploaded.';
+if (isset($mapShellDropText) && is_string($mapShellDropText) && $mapShellDropText !== '') {
+    $mapShellDrop = $mapShellDropText;
+}
+$mapShellAccept = isset($mapShellAccept) && is_string($mapShellAccept) ? $mapShellAccept : '';
 
 require __DIR__ . '/head.php';
 require __DIR__ . '/topbar.php';
@@ -44,7 +58,14 @@ require __DIR__ . '/topbar.php';
 
     <div id="empty-state" class="empty-state"<?php if (!$showEmpty) : ?> hidden<?php endif; ?>>
       <div class="empty-card">
-        <p class="empty-lead">Drop a file or choose one. Nothing is uploaded.</p>
+        <?php if ($mapShellHeading !== '') : ?>
+        <h1 class="empty-title"><?= e($mapShellHeading) ?></h1>
+        <?php endif; ?>
+        <p class="empty-lead"><?= e($emptyLead) ?></p>
+        <?php if ($mapShellNote !== '') : ?>
+        <p class="empty-note"><?= e($mapShellNote) ?></p>
+        <?php endif; ?>
+        <p id="empty-error" class="empty-error" role="alert" hidden></p>
         <div class="empty-actions">
           <button type="button" class="chip" data-file-pick>Choose file</button>
           <button type="button" class="chip" id="chip-sample">Sample</button>
@@ -54,10 +75,10 @@ require __DIR__ . '/topbar.php';
     </div>
 
     <div id="file-overlay" class="file-overlay" hidden>
-      <p class="chip chip-static">Drop a file to open it. Nothing is uploaded.</p>
+      <p class="chip chip-static"><?= e($mapShellDrop) ?></p>
     </div>
 
-    <input id="file-input" class="file-input" type="file" tabindex="-1" aria-hidden="true">
+    <input id="file-input" class="file-input" type="file" tabindex="-1" aria-hidden="true"<?php if ($mapShellAccept !== '') : ?> accept="<?= e($mapShellAccept) ?>"<?php endif; ?>>
   </div>
 
   <section id="graph-dock" class="graph-dock" aria-label="Graphs" hidden>

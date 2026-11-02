@@ -171,8 +171,92 @@ body.is-map .leaflet-control-attribution a {
   white-space: nowrap;
 }
 
+.chip:disabled,
+.chip:disabled:hover {
+  background: var(--tint);
+  cursor: default;
+  opacity: 0.55;
+}
+
 .chip-static:hover {
   background: var(--tint);
+}
+
+.unit-switch,
+.export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.popover-note {
+  margin-top: 0.45rem;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.stat-list {
+  margin: 0.75rem 0 0;
+}
+
+.stat-list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.18rem 0;
+}
+
+.stat-list dt {
+  font-weight: 650;
+}
+
+.stat-list dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.map-progress {
+  position: absolute;
+  z-index: 5;
+  top: 0.75rem;
+  left: 50%;
+  width: min(18rem, calc(100% - 8rem));
+  transform: translateX(-50%);
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: var(--tint);
+  pointer-events: auto;
+}
+
+.map-progress:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.map-progress p {
+  margin: 0;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.progress-track {
+  align-self: stretch;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--tint-strong);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--brand);
 }
 
 .map-popover {
@@ -181,6 +265,11 @@ body.is-map .leaflet-control-attribution a {
   border-radius: 12px;
   background: var(--tint);
   pointer-events: auto;
+}
+
+#stats-panel,
+#export-panel {
+  width: min(20rem, 100%);
 }
 
 .map-popover p {
@@ -197,7 +286,9 @@ body.is-map .leaflet-control-attribution a {
 
 .map-popover[hidden],
 .empty-state[hidden],
+.empty-error[hidden],
 .file-overlay[hidden],
+.map-progress[hidden],
 .graph-dock[hidden],
 .chip[hidden] {
   display: none;
@@ -215,7 +306,7 @@ body.is-map .leaflet-control-attribution a {
 }
 
 .empty-card {
-  width: min(22rem, 100%);
+  width: min(26rem, 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -227,11 +318,36 @@ body.is-map .leaflet-control-attribution a {
   pointer-events: auto;
 }
 
+.empty-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
 .empty-lead {
   margin: 0;
   font-size: 1.05rem;
   font-weight: 650;
   line-height: 1.35;
+}
+
+.empty-note {
+  margin: 0;
+  color: color-mix(in srgb, var(--text) 72%, transparent);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.empty-error {
+  margin: 0;
+  color: #b91c1c;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+[data-theme="dark"] .empty-error {
+  color: #f87171;
 }
 
 .empty-actions {
@@ -321,10 +437,37 @@ body.is-resizing #map {
 }
 
 .dock-panes {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
   padding: 0.15rem 1rem 0.85rem;
+}
+
+.dock-pane:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.dock-summary {
+  margin: 0 0 0.35rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.dock-chart {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.dock-chart canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .dock-placeholder {

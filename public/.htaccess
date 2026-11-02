@@ -20,6 +20,9 @@ Options -Indexes
     RewriteCond %{THE_REQUEST} \s/+map-demo\.php[\s?] [NC]
     RewriteRule ^map-demo\.php$ /map-demo [R=301,L]
 
+    RewriteCond %{THE_REQUEST} \s/+gopro\.php[\s?] [NC]
+    RewriteRule ^gopro\.php$ /gopro [R=301,L]
+
     # One canonical path without a trailing slash.
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.+)/$ /$1 [R=301,L]
@@ -27,4 +30,5 @@ Options -Indexes
     RewriteRule ^privacy/?$ privacy.php [L]
     RewriteRule ^about/?$ about.php [L]
     RewriteRule ^map-demo/?$ map-demo.php [L]
+    RewriteRule ^gopro/?$ gopro.php [L]
 </IfModule>
