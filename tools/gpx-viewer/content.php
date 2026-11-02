@@ -125,7 +125,7 @@ $faq = $route['faq'];
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
       <h2>More on GPS Toolset</h2>
-      <p>A video from a GoPro camera that recorded GPS can be read on the <a href="/gopro-gps-extract">GoPro GPS extractor</a>, then opened here if you download the GPX. Other converters will sit with these tools.</p>
+      <p>A video from a GoPro camera that recorded GPS can be read on the <a href="/gopro-gps-extract">GoPro GPS extractor</a>, then opened here if you download the GPX. A KML or KMZ file can be turned into GPX on the <a href="/kml-to-gpx">KML to GPX converter</a>. The other way is the <a href="/gpx-to-kml">GPX to KML converter</a>. A FIT activity file converts on the <a href="/fit-to-gpx">FIT to GPX converter</a>.</p>
     </div>
   </section>
 </main>

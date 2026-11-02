@@ -20,5 +20,6 @@ return [
     'slots' => [
         'ad-home-mid' => ['min_height' => 250],
         'ad-footer' => ['min_height' => 90],
+        'ad-converter-mid' => ['min_height' => 90],
     ],
 ];

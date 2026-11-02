@@ -6,6 +6,9 @@ import { stash } from './core/file-handoff.js';
 
 var ROUTES = {
   gpx: { slug: 'gpx-viewer', path: '/gpx-viewer' },
+  kml: { slug: 'kml-to-gpx', path: '/kml-to-gpx' },
+  kmz: { slug: 'kml-to-gpx', path: '/kml-to-gpx' },
+  fit: { slug: 'fit-to-gpx', path: '/fit-to-gpx' },
   mp4: { slug: 'gopro-gps-extract', path: '/gopro-gps-extract' },
   lrv: { slug: 'gopro-gps-extract', path: '/gopro-gps-extract' }
 };
@@ -61,7 +64,7 @@ function send(file) {
   }
   var route = ROUTES[extension(file)];
   if (!route) {
-    showError('Drop a GPX file, or a GoPro .MP4 or .LRV.');
+    showError('Drop a GPX, KML, KMZ, or FIT file, or a GoPro .MP4 or .LRV.');
     return;
   }
   showError('');

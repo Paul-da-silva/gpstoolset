@@ -24,12 +24,29 @@ declare(strict_types=1);
           </a>
         </div>
       </div>
-      <div class="nav-group<?= nav_active('/measure-distance') ?>">
+      <div class="nav-group<?= nav_active('/measure-distance') ?><?= nav_active('/coordinate-converter') ?><?= nav_active('/kml-to-gpx') ?><?= nav_active('/gpx-to-kml') ?><?= nav_active('/fit-to-gpx') ?>">
         <span class="nav-link">Tools</span>
         <div class="nav-sub" role="group" aria-label="Tools">
-          <a class="nav-sublink<?= nav_active('/measure-distance') ?>" href="/measure-distance">
+          <a class="nav-sublink nav-sublink-wide<?= nav_active('/measure-distance') ?>" href="/measure-distance">
             <span class="nav-sublink-title">Measure distance</span>
             <span class="nav-sublink-note">Distance between points on the map</span>
+          </a>
+          <p class="nav-subhead">Convert</p>
+          <a class="nav-sublink<?= nav_active('/coordinate-converter') ?>" href="/coordinate-converter">
+            <span class="nav-sublink-title">Coordinate converter</span>
+            <span class="nav-sublink-note">Decimal, DMS, UTM, and MGRS</span>
+          </a>
+          <a class="nav-sublink<?= nav_active('/kml-to-gpx') ?>" href="/kml-to-gpx">
+            <span class="nav-sublink-title">KML to GPX</span>
+            <span class="nav-sublink-note">KML or KMZ file to GPX</span>
+          </a>
+          <a class="nav-sublink<?= nav_active('/gpx-to-kml') ?>" href="/gpx-to-kml">
+            <span class="nav-sublink-title">GPX to KML</span>
+            <span class="nav-sublink-note">GPX file to KML</span>
+          </a>
+          <a class="nav-sublink<?= nav_active('/fit-to-gpx') ?>" href="/fit-to-gpx">
+            <span class="nav-sublink-title">FIT to GPX</span>
+            <span class="nav-sublink-note">FIT activity file to GPX</span>
           </a>
         </div>
       </div>

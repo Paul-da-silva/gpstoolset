@@ -22,11 +22,15 @@ gpstoolset/
     seo.php              ← title / description / canonical / og / JSON-LD / sitemap.xml
     layout/              ← head, topbar, footer, close, map-app
     pages/               ← bodies for plain pages: home, privacy, about, not-found
-    partials/            ← ads, tile-config, scripts-map (the one map script stack)
+    partials/            ← ads, tile-config, scripts-map, scripts-module, converter-card
   tools/
     gopro-gps-extract/   ← meta.php, content.php, page.php
     gpx-viewer/          ← same three files; edit tools on the shared map shell
     measure-distance/    ← same three files
+    coordinate-converter/ ← document page (preview map only, not the full-screen shell)
+    kml-to-gpx/          ← document page (not the map shell)
+    gpx-to-kml/          ← same
+    fit-to-gpx/          ← same
   public/                ← the only document root
     index.php            ← front controller (all HTML routes + /sitemap.xml)
     .htaccess            ← real files as files; everything else → index.php
@@ -39,12 +43,14 @@ gpstoolset/
         tool-landing.css ← landing page for a map tool (hero, drop card, steps, prose)
         map-shell.css    ← map, chips placement, popovers, graph dock, video view only
       js/
-        core/            ← track.js  format.js  exporters.js  ui-state.js  file-drop.js  edit.js
+        core/            ← track.js  format.js  coords.js  exporters.js  ui-state.js  file-drop.js  edit.js
         map/             ← tiles.js  map-shell.js  graph-dock.js  track-layer.js
                            track-charts.js  panels.js  edit-tools.js
-        parsers/         ← gpmf.js  gpx.js   (kml.js · fit.js later)
+        parsers/         ← gpmf.js  gpx.js  kml.js  fit.js  zip.js
         video/           ← overlay.js  sync.js
         tools/           ← gopro-gps-extract.js  gpx-viewer.js  measure-distance.js
+                           coordinate-converter.js  kml-to-gpx.js  gpx-to-kml.js
+                           fit-to-gpx.js  convert-app.js
         dropzone.js      ← home page placeholder (classic script, not a module)
       vendor/            ← leaflet 1.9.4 · chartjs 4.4.7 · gopro (gpmf-fast, telemetry bundle)
   docs/                  ← plan, architecture, prompts, SEO, design
@@ -106,6 +112,8 @@ No email/mailto · no contact · Privacy/About footer only · central tiles · a
 3. **Parser** (if needed): `public/assets/js/parsers/<format>.js` exporting `parse(file, options)` → `{ points, acc }`.
 4. **Tool app:** `public/assets/js/tools/<slug>.js` — file-drop → parser → `buildTrack` → map shell, charts, panels, exporters (+ `video/overlay.js` if it has a video). Reuse the shell; don't fork markup (`layout/map-app.php`).
 5. **Check** http://gpstoolset.lan/<slug> and http://gpstoolset.lan/sitemap.xml — then leave uncommitted for Paul.
+
+Converters (`/kml-to-gpx`, `/gpx-to-kml`, `/fit-to-gpx`) are document pages, not the map shell. `flags.map` stays false. The page loads `includes/partials/scripts-module.php` instead of the map stack. The drop, convert, and download UI is `public/assets/js/tools/convert-app.js`. Parsers are `parsers/kml.js` (KMZ via `parsers/zip.js`) and `parsers/fit.js`.
 
 Guides: add `config/guides.php` (rows with `slug`, `inSitemap`) and an article layout when the first guide is written.
 

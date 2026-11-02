@@ -288,4 +288,23 @@
   .tool-card h2 {
     margin-bottom: 0;
   }
+
+  .tool-card.convert-card h2 {
+    margin-bottom: 0.85rem;
+  }
+}
+
+.convert-status,
+.convert-summary {
+  margin: 0.85rem 0 0;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.convert-result .tool-actions {
+  margin-top: 0.75rem;
+}
+
+.convert-result[hidden] {
+  display: none;
 }

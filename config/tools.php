@@ -65,4 +65,28 @@ return [
         'entry' => 'tools/measure-distance/page.php',
         'meta' => 'tools/measure-distance/meta.php',
     ],
+    'coordinate-converter' => [
+        'slug' => 'coordinate-converter',
+        'inSitemap' => true,
+        'entry' => 'tools/coordinate-converter/page.php',
+        'meta' => 'tools/coordinate-converter/meta.php',
+    ],
+    'kml-to-gpx' => [
+        'slug' => 'kml-to-gpx',
+        'inSitemap' => true,
+        'entry' => 'tools/kml-to-gpx/page.php',
+        'meta' => 'tools/kml-to-gpx/meta.php',
+    ],
+    'gpx-to-kml' => [
+        'slug' => 'gpx-to-kml',
+        'inSitemap' => true,
+        'entry' => 'tools/gpx-to-kml/page.php',
+        'meta' => 'tools/gpx-to-kml/meta.php',
+    ],
+    'fit-to-gpx' => [
+        'slug' => 'fit-to-gpx',
+        'inSitemap' => true,
+        'entry' => 'tools/fit-to-gpx/page.php',
+        'meta' => 'tools/fit-to-gpx/meta.php',
+    ],
 ];

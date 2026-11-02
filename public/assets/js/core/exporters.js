@@ -134,6 +134,142 @@ export function toKml(points, name) {
     '</coordinates></LineString></Placemark></Document></kml>';
 }
 
+function pointTime(point) {
+  return isoTime(point.t);
+}
+
+function trackIsTimed(points) {
+  var i;
+  if (!points.length) {
+    return false;
+  }
+  for (i = 0; i < points.length; i++) {
+    if (!pointTime(points[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function trackHasElevation(points) {
+  var i;
+  for (i = 0; i < points.length; i++) {
+    if (points[i].ele != null && isFinite(points[i].ele)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * GPX with several tracks and waypoints.
+ * doc: { name, tracks: [{ name, points }], waypoints: [{ lat, lon, ele?, name?, t? }] }
+ */
+export function toGpxDocument(doc) {
+  var name = doc && doc.name ? doc.name : 'track';
+  var tracks = doc && doc.tracks ? doc.tracks : [];
+  var waypoints = doc && doc.waypoints ? doc.waypoints : [];
+  var lines = gpxHeader();
+  lines.push('<metadata><name>' + xml(name) + '</name></metadata>');
+  var i;
+  for (i = 0; i < waypoints.length; i++) {
+    var mark = waypoints[i];
+    lines.push('<wpt lat="' + mark.lat.toFixed(7) + '" lon="' + mark.lon.toFixed(7) + '">');
+    if (mark.ele != null && isFinite(mark.ele)) {
+      lines.push('<ele>' + mark.ele.toFixed(2) + '</ele>');
+    }
+    var when = pointTime(mark);
+    if (when) {
+      lines.push('<time>' + when + '</time>');
+    }
+    lines.push('<name>' + xml(mark.name || 'Waypoint') + '</name></wpt>');
+  }
+  for (i = 0; i < tracks.length; i++) {
+    var part = tracks[i];
+    var points = part && part.points ? part.points : part;
+    if (!points || !points.length) {
+      continue;
+    }
+    var partName = part && part.name ? part.name : name;
+    appendTrack(lines, points, partName);
+  }
+  lines.push('</gpx>');
+  return lines.join('\n');
+}
+
+function kmlPoint(point, named) {
+  var alt = point.ele != null && isFinite(point.ele) ? ',' + point.ele.toFixed(2) : '';
+  var body = '<Point><coordinates>' + point.lon.toFixed(7) + ',' + point.lat.toFixed(7) + alt +
+    '</coordinates></Point>';
+  if (!named) {
+    return body;
+  }
+  var when = pointTime(point);
+  var time = when ? '<TimeStamp><when>' + when + '</when></TimeStamp>' : '';
+  return '<Placemark><name>' + xml(point.name || 'Waypoint') + '</name>' + time + body + '</Placemark>';
+}
+
+function kmlTrack(points, name) {
+  var lines = ['<Placemark><name>' + xml(name) + '</name>'];
+  var i;
+  if (trackIsTimed(points)) {
+    var mode = trackHasElevation(points) ? 'absolute' : 'clampToGround';
+    lines.push('<gx:Track><altitudeMode>' + mode + '</altitudeMode>');
+    for (i = 0; i < points.length; i++) {
+      lines.push('<when>' + pointTime(points[i]) + '</when>');
+    }
+    for (i = 0; i < points.length; i++) {
+      var point = points[i];
+      var alt = point.ele != null && isFinite(point.ele) ? ' ' + point.ele.toFixed(2) : '';
+      lines.push('<gx:coord>' + point.lon.toFixed(7) + ' ' + point.lat.toFixed(7) + alt + '</gx:coord>');
+    }
+    lines.push('</gx:Track></Placemark>');
+    return lines.join('');
+  }
+  var coords = [];
+  var elevated = trackHasElevation(points);
+  for (i = 0; i < points.length; i++) {
+    var place = points[i];
+    var height = elevated
+      ? ',' + (place.ele != null && isFinite(place.ele) ? place.ele.toFixed(2) : '0')
+      : '';
+    coords.push(place.lon.toFixed(7) + ',' + place.lat.toFixed(7) + height);
+  }
+  lines.push('<LineString><altitudeMode>' + (elevated ? 'absolute' : 'clampToGround') +
+    '</altitudeMode><coordinates>' + coords.join(' ') + '</coordinates></LineString></Placemark>');
+  return lines.join('');
+}
+
+/**
+ * KML with one placemark per track, plus a placemark per waypoint.
+ * Timed tracks use gx:Track so the times are kept.
+ */
+export function toKmlDocument(doc) {
+  var name = doc && doc.name ? doc.name : 'track';
+  var tracks = doc && doc.tracks ? doc.tracks : [];
+  var waypoints = doc && doc.waypoints ? doc.waypoints : [];
+  var lines = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">',
+    '<Document><name>' + xml(name) + '</name>'
+  ];
+  var i;
+  for (i = 0; i < waypoints.length; i++) {
+    lines.push(kmlPoint(waypoints[i], true));
+  }
+  for (i = 0; i < tracks.length; i++) {
+    var part = tracks[i];
+    var points = part && part.points ? part.points : part;
+    if (!points || !points.length) {
+      continue;
+    }
+    var partName = part && part.name ? part.name : name;
+    lines.push(kmlTrack(points, partName));
+  }
+  lines.push('</Document></kml>');
+  return lines.join('');
+}
+
 /** Save a Track as 'gpx', 'csv' or 'kml'. */
 export function exportTrack(kind, track) {
   if (!track || !track.points.length) {

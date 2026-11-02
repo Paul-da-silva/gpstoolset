@@ -1,0 +1,200 @@
+/* Coordinate converter. Document page, with a small preview map.
+   Thin neutral borders only. */
+
+.coord-tool {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
+  gap: 1.25rem 1.5rem;
+  align-items: start;
+  margin-top: 1.35rem;
+}
+
+.coord-hint {
+  margin: 0.55rem 0 0;
+  color: color-mix(in srgb, var(--text) 68%, transparent);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.coord-paste {
+  width: 100%;
+  margin-top: 0.85rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.coord-formats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+
+.coord-fields {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+}
+
+.coord-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--text) 72%, transparent);
+}
+
+.coord-label input,
+.coord-label select,
+.coord-paste {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.coord-label input,
+.coord-label select {
+  width: 100%;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  font: inherit;
+  font-family: var(--font-mono);
+}
+
+.coord-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.coord-angle {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.coord-angle.is-ddm {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.coord-axis {
+  grid-column: 1 / -1;
+  margin: 0.15rem 0 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.coord-empty {
+  margin: 0.9rem 0 0;
+  color: color-mix(in srgb, var(--text) 68%, transparent);
+}
+
+.coord-results {
+  margin-top: 0.35rem;
+}
+
+.coord-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.coord-k {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--text) 68%, transparent);
+}
+
+.coord-v {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.98rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.coord-sub {
+  display: block;
+  margin-top: 0.2rem;
+  color: color-mix(in srgb, var(--text) 68%, transparent);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.coord-row .chip {
+  flex: 0 0 auto;
+}
+
+.coord-copy-all {
+  margin-top: 0.35rem;
+}
+
+.coord-map {
+  height: 22rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.coord-map.leaflet-container {
+  font-family: var(--font-sans);
+  cursor: crosshair;
+}
+
+.coord-example {
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.coord-example li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+}
+
+.coord-example span {
+  font-family: var(--font-sans);
+  font-weight: 650;
+}
+
+.coord-side {
+  z-index: 10;
+}
+
+@media (max-width: 800px) {
+  .coord-tool {
+    grid-template-columns: 1fr;
+  }
+
+  .coord-map {
+    height: 16rem;
+  }
+
+  .coord-angle,
+  .coord-angle.is-ddm {
+    grid-template-columns: 1fr 1fr;
+  }
+}

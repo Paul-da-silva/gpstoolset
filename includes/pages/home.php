@@ -11,10 +11,10 @@ require APP_ROOT . '/includes/layout/topbar.php';
   <p class="privacy-line">Your file never leaves your device.</p>
   <button type="button" class="dropzone" id="home-drop">
     <span class="dropzone-title">Drop a file here</span>
-    <span class="dropzone-note">or choose one. GPX, or a GoPro .MP4 / .LRV.</span>
+    <span class="dropzone-note">or choose one. GPX, KML, KMZ, FIT, or a GoPro .MP4 / .LRV.</span>
   </button>
   <p class="dropzone-error" id="home-drop-error" hidden></p>
-  <input type="file" id="home-file" accept=".gpx,.mp4,.lrv,application/gpx+xml,video/mp4" hidden>
+  <input type="file" id="home-file" accept=".gpx,.kml,.kmz,.fit,.mp4,.lrv,application/gpx+xml,application/vnd.google-earth.kml+xml,application/vnd.google-earth.kmz,video/mp4" hidden>
   <?php render_ad('ad-home-mid'); ?>
 </main>
 <?php

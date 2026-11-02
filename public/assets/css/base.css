@@ -237,6 +237,21 @@ a.nav-link:hover {
   color: var(--brand);
 }
 
+.nav-sublink-wide,
+.nav-subhead {
+  grid-column: 1 / -1;
+}
+
+.nav-subhead {
+  margin: 0.45rem 0.35rem 0;
+  padding: 0.2rem 0.45rem 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text) 55%, transparent);
+}
+
 .home,
 .page {
   width: min(40rem, calc(100% - 2.5rem));
@@ -292,7 +307,7 @@ a.nav-link:hover {
 }
 
 .dropzone-note {
-  max-width: 22rem;
+  max-width: 26rem;
   font-size: 0.92rem;
   font-weight: 500;
   line-height: 1.4;
@@ -427,5 +442,10 @@ a.nav-link:hover {
 
   .nav-sublink-note {
     display: none;
+  }
+
+  .nav-subhead {
+    margin: 0.7rem 0.75rem 0.15rem;
+    padding: 0;
   }
 }

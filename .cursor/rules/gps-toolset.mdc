@@ -31,7 +31,7 @@ config/tools.php          ← page/tool registry (slug, entry, meta, inSitemap, 
 includes/router.php seo.php bootstrap.php
 includes/layout/          ← head topbar footer close map-app
 includes/pages/           ← home privacy about not-found bodies
-includes/partials/        ← ads tile-config scripts-map
+includes/partials/        ← ads tile-config scripts-map scripts-module converter-card
 tools/<slug>/{meta,content,page}.php
 public/index.php          ← front controller (all HTML routes + /sitemap.xml)
 public/assets/js/core|map|parsers|video|tools/   ← ES modules, tool app = tools/<slug>.js
@@ -40,7 +40,7 @@ guides/ config/guides.php ← not created yet
 ```
 
 - Shared **Track** model from every parser (`core/track.js`); edits in `core/edit.js`; tool apps stay thin
-- Shipped tools: `/gopro-gps-extract`, `/gpx-viewer`, `/measure-distance` (same map shell; edit tools only on the GPX viewer)
+- Shipped tools: `/gopro-gps-extract`, `/gpx-viewer`, `/measure-distance` (same map shell; edit tools only on the GPX viewer), `/coordinate-converter` (document page, small preview map). Converters `/kml-to-gpx`, `/gpx-to-kml`, `/fit-to-gpx` are document pages (shared `convert-app.js`; Tools menu, Convert subsection)
 - Native ES modules, no build; tile URLs only via `config/tiles.php` + `map/tiles.js`
 - Sitemap / meta via `includes/seo.php` + registry (`/sitemap.xml` is generated; no static file)
 - **Adding a tool:** register in `config/tools.php` → create `tools/<slug>/` → parser if needed → `public/assets/js/tools/<slug>.js` → check on `.lan` → leave uncommitted for Paul  
