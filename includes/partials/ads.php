@@ -14,7 +14,7 @@ function render_ad(string $slotId): void
     static $rendered = 0;
 
     $page = $GLOBALS['page'] ?? [];
-    if (!empty($page['isMapPage'])) {
+    if (!empty($page['isMapPage']) || (isset($page['allowAds']) && $page['allowAds'] === false)) {
         return;
     }
 

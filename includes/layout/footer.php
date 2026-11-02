@@ -20,6 +20,6 @@ $showFooter = empty($page['isMapPage']) || !empty($footerInPreamble);
 </footer>
 <?php endif; ?>
 <?php
-if (empty($footerInPreamble)) {
+if (empty($footerInPreamble) && (!isset($footerClose) || $footerClose)) {
     require __DIR__ . '/close.php';
 }

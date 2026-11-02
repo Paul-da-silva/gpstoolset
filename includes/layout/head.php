@@ -26,10 +26,19 @@ if ($description === '') {
 
 $canonical = base_url(current_path());
 $isMapPage = !empty($page['isMapPage']);
+$wantMapAssets = $isMapPage || !empty($page['mapAssets']);
 $bodyClass = $isMapPage ? ' class="is-map"' : '';
 $viewport = 'width=device-width, initial-scale=1';
-if ($isMapPage) {
+if ($wantMapAssets) {
     $viewport .= ', viewport-fit=cover';
+}
+$extraStyles = [];
+if (!empty($page['styles']) && is_array($page['styles'])) {
+    foreach ($page['styles'] as $href) {
+        if (is_string($href) && str_starts_with($href, '/assets/')) {
+            $extraStyles[] = $href;
+        }
+    }
 }
 
 // Do not add a Referrer-Policy tag. Map tiles need the browser to send Referer.
@@ -49,7 +58,10 @@ if ($isMapPage) {
 <meta property="og:url" content="<?= e($canonical) ?>">
 <link rel="stylesheet" href="/assets/css/tokens.css">
 <link rel="stylesheet" href="/assets/css/base.css">
-<?php if ($isMapPage): ?>
+<?php foreach ($extraStyles as $href): ?>
+<link rel="stylesheet" href="<?= e($href) ?>">
+<?php endforeach; ?>
+<?php if ($wantMapAssets): ?>
 <link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">
 <link rel="stylesheet" href="/assets/css/map-shell.css">
 <?php endif; ?>

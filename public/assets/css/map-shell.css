@@ -91,6 +91,10 @@ body.is-map .leaflet-container .leaflet-control-attribution {
   flex-direction: column;
 }
 
+.map-app[hidden] {
+  display: none;
+}
+
 .map-stage {
   position: relative;
   flex: 1 1 auto;

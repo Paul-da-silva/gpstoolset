@@ -354,6 +354,7 @@
   function showName(name) {
     var openBtn = document.getElementById('chip-open');
     var nameEl = document.getElementById('file-name');
+    var landingName = document.getElementById('landing-file');
     if (openBtn) {
       openBtn.textContent = 'Replace file';
     }
@@ -361,27 +362,34 @@
       nameEl.hidden = false;
       nameEl.textContent = name;
     }
+    if (landingName) {
+      landingName.hidden = false;
+      landingName.textContent = name;
+    }
   }
 
   function showError(message) {
-    var el = document.getElementById('empty-error');
-    if (!el) {
-      return;
+    var ids = ['empty-error', 'landing-error'];
+    var i;
+    for (i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i]);
+      if (!el) {
+        continue;
+      }
+      el.hidden = !message;
+      el.textContent = message || '';
     }
-    el.hidden = !message;
-    el.textContent = message || '';
   }
 
   function clearError() {
     showError('');
   }
 
-  function setProgress(pct, label) {
-    var box = document.getElementById('map-progress');
-    var bar = document.getElementById('progress-bar');
-    var text = document.getElementById('progress-label');
-    var track = document.getElementById('progress-track');
-    var clamped = Math.max(0, Math.min(100, Math.round(pct)));
+  function applyProgress(boxId, barId, labelId, trackId, clamped, label) {
+    var box = document.getElementById(boxId);
+    var bar = document.getElementById(barId);
+    var text = document.getElementById(labelId);
+    var track = document.getElementById(trackId);
     if (box) {
       box.hidden = false;
     }
@@ -399,11 +407,59 @@
     }
   }
 
+  function setProgress(pct, label) {
+    var clamped = Math.max(0, Math.min(100, Math.round(pct)));
+    applyProgress('map-progress', 'progress-bar', 'progress-label', 'progress-track', clamped, label);
+    applyProgress('landing-progress', 'landing-progress-bar', 'landing-progress-label', 'landing-progress-track', clamped, label);
+  }
+
   function hideProgress() {
-    var box = document.getElementById('map-progress');
-    if (box) {
-      box.hidden = true;
+    var ids = ['map-progress', 'landing-progress'];
+    var i;
+    for (i = 0; i < ids.length; i++) {
+      var box = document.getElementById(ids[i]);
+      if (box) {
+        box.hidden = true;
+      }
     }
+  }
+
+  function enterTool() {
+    var landing = document.getElementById('tool-landing');
+    if (!landing) {
+      return;
+    }
+    var first = !document.body.classList.contains('is-map');
+    document.body.classList.add('is-map');
+    landing.hidden = true;
+    var footer = document.querySelector('.site-footer');
+    if (footer) {
+      footer.hidden = true;
+    }
+    var app = document.getElementById('map-app');
+    if (app) {
+      app.hidden = false;
+    }
+    if (global.GpsMapShell && !global.GpsMapShell.map) {
+      global.GpsMapShell.init();
+    }
+    if (!first) {
+      return;
+    }
+    global.scrollTo(0, 0);
+    global.requestAnimationFrame(function () {
+      if (global.GpsMapShell) {
+        global.GpsMapShell.invalidate();
+      }
+      global.requestAnimationFrame(function () {
+        if (global.GpsMapShell) {
+          global.GpsMapShell.invalidate();
+        }
+        if (state.points.length) {
+          drawMap();
+        }
+      });
+    });
   }
 
   function nextJob() {
@@ -1120,6 +1176,7 @@
     }), 5);
     state.idx = thinIndices(points.length, CHART_POINTS);
     clearError();
+    enterTool();
     drawMap();
     renderStats();
     try {
@@ -1638,6 +1695,16 @@
       }
     });
     document.addEventListener('gpstoolset:sample', onSample);
+    var landingSample = document.getElementById('landing-sample');
+    if (landingSample) {
+      landingSample.addEventListener('click', function () {
+        document.dispatchEvent(new CustomEvent('gpstoolset:sample'));
+      });
+    }
+    var landingCancel = document.getElementById('landing-cancel');
+    if (landingCancel) {
+      landingCancel.addEventListener('click', onCancel);
+    }
     document.addEventListener('gpstoolset:dock', function () {
       global.requestAnimationFrame(resizeCharts);
     });
@@ -2491,11 +2558,27 @@
     global.addEventListener('pagehide', releaseVideo);
   }
 
+  function bindLandingDrop() {
+    if (!document.getElementById('tool-landing') || !global.GpsFileDrop || global.GpsFileDrop.bound) {
+      return;
+    }
+    global.GpsFileDrop.init({
+      stage: '#tool-landing',
+      overlay: '#landing-overlay',
+      onFile: function (file) {
+        document.dispatchEvent(new CustomEvent('gpstoolset:file', {
+          detail: { file: file }
+        }));
+      }
+    });
+  }
+
   function init() {
     mountCharts();
     mountPanels();
     mountProgress();
     mountVideo();
+    bindLandingDrop();
     bindUi();
     paintUnits();
     selfCheckSync();

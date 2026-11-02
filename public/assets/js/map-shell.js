@@ -181,7 +181,11 @@
       global.GpsGraphDock.init();
     }
     if (global.GpsFileDrop) {
-      global.GpsFileDrop.init({ onFile: onFile });
+      if (global.GpsFileDrop.bound) {
+        global.GpsFileDrop.addStage('#map-stage', '#file-overlay');
+      } else {
+        global.GpsFileDrop.init({ onFile: onFile });
+      }
     }
     createMap();
     flush();
