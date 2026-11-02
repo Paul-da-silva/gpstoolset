@@ -704,15 +704,40 @@ body.is-resizing #map {
     white-space: normal;
   }
 
+  body.is-map .nav-group > .nav-link::after,
+  body.is-map .nav-sub::before {
+    display: none;
+  }
+
   body.is-map .nav-sub {
     position: static;
     display: flex;
     flex-direction: column;
+    flex-wrap: nowrap;
+    width: auto;
+    max-width: none;
     min-width: 0;
+    gap: 0;
     padding: 0 0 0.25rem 0.85rem;
     background: transparent;
     border: 0;
     border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.is-map .nav-sublink {
+    display: block;
+    flex: none;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    padding: 0.45rem 0.75rem;
+    background: transparent;
+    border-radius: 6px;
+  }
+
+  body.is-map .nav-sublink-note {
+    display: none;
   }
 }
 
