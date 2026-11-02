@@ -63,12 +63,21 @@ a:hover {
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   color: var(--brand);
   font-weight: 700;
   letter-spacing: -0.02em;
   text-decoration: none;
   font-size: 1.05rem;
   white-space: nowrap;
+}
+
+.logo-mark {
+  display: block;
+  height: 36px;
+  width: auto;
 }
 
 .logo:hover {
@@ -210,6 +219,10 @@ a.nav-link:hover {
 }
 
 @media (max-width: 720px) {
+  .logo-mark {
+    height: 28px;
+  }
+
   .nav-toggle:focus-visible + .nav-burger {
     outline: 2px solid var(--brand);
     outline-offset: 2px;

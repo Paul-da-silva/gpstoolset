@@ -54,13 +54,12 @@ require APP_ROOT . '/includes/layout/topbar.php';
   <section class="tool-hero">
     <div class="tool-wrap tool-hero-grid">
       <div>
-        <p class="tool-kicker">Free · No account · In your browser</p>
         <h1>GoPro GPS Extractor</h1>
-        <p class="tool-lead">Extract GPS from a GoPro video and keep a GPX file. The video stays on this device.</p>
+        <p class="tool-lead">Extract GPS from a GoPro video and download a GPX file. Your video stays on your device.</p>
         <ul class="tool-pills">
-          <li>Track on a map</li>
-          <li>GPX, CSV, or KML</li>
-          <li>Stays on your device</li>
+          <li>MP4 or LRV</li>
+          <li>Map view</li>
+          <li>Video view</li>
         </ul>
         <p class="tool-copy">Works with GoPro HERO video that recorded GPS. An .MP4 or the smaller .LRV proxy both work. GPS has to be on in the camera while it records. “GoPro” here is compatibility: the camera writes the track, and this page reads it.</p>
       </div>
@@ -82,9 +81,9 @@ require APP_ROOT . '/includes/layout/topbar.php';
         </div>
         <div class="tool-actions">
           <button type="button" class="tool-btn" data-file-pick>Choose video</button>
-          <button type="button" class="tool-btn tool-btn-quiet" id="landing-sample">Try a sample route</button>
+          <p class="tool-privacy">Your file never leaves your device.</p>
         </div>
-        <p class="tool-privacy">Your file never leaves your device.</p>
+        
       </div>
     </div>
   </section>
