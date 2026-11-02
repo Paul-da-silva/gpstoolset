@@ -1,0 +1,26 @@
+# DocumentRoot is this directory. Config and includes live outside it.
+
+DirectoryIndex index.php
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # /privacy.php -> /privacy (and the same for the other stubs).
+    # THE_REQUEST avoids a loop with the internal rewrite below.
+    RewriteCond %{THE_REQUEST} \s/+index\.php[\s?] [NC]
+    RewriteRule ^index\.php$ / [R=301,L]
+
+    RewriteCond %{THE_REQUEST} \s/+privacy\.php[\s?] [NC]
+    RewriteRule ^privacy\.php$ /privacy [R=301,L]
+
+    RewriteCond %{THE_REQUEST} \s/+about\.php[\s?] [NC]
+    RewriteRule ^about\.php$ /about [R=301,L]
+
+    # One canonical path without a trailing slash.
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+    RewriteRule ^privacy/?$ privacy.php [L]
+    RewriteRule ^about/?$ about.php [L]
+</IfModule>

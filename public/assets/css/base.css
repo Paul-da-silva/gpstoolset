@@ -1,0 +1,282 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--text);
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+h1, h2, p {
+  margin: 0;
+}
+
+a {
+  color: var(--link);
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--header-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar-inner {
+  position: relative;
+  height: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo {
+  color: var(--brand);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+.logo:hover {
+  text-decoration: none;
+}
+
+.nav-toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.nav-burger {
+  display: none;
+}
+
+.site-nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+a.nav-link:hover {
+  color: var(--link);
+  background: color-mix(in srgb, var(--link) 10%, transparent);
+  text-decoration: none;
+}
+
+.nav-link.is-active {
+  color: var(--brand);
+  font-weight: 650;
+}
+
+.nav-link.is-soon {
+  color: color-mix(in srgb, var(--text) 45%, var(--bg));
+}
+
+.home,
+.page {
+  width: min(40rem, calc(100% - 2.5rem));
+  margin: 0 auto;
+  padding: 2.75rem 0 3.5rem;
+}
+
+.home h1 {
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.page h1 {
+  font-size: 1.85rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.85rem;
+}
+
+.page p + p {
+  margin-top: 0.75rem;
+}
+
+.privacy-line {
+  margin-top: 0.85rem;
+  font-size: 1.125rem;
+  font-weight: 650;
+  color: var(--brand);
+}
+
+.dropzone {
+  margin-top: 1.75rem;
+  min-height: 11rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  border: 2px dashed var(--brand);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  text-align: center;
+}
+
+.dropzone.is-dragover {
+  background: var(--tint-strong);
+}
+
+.home-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin-top: 1.25rem;
+}
+
+.ad-slot {
+  display: block;
+  margin: 1rem 0;
+  background: var(--tint);
+  border: 1px solid var(--line);
+}
+
+.site-footer {
+  margin-top: 1rem;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+.footer-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.15rem 1rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.15rem;
+}
+
+.footer-nav a {
+  text-decoration: none;
+}
+
+.footer-nav a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .nav-toggle:focus-visible + .nav-burger {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  .nav-burger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-left: auto;
+    min-height: 2.25rem;
+    padding: 0 0.35rem;
+    color: var(--text);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .nav-burger-bar,
+  .nav-burger-bar::before,
+  .nav-burger-bar::after {
+    display: block;
+    width: 1.05rem;
+    height: 2px;
+    background: var(--brand);
+    position: relative;
+    content: "";
+  }
+
+  .nav-burger-bar::before {
+    position: absolute;
+    top: -5px;
+  }
+
+  .nav-burger-bar::after {
+    position: absolute;
+    top: 5px;
+  }
+
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0.35rem;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--tint);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-toggle:checked ~ .site-nav {
+    display: flex;
+  }
+
+  .nav-link {
+    padding: 0.65rem 0.75rem;
+  }
+}

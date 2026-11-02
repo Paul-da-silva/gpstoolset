@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Local config overrides (see config/site.php)
+config/*.local.php
+
+# Secrets and env files, if a later tool adds them
+.env
+.env.*
+
+# Logs
+*.log
