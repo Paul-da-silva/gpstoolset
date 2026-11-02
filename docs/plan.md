@@ -11,7 +11,7 @@
 - **Folder:** `public/` = vhost docroot · includes/templates/config **outside** `public/` · agent notes: box `/workspace/gpstoolset/` only.
 - **Cursor — tiles:** ONE shared config/module (see § OSM tile rules). No hardcoded tile URLs in pages.
 - **Cursor — ads:** ONE shared partial/config. **Off now**; on later with monetization. **Viewer/map pages:** ads must **never** eat the map (home/guides/converters only, or none on viewers — open for Monetization). Elsewhere: never on drop zone; max 2/page when on.
-- **Hard site rules (Paul):** no email / `mailto:` · no contact page · Privacy/About **footer only** · **no heavy coloured one-sided borders** (thin borders OK) · OSM attribution **on the map only** (no © OSM in footer; no “Report a map issue” anywhere).
+- **Hard site rules (Paul):** no email / `mailto:` · no contact page · Privacy/About **footer only** · **no heavy coloured one-sided borders** (thin borders OK) · OSM attribution **on the map only** (no © OSM in footer; no “Report a map issue” anywhere) · **never git commit/push/amend** (Paul alone commits; leave changes uncommitted).
 - **URL / brand rules:** no brand names in URLs **except `/gopro-gps-extract`**. GoPro/DJI = **compatibility wording in copy only**. Never “Telemetry Extractor”. **Never name FlySight** → say **GNSS logger CSV exports**.
 - **FlySync:** keeps its viewers; **no 301s**. May link to gpstoolset for non-skydive users later. Some keyword overlap is fine.
 - **`/gopro-gps-extract` copy:** must be **clearly different** from FlySync’s page (angle + wording) — not a copy. Rich pre-upload content below the drop zone; hides after load. SEO note.
@@ -107,7 +107,7 @@ SEO recommends **how-to / compare** over pure “what is” (wiki/gov own defini
 
 | Phase | Scope | Done |
 |------:|-------|------|
-| **A** | PHP shell · tokens/design · tile module · ads off · privacy/about (no contact) · OSM rules · no heavy coloured one-sided borders · env-aware base_url | Stub home + chrome |
+| **A** | PHP shell · tokens/design · tile module · ads off · privacy/about (no contact) · OSM rules · no heavy coloured one-sided borders · env-aware base_url · Paul-only git commits | Stub home + chrome |
 | **B** | `/gopro-gps-extract` (map+video views) + `/gpx-viewer` (editor day one); **distinct** copy | Both usable; FlySync stays |
 | **C** | Guides kickoff: formats hub · `/guides/gpx` · `/guides/gpmf` | Linked from tools |
 | **D** | Utility tools + short what-is-GPS / GNSS guides | Usable + linked |

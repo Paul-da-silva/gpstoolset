@@ -13,7 +13,7 @@
   var job = 0;
   var token = { cancelled: false };
   var layers = { halo: null, line: null, start: null, end: null, scrub: null };
-  var charts = { speed: null, altitude: null };
+  var charts = {};
   var state = {
     points: [],
     smooth: [],
@@ -521,14 +521,12 @@
   }
 
   function destroyCharts() {
-    if (charts.speed) {
-      charts.speed.destroy();
-      charts.speed = null;
-    }
-    if (charts.altitude) {
-      charts.altitude.destroy();
-      charts.altitude = null;
-    }
+    Object.keys(charts).forEach(function (name) {
+      if (charts[name]) {
+        charts[name].destroy();
+        charts[name] = null;
+      }
+    });
   }
 
   function setSummary(id, text) {
@@ -712,14 +710,69 @@
   }
 
   function resizeCharts() {
-    var speedPane = document.getElementById('pane-speed');
-    var altPane = document.getElementById('pane-altitude');
-    if (charts.speed && speedPane && !speedPane.hidden) {
-      charts.speed.resize();
+    Object.keys(charts).forEach(function (name) {
+      var pane = document.getElementById('pane-' + name);
+      if (charts[name] && pane && !pane.hidden) {
+        charts[name].resize();
+      }
+    });
+  }
+
+  function elapsedSec(point, index) {
+    var first = state.points[0];
+    if (!first) {
+      return index;
     }
-    if (charts.altitude && altPane && !altPane.hidden) {
-      charts.altitude.resize();
+    if (point.cts != null && first.cts != null) {
+      return (point.cts - first.cts) / 1000;
     }
+    if (point.t != null && first.t != null) {
+      return (point.t - first.t) / 1000;
+    }
+    return index;
+  }
+
+  function nearestPointIndex(cts) {
+    var points = state.points;
+    if (!points.length || points[0].cts == null || cts == null) {
+      return 0;
+    }
+    var lo = 0;
+    var hi = points.length - 1;
+    while (lo < hi) {
+      var mid = (lo + hi) >> 1;
+      if (points[mid].cts < cts) {
+        lo = mid + 1;
+      } else {
+        hi = mid;
+      }
+    }
+    if (lo > 0 && Math.abs(points[lo - 1].cts - cts) < Math.abs(points[lo].cts - cts)) {
+      return lo - 1;
+    }
+    return lo;
+  }
+
+  function accChartRows() {
+    var rows = [];
+    var acc = state.acc;
+    if (!acc.length) {
+      return rows;
+    }
+    var step = acc.length > 2500 ? Math.ceil(acc.length / 2500) : 1;
+    var i;
+    for (i = 0; i < acc.length; i += step) {
+      rows.push({
+        x: acc[i].cts / 1000,
+        y: acc[i].g,
+        i: nearestPointIndex(acc[i].cts)
+      });
+    }
+    var last = acc[acc.length - 1];
+    if (!rows.length || rows[rows.length - 1].x !== last.cts / 1000) {
+      rows.push({ x: last.cts / 1000, y: last.g, i: nearestPointIndex(last.cts) });
+    }
+    return rows;
   }
 
   function renderCharts() {
@@ -727,19 +780,26 @@
     var imperial = unitMode() === 'imperial';
     var speedSuffix = imperial ? 'mph' : 'km/h';
     var altSuffix = imperial ? 'ft' : 'm';
+    var distSuffix = imperial ? 'mi' : 'km';
     var speedFactor = imperial ? 2.2369362920544 : 3.6;
     var altFactor = imperial ? 3.280839895013123 : 1;
+    var distFactor = imperial ? 1 / 1609.344 : 0.001;
     var speeds = state.smooth;
     var alts = state.points.map(function (point) {
       return point.ele;
     });
+    var dists = state.points.map(function (point) {
+      return point.dist;
+    });
+    var vspeeds = state.points.map(function (point) {
+      return point.vspeed;
+    });
+    var meters = totalDistance(state.points);
+    var elapsed = durationMs(state.points);
 
     if (anyNumber(speeds)) {
-      var maxSpeed = maxOf(speeds);
-      var meters = totalDistance(state.points);
-      var elapsed = durationMs(state.points);
       var average = elapsed ? meters / (elapsed / 1000) : null;
-      setSummary('speed-summary', 'Max ' + formatSpeed(maxSpeed) + ' · average ' + formatSpeed(average));
+      setSummary('speed-summary', 'Max ' + formatSpeed(maxOf(speeds)) + ' · average ' + formatSpeed(average));
       charts.speed = makeChart(
         'chart-speed',
         'Speed',
@@ -773,6 +833,79 @@
       );
     } else {
       setSummary('altitude-summary', 'No altitude in this track.');
+    }
+
+    if (anyNumber(dists)) {
+      setSummary('distance-summary', 'Total ' + formatDistance(meters));
+      charts.distance = makeChart(
+        'chart-distance',
+        'Distance',
+        '#0369a1',
+        'rgba(3, 105, 161, 0.12)',
+        chartRows(function (point) {
+          return point.dist == null ? null : point.dist * distFactor;
+        }),
+        2,
+        distSuffix,
+        true
+      );
+    } else {
+      setSummary('distance-summary', 'No distance in this track.');
+    }
+
+    if (state.points.length > 1 && (state.timed || state.points[0].cts != null)) {
+      setSummary('time-summary', 'Duration ' + formatDuration(elapsed));
+      charts.time = makeChart(
+        'chart-time',
+        'Time',
+        '#115e59',
+        null,
+        chartRows(function (point, index) {
+          return elapsedSec(point, index);
+        }),
+        0,
+        's',
+        true
+      );
+    } else {
+      setSummary('time-summary', 'No time in this track.');
+    }
+
+    if (state.hasVspeed && anyNumber(vspeeds)) {
+      setSummary('verticalSpeed-summary', 'Lowest ' + formatSpeed(minOf(vspeeds)) + ' · highest ' + formatSpeed(maxOf(vspeeds)));
+      charts.verticalSpeed = makeChart(
+        'chart-verticalSpeed',
+        'Vertical speed',
+        '#c2410c',
+        'rgba(194, 65, 12, 0.14)',
+        chartRows(function (point) {
+          return point.vspeed == null ? null : point.vspeed * speedFactor;
+        }),
+        1,
+        speedSuffix,
+        false
+      );
+    } else {
+      setSummary('verticalSpeed-summary', 'No vertical speed in this track.');
+    }
+
+    if (state.hasG && state.acc.length) {
+      var gValues = state.acc.map(function (sample) {
+        return sample.g;
+      });
+      setSummary('gForce-summary', 'Lowest ' + minOf(gValues).toFixed(2) + ' g · highest ' + maxOf(gValues).toFixed(2) + ' g');
+      charts.gForce = makeChart(
+        'chart-gForce',
+        'G-force',
+        '#c2410c',
+        'rgba(194, 65, 12, 0.14)',
+        accChartRows(),
+        2,
+        'g',
+        true
+      );
+    } else {
+      setSummary('gForce-summary', 'No G-force in this track.');
     }
     global.requestAnimationFrame(resizeCharts);
   }
@@ -813,7 +946,7 @@
 
   function paintUnits() {
     var mode = unitMode();
-    var buttons = document.querySelectorAll('#stats-panel [data-units]');
+    var buttons = document.querySelectorAll('[data-units]');
     var i;
     for (i = 0; i < buttons.length; i++) {
       var on = buttons[i].getAttribute('data-units') === mode;
@@ -852,6 +985,11 @@
     renderStats();
     setSummary('speed-summary', 'Speed appears here after a video is opened.');
     setSummary('altitude-summary', 'Altitude appears here after a video is opened.');
+    setSummary('distance-summary', 'Distance appears here after a video is opened.');
+    setSummary('time-summary', 'Time appears here after a video is opened.');
+    setSummary('verticalSpeed-summary', 'Vertical speed appears here after a video is opened.');
+    setSummary('gForce-summary', 'G-force appears here after a video is opened.');
+    paintSeriesAvailability();
   }
 
   function download(filename, mime, text) {
@@ -1133,10 +1271,16 @@
     for (i = 1; i < points.length; i++) {
       points[i].dist = points[i - 1].dist + haversine(points[i - 1], points[i]);
       points[i].vspeed = null;
-      if (points[i].cts == null || points[i - 1].cts == null) {
+      var dtMs = null;
+      if (points[i].cts != null && points[i - 1].cts != null) {
+        dtMs = points[i].cts - points[i - 1].cts;
+      } else if (points[i].t != null && points[i - 1].t != null) {
+        dtMs = points[i].t - points[i - 1].t;
+      }
+      if (dtMs == null) {
         continue;
       }
-      var dt = (points[i].cts - points[i - 1].cts) / 1000;
+      var dt = dtMs / 1000;
       if (dt <= 0.02 || points[i].ele == null || points[i - 1].ele == null) {
         continue;
       }
@@ -1369,7 +1513,7 @@
       pane.appendChild(summary);
       pane.appendChild(wrap);
       if (typeof global.ResizeObserver === 'function') {
-        var chartName = canvasId === 'chart-speed' ? 'speed' : 'altitude';
+        var chartName = canvasId.replace(/^chart-/, '');
         var observer = new global.ResizeObserver(function () {
           if (charts[chartName]) {
             charts[chartName].resize();
@@ -1380,6 +1524,10 @@
     }
     mount('pane-speed', 'chart-speed', 'speed-summary', 'Speed over time', 'Speed appears here after a video is opened.');
     mount('pane-altitude', 'chart-altitude', 'altitude-summary', 'Altitude over time', 'Altitude appears here after a video is opened.');
+    mount('pane-distance', 'chart-distance', 'distance-summary', 'Distance over time', 'Distance appears here after a video is opened.');
+    mount('pane-time', 'chart-time', 'time-summary', 'Time along the track', 'Time appears here after a video is opened.');
+    mount('pane-verticalSpeed', 'chart-verticalSpeed', 'verticalSpeed-summary', 'Vertical speed over time', 'Vertical speed appears here after a video is opened.');
+    mount('pane-gForce', 'chart-gForce', 'gForce-summary', 'G-force over time', 'G-force appears here after a video is opened.');
   }
 
   function mountPanels() {
@@ -1436,7 +1584,7 @@
   }
 
   function bindUi() {
-    var buttons = document.querySelectorAll('#stats-panel [data-units]');
+    var buttons = document.querySelectorAll('[data-units]');
     var i;
     for (i = 0; i < buttons.length; i++) {
       buttons[i].addEventListener('click', function (event) {
@@ -1478,6 +1626,7 @@
       }
       var box = document.getElementById('map-progress');
       if (!box || box.hidden) {
+        setVideoMenu(false);
         return;
       }
       onCancel();
@@ -1492,12 +1641,37 @@
     document.addEventListener('gpstoolset:dock', function () {
       global.requestAnimationFrame(resizeCharts);
     });
-    ['pane-speed', 'pane-altitude'].forEach(function (id) {
-      var pane = document.getElementById(id);
+    ['speed', 'altitude', 'distance', 'time', 'verticalSpeed', 'gForce'].forEach(function (name) {
+      var pane = document.getElementById('pane-' + name);
       if (pane) {
         pane.addEventListener('mouseleave', hideScrub);
       }
     });
+  }
+
+  function setSeriesAvailable(name, on) {
+    var chips = document.querySelectorAll('[data-graph="' + name + '"]');
+    var i;
+    for (i = 0; i < chips.length; i++) {
+      chips[i].setAttribute('data-available', on ? 'true' : 'false');
+      chips[i].hidden = !on;
+    }
+    var tab = document.querySelector('[data-dock-tab="' + name + '"]');
+    if (tab) {
+      tab.setAttribute('data-available', on ? 'true' : 'false');
+    }
+  }
+
+  function paintSeriesAvailability() {
+    setSeriesAvailable('speed', true);
+    setSeriesAvailable('altitude', true);
+    setSeriesAvailable('distance', true);
+    setSeriesAvailable('time', true);
+    setSeriesAvailable('verticalSpeed', !!state.hasVspeed);
+    setSeriesAvailable('gForce', !!state.hasG);
+    if (global.GpsGraphDock && global.GpsGraphDock.refresh) {
+      global.GpsGraphDock.refresh();
+    }
   }
 
   var OVERLAYS = [
@@ -1752,6 +1926,151 @@
     mini.fitted = false;
   }
 
+  function stageBox() {
+    var stage = document.getElementById('video-stage');
+    if (!stage) {
+      return null;
+    }
+    var rect = stage.getBoundingClientRect();
+    if (rect.width < 40 || rect.height < 40) {
+      return null;
+    }
+    return rect;
+  }
+
+  function clampBox(value, min, max) {
+    if (value < min) {
+      return min;
+    }
+    if (value > max) {
+      return max;
+    }
+    return value;
+  }
+
+  function applyMiniFrame() {
+    var frame = document.getElementById('video-minimap-frame');
+    var rect = stageBox();
+    var saved = global.GpsUiState && global.GpsUiState.load().videoMiniMap;
+    if (!frame || !rect || !saved || saved.x == null) {
+      return;
+    }
+    var width = clampBox(saved.w * rect.width, 144, rect.width * 0.86);
+    var height = clampBox(saved.h * rect.height, 128, rect.height * 0.72);
+    var left = clampBox(saved.x * rect.width, 8, Math.max(8, rect.width - width - 8));
+    var top = clampBox(saved.y * rect.height, 8, Math.max(8, rect.height - height - 8));
+    frame.style.left = left + 'px';
+    frame.style.top = top + 'px';
+    frame.style.right = 'auto';
+    frame.style.bottom = 'auto';
+    frame.style.width = width + 'px';
+    frame.style.height = height + 'px';
+  }
+
+  function saveMiniFrame() {
+    var frame = document.getElementById('video-minimap-frame');
+    var rect = stageBox();
+    if (!frame || !rect || !global.GpsUiState) {
+      return;
+    }
+    var box = frame.getBoundingClientRect();
+    global.GpsUiState.update(function (current) {
+      current.videoMiniMap = {
+        x: (box.left - rect.left) / rect.width,
+        y: (box.top - rect.top) / rect.height,
+        w: box.width / rect.width,
+        h: box.height / rect.height
+      };
+    });
+  }
+
+  function bindMiniFrame() {
+    var drag = document.getElementById('video-minimap-drag');
+    var resize = document.getElementById('video-minimap-resize');
+    var frame = document.getElementById('video-minimap-frame');
+    if (!drag || !resize || !frame || drag.getAttribute('data-bound')) {
+      return;
+    }
+    drag.setAttribute('data-bound', 'true');
+
+    function track(handle, onMove) {
+      handle.addEventListener('pointerdown', function (event) {
+        if (event.button != null && event.button !== 0) {
+          return;
+        }
+        var rect = stageBox();
+        var box = frame.getBoundingClientRect();
+        if (!rect) {
+          return;
+        }
+        var startX = event.clientX;
+        var startY = event.clientY;
+        var origin = {
+          left: box.left - rect.left,
+          top: box.top - rect.top,
+          width: box.width,
+          height: box.height
+        };
+        function move(ev) {
+          onMove(ev.clientX - startX, ev.clientY - startY, origin);
+          if (mini.map) {
+            mini.map.invalidateSize();
+          }
+        }
+        function up(ev) {
+          handle.removeEventListener('pointermove', move);
+          handle.removeEventListener('pointerup', up);
+          handle.removeEventListener('pointercancel', up);
+          saveMiniFrame();
+          if (ev && ev.pointerId != null && handle.releasePointerCapture) {
+            try {
+              handle.releasePointerCapture(ev.pointerId);
+            } catch (err) {
+              /* capture may already be gone */
+            }
+          }
+        }
+        if (handle.setPointerCapture) {
+          handle.setPointerCapture(event.pointerId);
+        }
+        handle.addEventListener('pointermove', move);
+        handle.addEventListener('pointerup', up);
+        handle.addEventListener('pointercancel', up);
+        event.preventDefault();
+      });
+    }
+
+    track(drag, function (dx, dy, origin) {
+      var rect = stageBox();
+      if (!rect) {
+        return;
+      }
+      var left = clampBox(origin.left + dx, 8, Math.max(8, rect.width - origin.width - 8));
+      var top = clampBox(origin.top + dy, 8, Math.max(8, rect.height - origin.height - 8));
+      frame.style.left = left + 'px';
+      frame.style.top = top + 'px';
+      frame.style.right = 'auto';
+      frame.style.bottom = 'auto';
+    });
+
+    track(resize, function (dx, dy, origin) {
+      var rect = stageBox();
+      if (!rect) {
+        return;
+      }
+      var width = clampBox(origin.width + dx, 144, rect.width * 0.86);
+      var height = clampBox(origin.height + dy, 128, rect.height * 0.72);
+      var maxLeft = Math.max(8, rect.width - width - 8);
+      var maxTop = Math.max(8, rect.height - height - 8);
+      frame.style.width = width + 'px';
+      frame.style.height = height + 'px';
+      frame.style.left = clampBox(origin.left, 8, maxLeft) + 'px';
+      frame.style.top = clampBox(origin.top, 8, maxTop) + 'px';
+      frame.style.right = 'auto';
+      frame.style.bottom = 'auto';
+    });
+  }
+
   function ensureMiniMap() {
     var el = document.getElementById('video-minimap');
     if (!el || mini.map || !global.L || !global.GpsTiles) {
@@ -1759,8 +2078,12 @@
     }
     mini.map = global.L.map(el, {
       attributionControl: true,
-      zoomControl: true,
-      scrollWheelZoom: true
+      zoomControl: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      boxZoom: false,
+      keyboard: false,
+      touchZoom: true
     });
     global.GpsTiles.createTileLayer(global.L).addTo(mini.map);
     mini.map.setView([20, 0], 2);
@@ -1768,13 +2091,16 @@
   }
 
   function syncMiniMap() {
-    var el = document.getElementById('video-minimap');
+    var el = document.getElementById('video-minimap-frame');
     var app = document.getElementById('map-app');
     if (!el) {
       return;
     }
     var on = overlayOn('miniMap') && app && app.classList.contains('is-video');
     el.hidden = !on;
+    if (on) {
+      applyMiniFrame();
+    }
     if (!on) {
       return;
     }
@@ -1984,6 +2310,7 @@
   }
 
   function onTrackReady() {
+    paintSeriesAvailability();
     paintOverlayToggles();
     drawMiniTrack();
     if (!state.videoUrl) {
@@ -2044,6 +2371,17 @@
     }
   }
 
+  function setVideoMenu(open) {
+    var menu = document.getElementById('video-menu');
+    var button = document.getElementById('video-menu-btn');
+    if (!menu || !button) {
+      return;
+    }
+    menu.hidden = !open;
+    button.classList.toggle('is-active', open);
+    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
   function mountVideo() {
     var host = document.getElementById('topbar-tools');
     var toggles = document.getElementById('video-toggles');
@@ -2096,6 +2434,29 @@
       metrics.appendChild(chip);
     }
     paintOverlayToggles();
+    bindMiniFrame();
+
+    var menuBtn = document.getElementById('video-menu-btn');
+    if (menuBtn) {
+      menuBtn.addEventListener('click', function () {
+        var menu = document.getElementById('video-menu');
+        setVideoMenu(!menu || menu.hidden);
+      });
+    }
+    document.addEventListener('click', function (event) {
+      var menu = document.getElementById('video-menu');
+      var wrap = document.querySelector('.video-menu-wrap');
+      if (!menu || menu.hidden || !wrap || wrap.contains(event.target)) {
+        return;
+      }
+      setVideoMenu(false);
+    });
+    global.addEventListener('resize', function () {
+      applyMiniFrame();
+      if (mini.map) {
+        mini.map.invalidateSize();
+      }
+    });
 
     var fs = document.getElementById('video-fullscreen');
     if (fs) {

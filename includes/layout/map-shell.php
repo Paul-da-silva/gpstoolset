@@ -46,9 +46,19 @@ require __DIR__ . '/topbar.php';
         <button type="button" class="chip" id="chip-open" data-file-pick>Open file</button>
         <span class="chip chip-static" id="file-name" hidden></span>
         <button type="button" class="chip" id="chip-stats" aria-pressed="false" aria-expanded="false" aria-controls="stats-panel">Stats</button>
-        <button type="button" class="chip" id="chip-speed" data-graph="speed" aria-pressed="false">Speed</button>
-        <button type="button" class="chip" id="chip-altitude" data-graph="altitude" aria-pressed="false">Altitude</button>
+        <button type="button" class="chip" id="chip-graphs" aria-pressed="false" aria-expanded="false" aria-controls="graphs-panel">Graphs</button>
         <button type="button" class="chip" id="chip-export" aria-pressed="false" aria-expanded="false" aria-controls="export-panel">Export</button>
+      </div>
+      <div id="graphs-panel" class="map-popover" hidden>
+        <p class="popover-kicker">Graphs</p>
+        <div class="graph-menu" role="group" aria-label="Graphs">
+          <button type="button" class="chip" data-graph="speed" aria-pressed="false">Speed</button>
+          <button type="button" class="chip" data-graph="altitude" aria-pressed="false">Altitude</button>
+          <button type="button" class="chip" data-graph="distance" aria-pressed="false">Distance</button>
+          <button type="button" class="chip" data-graph="time" aria-pressed="false">Time</button>
+          <button type="button" class="chip" data-graph="verticalSpeed" data-available="false" aria-pressed="false" hidden>Vertical speed</button>
+          <button type="button" class="chip" data-graph="gForce" data-available="false" aria-pressed="false" hidden>G-force</button>
+        </div>
       </div>
       <div id="stats-panel" class="map-popover" hidden>
         <p class="popover-kicker">Stats</p>
@@ -89,11 +99,26 @@ require __DIR__ . '/topbar.php';
   <div id="video-stage" class="video-stage" hidden>
     <video id="gopro-video" class="video-player" playsinline controls controlsList="nofullscreen" preload="metadata" aria-label="Video from this device"></video>
     <div class="video-overlays">
-      <p id="video-wait" class="video-wait" hidden>Waiting for GPS fix</p>
       <div id="video-metrics" class="video-metrics" aria-live="polite"></div>
-      <div id="video-minimap" class="video-minimap" role="region" aria-label="Track on a map" hidden></div>
+      <div id="video-minimap-frame" class="video-minimap-frame" hidden>
+        <div id="video-minimap-drag" class="video-minimap-drag">Drag</div>
+        <div class="video-minimap-body">
+          <div id="video-minimap" class="video-minimap" role="region" aria-label="Track on a map"></div>
+          <p id="video-wait" class="video-wait" hidden>Waiting for GPS fix</p>
+        </div>
+        <button type="button" id="video-minimap-resize" class="video-minimap-resize" aria-label="Resize map"></button>
+      </div>
       <div class="video-toolbar">
-        <div id="video-toggles" class="video-toggles" role="group" aria-label="Video overlays"></div>
+        <div class="video-menu-wrap">
+          <button type="button" class="chip" id="video-menu-btn" aria-expanded="false" aria-controls="video-menu">Display</button>
+          <div id="video-menu" class="video-menu" hidden>
+            <div class="unit-switch" role="group" aria-label="Units">
+              <button type="button" class="chip" data-units="metric" aria-pressed="true">Metric</button>
+              <button type="button" class="chip" data-units="imperial" aria-pressed="false">Imperial</button>
+            </div>
+            <div id="video-toggles" class="video-toggles" role="group" aria-label="Video overlays"></div>
+          </div>
+        </div>
         <button type="button" class="chip" id="video-fullscreen">Fullscreen</button>
       </div>
     </div>
@@ -115,6 +140,10 @@ require __DIR__ . '/topbar.php';
     <div class="dock-tabs" role="tablist" aria-label="Graph">
       <button type="button" class="chip" role="tab" data-dock-tab="speed" aria-controls="pane-speed" aria-pressed="false">Speed</button>
       <button type="button" class="chip" role="tab" data-dock-tab="altitude" aria-controls="pane-altitude" aria-pressed="false">Altitude</button>
+      <button type="button" class="chip" role="tab" data-dock-tab="distance" aria-controls="pane-distance" aria-pressed="false">Distance</button>
+      <button type="button" class="chip" role="tab" data-dock-tab="time" aria-controls="pane-time" aria-pressed="false">Time</button>
+      <button type="button" class="chip" role="tab" data-dock-tab="verticalSpeed" aria-controls="pane-verticalSpeed" aria-pressed="false">Vertical speed</button>
+      <button type="button" class="chip" role="tab" data-dock-tab="gForce" aria-controls="pane-gForce" aria-pressed="false">G-force</button>
     </div>
     <div class="dock-panes">
       <div id="pane-speed" class="dock-pane" data-pane="speed" role="tabpanel" hidden>
@@ -122,6 +151,18 @@ require __DIR__ . '/topbar.php';
       </div>
       <div id="pane-altitude" class="dock-pane" data-pane="altitude" role="tabpanel" hidden>
         <p class="dock-placeholder">Altitude graph will appear here.</p>
+      </div>
+      <div id="pane-distance" class="dock-pane" data-pane="distance" role="tabpanel" hidden>
+        <p class="dock-placeholder">Distance graph will appear here.</p>
+      </div>
+      <div id="pane-time" class="dock-pane" data-pane="time" role="tabpanel" hidden>
+        <p class="dock-placeholder">Time graph will appear here.</p>
+      </div>
+      <div id="pane-verticalSpeed" class="dock-pane" data-pane="verticalSpeed" role="tabpanel" hidden>
+        <p class="dock-placeholder">Vertical speed graph will appear here.</p>
+      </div>
+      <div id="pane-gForce" class="dock-pane" data-pane="gForce" role="tabpanel" hidden>
+        <p class="dock-placeholder">G-force graph will appear here.</p>
       </div>
     </div>
   </section>

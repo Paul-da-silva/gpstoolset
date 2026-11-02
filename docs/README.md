@@ -24,4 +24,5 @@ Local: http://gpstoolset.lan/ → `public/` · Prod: https://gpstoolset.com
 - OSM tiles only via the central tile module; **attribution on the map only** (no © OSM in footer; no “Report a map issue”)
 - Never mention FlySight; never “Telemetry Extractor”; GoPro/DJI = compatibility wording only
 - Brand-in-URL exception: **`/gopro-gps-extract`**
+- **Git:** never commit/push/amend — leave changes uncommitted; Paul commits
 - Cursor rules: `.cursor/rules/`

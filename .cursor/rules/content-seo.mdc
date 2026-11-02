@@ -8,6 +8,7 @@ alwaysApply: false
 
 ## Never
 
+- `git commit` / `git push` / amend / stage-and-commit (leave changes uncommitted; Paul commits)
 - Email addresses or `mailto:` links
 - A contact page or “Contact” nav/footer links
 - Privacy/About links outside the **footer**

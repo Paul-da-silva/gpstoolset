@@ -79,8 +79,14 @@ Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side par
 - Add/keep sitemap entry when shipping a new URL
 - Clean URLs via `.htaccess`
 
+## Git (hard rule — Paul)
+
+- **Never** `git commit`, `git push`, `git amend`, or stage-and-commit.
+- Leave all changes **uncommitted** for Paul. He alone commits.
+- Do not create commits “to wrap up” a prompt.
+
 ## Workflow
 
 - Verify at http://gpstoolset.lan/
-- Commit after each prompt / logical step
+- Leave changes uncommitted; Paul commits
 - Do not edit `/etc/apache2` unless Paul asks

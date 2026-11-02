@@ -4,7 +4,7 @@
 **Repo:** `/var/www/gpstoolset` · **Local:** http://gpstoolset.lan/ → `public/`  
 **Server:** Apache 2.4.58 · PHP 8.4
 
-Run **one prompt at a time**. Commit after each.
+Run **one prompt at a time**. Leave changes **uncommitted**; Paul commits.
 
 ### Hard rules (Paul — apply to every prompt)
 - **No email address and no `mailto:`** anywhere on the site.
@@ -13,11 +13,12 @@ Run **one prompt at a time**. Commit after each.
 - **Privacy / About links:** footer only (not topbar, not homepage mid-links).
 - **OSM:** attribution **on the map only** (Leaflet control via central tile module). **No** “© OpenStreetMap contributors” in the footer. **No** “Report a map issue” anywhere (Paul).
 - Brand-in-URL exception: **`/gopro-gps-extract`** only (not bare `/gopro`).
+- **Git:** never commit, push, amend, or stage-and-commit. Leave changes uncommitted; **Paul commits**.
 
 ---
 
 ## P1 — Foundation ✅ done
-## P1b — Cleanup ✅ done (env-aware base_url, initial commit, border correction)
+## P1b — Cleanup ✅ done (env-aware base_url, border correction; Paul handled git)
 ## P2 — Map shell ✅ done
 ## P3 — /gopro port ✅ done (URL superseded by P4 → `/gopro-gps-extract`)
 
@@ -26,7 +27,7 @@ Run **one prompt at a time**. Commit after each.
 ## P4 — Chrome cleanup + /gopro-gps-extract + video overlay view
 
 ```
-Continue in /var/www/gpstoolset. Keep .cursor/rules (no email/mailto, no contact page, thin borders OK, no heavy coloured one-sided accent borders, central tile module only, ads only via partial and never on map/viewer pages). Do not edit /var/www/skylog. Commit when done.
+Continue in /var/www/gpstoolset. Keep .cursor/rules (no email/mailto, no contact page, thin borders OK, no heavy coloured one-sided accent borders, central tile module only, ads only via partial and never on map/viewer pages). Do not edit /var/www/skylog. Leave changes uncommitted; Paul commits.
 
 Real files today (use/extend these):
 - public/index.php — home has Privacy/About in .home-links (REMOVE those links)

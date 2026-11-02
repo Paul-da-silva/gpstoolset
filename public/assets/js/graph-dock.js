@@ -44,8 +44,38 @@
     return n;
   }
 
+  function isAvailable(name) {
+    var chip = document.querySelector('[data-graph="' + name + '"]');
+    if (chip && chip.getAttribute('data-available') === 'false') {
+      return false;
+    }
+    return !!(state.graphs[name]);
+  }
+
+  function graphNames() {
+    return Object.keys(state.graphs);
+  }
+
   function anyOpen() {
-    return !!(state.graphs.speed.open || state.graphs.altitude.open);
+    var names = graphNames();
+    var i;
+    for (i = 0; i < names.length; i++) {
+      if (state.graphs[names[i]].open && isAvailable(names[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function firstOpen() {
+    var names = graphNames();
+    var i;
+    for (i = 0; i < names.length; i++) {
+      if (state.graphs[names[i]].open && isAvailable(names[i])) {
+        return names[i];
+      }
+    }
+    return 'speed';
   }
 
   function notify() {
@@ -54,11 +84,11 @@
 
   function apply() {
     var open = anyOpen();
-    if (state.dock.tab !== 'speed' && state.dock.tab !== 'altitude') {
+    if (!state.graphs[state.dock.tab]) {
       state.dock.tab = 'speed';
     }
-    if (open && !state.graphs[state.dock.tab].open) {
-      state.dock.tab = state.graphs.speed.open ? 'speed' : 'altitude';
+    if (open && (!state.graphs[state.dock.tab].open || !isAvailable(state.dock.tab))) {
+      state.dock.tab = firstOpen();
     }
 
     if (!open) {
@@ -73,8 +103,10 @@
     var tabs = dock.querySelectorAll('[data-dock-tab]');
     for (var i = 0; i < tabs.length; i++) {
       var name = tabs[i].getAttribute('data-dock-tab');
-      var active = open && state.dock.tab === name;
-      tabs[i].hidden = !state.graphs[name].open;
+      var graph = state.graphs[name];
+      var shown = !!(open && graph && graph.open && isAvailable(name));
+      var active = shown && state.dock.tab === name;
+      tabs[i].hidden = !shown;
       tabs[i].classList.toggle('is-active', active);
       tabs[i].setAttribute('aria-pressed', active ? 'true' : 'false');
       tabs[i].setAttribute('aria-selected', active ? 'true' : 'false');
@@ -83,7 +115,8 @@
     var panes = dock.querySelectorAll('[data-pane]');
     for (var p = 0; p < panes.length; p++) {
       var paneName = panes[p].getAttribute('data-pane');
-      panes[p].hidden = !(open && state.dock.tab === paneName);
+      var paneGraph = state.graphs[paneName];
+      panes[p].hidden = !(open && paneGraph && paneGraph.open && isAvailable(paneName) && state.dock.tab === paneName);
     }
 
     var chips = document.querySelectorAll('[data-graph]');
@@ -108,7 +141,7 @@
   }
 
   function toggle(name) {
-    if (!state.graphs[name]) {
+    if (!state.graphs[name] || !isAvailable(name)) {
       return;
     }
     var graph = state.graphs[name];
@@ -122,7 +155,7 @@
   }
 
   function setTab(name) {
-    if (!state.graphs[name]) {
+    if (!state.graphs[name] || !isAvailable(name)) {
       return;
     }
     state.graphs[name].open = true;
@@ -235,9 +268,18 @@
     apply();
   }
 
+  function refresh() {
+    if (!dock || !global.GpsUiState) {
+      return;
+    }
+    state = global.GpsUiState.load();
+    apply();
+  }
+
   global.GpsGraphDock = {
     init: init,
     toggle: toggle,
-    setTab: setTab
+    setTab: setTab,
+    refresh: refresh
   };
 })(window);

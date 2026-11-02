@@ -174,6 +174,7 @@
       return map;
     }
     bindPopover('chip-stats', 'stats-panel', 'statsOpen');
+    bindPopover('chip-graphs', 'graphs-panel', 'graphsOpen');
     bindPopover('chip-export', 'export-panel', null);
     bindSample();
     if (global.GpsGraphDock) {

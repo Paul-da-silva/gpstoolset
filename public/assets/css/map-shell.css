@@ -319,6 +319,31 @@ body.is-map .leaflet-control-attribution a {
   margin-top: 0.35rem;
 }
 
+.graph-menu,
+.video-toggles {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+}
+
+.graph-menu {
+  margin-top: 0.7rem;
+}
+
+.graph-menu .chip,
+.video-toggles .chip {
+  width: 100%;
+  text-align: left;
+}
+
+#graphs-panel,
+.video-menu {
+  width: min(16rem, calc(100vw - 1.5rem));
+  max-height: min(70vh, 28rem);
+  overflow: auto;
+}
+
 .popover-kicker {
   font-weight: 700;
 }
@@ -332,7 +357,8 @@ body.is-map .leaflet-control-attribution a {
 .chip[hidden],
 .video-stage[hidden],
 .video-wait[hidden],
-.video-minimap[hidden],
+.video-minimap-frame[hidden],
+.video-menu[hidden],
 .metric[hidden],
 #tool-preamble[hidden] {
   display: none;
@@ -718,16 +744,19 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
 
 .video-wait {
   position: absolute;
-  left: 50%;
-  top: 42%;
-  transform: translate(-50%, -50%);
-  max-width: calc(100% - 2rem);
+  z-index: 500;
+  left: 0.45rem;
+  right: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
   margin: 0;
-  padding: 0.7rem 1rem;
-  border-radius: 999px;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent);
   color: var(--text);
+  font-size: 0.82rem;
   font-weight: 700;
+  line-height: 1.3;
   text-align: center;
   pointer-events: none;
 }
@@ -768,55 +797,122 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   line-height: 1.2;
 }
 
-.video-minimap {
+.video-minimap-frame {
   position: absolute;
   left: 0.75rem;
   bottom: calc(3.4rem + env(safe-area-inset-bottom, 0px));
   width: min(16rem, 46vw);
-  height: min(11rem, 30vh);
+  height: min(13rem, 34vh);
+  min-width: 9rem;
+  min-height: 8rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--line);
-  pointer-events: auto;
   background: var(--bg);
+  pointer-events: auto;
 }
 
+.video-minimap-drag {
+  flex: 0 0 2.75rem;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  background: var(--tint);
+  color: var(--text);
+  font-weight: 700;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.video-minimap-drag:active {
+  cursor: grabbing;
+}
+
+.video-minimap-body {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.video-minimap,
 .video-minimap .leaflet-container {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   font-family: var(--font-sans);
   background: var(--bg);
 }
 
-.video-minimap .leaflet-bar a,
-.video-minimap .leaflet-touch .leaflet-bar a {
-  width: 1.75rem;
-  height: 1.75rem;
-  line-height: 1.75rem;
-  margin-bottom: 0.2rem;
+.video-minimap .leaflet-control-attribution {
+  margin-right: 2.2rem !important;
+  max-width: calc(100% - 2.6rem);
+}
+
+.video-minimap-resize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 600;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: nwse-resize;
+  touch-action: none;
+}
+
+.video-minimap-resize::before {
+  content: "";
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-right: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
 }
 
 .video-toolbar {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
+  z-index: 4;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.45rem;
-  max-width: min(22rem, calc(100% - 1.5rem));
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.4rem;
   pointer-events: auto;
 }
 
-.video-toggles {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0.35rem;
+.video-menu-wrap {
+  position: relative;
 }
 
-.video-toggles .chip,
-#video-fullscreen {
+.video-menu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: var(--tint);
+}
+
+.video-menu .unit-switch .chip {
+  flex: 1 1 auto;
+}
+
+#video-fullscreen,
+.video-menu-wrap > .chip {
   min-height: 2.75rem;
 }
 
@@ -831,29 +927,15 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   .video-toolbar {
     top: 0.5rem;
     right: 0.5rem;
-    left: 0.5rem;
-    max-width: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-  }
-
-  .video-toggles {
-    justify-content: flex-start;
   }
 
   .video-metrics {
-    top: auto;
-    left: 0.5rem;
-    bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
-    max-width: calc(100% - 8.75rem);
+    max-width: calc(100% - 11rem);
   }
 
-  .video-minimap {
-    left: auto;
-    right: 0.5rem;
-    width: 7.75rem;
-    height: 7.75rem;
+  .video-minimap-frame {
+    width: min(12rem, 62vw);
+    height: min(11rem, 32vh);
   }
 
   .metric {
