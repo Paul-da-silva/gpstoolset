@@ -1888,9 +1888,9 @@
   }
 
   function showViewSwitch(on) {
-    var host = document.getElementById('topbar-tools');
-    if (host) {
-      host.hidden = !on;
+    var switcher = document.getElementById('view-switch');
+    if (switcher) {
+      switcher.hidden = !on;
     }
   }
 
@@ -2052,13 +2052,12 @@
   }
 
   function bindMiniFrame() {
-    var drag = document.getElementById('video-minimap-drag');
     var resize = document.getElementById('video-minimap-resize');
     var frame = document.getElementById('video-minimap-frame');
-    if (!drag || !resize || !frame || drag.getAttribute('data-bound')) {
+    if (!resize || !frame || resize.getAttribute('data-bound')) {
       return;
     }
-    drag.setAttribute('data-bound', 'true');
+    resize.setAttribute('data-bound', 'true');
 
     function track(handle, onMove) {
       handle.addEventListener('pointerdown', function (event) {
@@ -2106,19 +2105,6 @@
         event.preventDefault();
       });
     }
-
-    track(drag, function (dx, dy, origin) {
-      var rect = stageBox();
-      if (!rect) {
-        return;
-      }
-      var left = clampBox(origin.left + dx, 8, Math.max(8, rect.width - origin.width - 8));
-      var top = clampBox(origin.top + dy, 8, Math.max(8, rect.height - origin.height - 8));
-      frame.style.left = left + 'px';
-      frame.style.top = top + 'px';
-      frame.style.right = 'auto';
-      frame.style.bottom = 'auto';
-    });
 
     track(resize, function (dx, dy, origin) {
       var rect = stageBox();
@@ -2480,18 +2466,14 @@
   }
 
   function mountVideo() {
-    var host = document.getElementById('topbar-tools');
+    var switcher = document.getElementById('view-switch');
     var toggles = document.getElementById('video-toggles');
     var metrics = document.getElementById('video-metrics');
     var video = videoEl();
-    if (!host || !toggles || !metrics || !video || host.querySelector('#view-switch')) {
+    if (!switcher || !toggles || !metrics || !video || switcher.getAttribute('data-bound')) {
       return;
     }
-    host.innerHTML =
-      '<div id="view-switch" class="view-switch" role="group" aria-label="View">' +
-      '<button type="button" id="view-map" aria-pressed="true">Map</button>' +
-      '<button type="button" id="view-video" aria-pressed="false">Video</button>' +
-      '</div>';
+    switcher.setAttribute('data-bound', 'true');
     document.getElementById('view-map').addEventListener('click', function () {
       applyView('map', true);
     });

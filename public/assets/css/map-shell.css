@@ -33,12 +33,29 @@ body.is-map .topbar-inner {
 }
 
 .view-switch {
+  position: absolute;
+  z-index: 6;
+  top: 0.75rem;
+  left: 0.75rem;
   display: inline-flex;
   align-items: center;
   padding: 0.15rem;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--surface);
+  pointer-events: auto;
+}
+
+.view-switch[hidden] {
+  display: none;
+}
+
+.map-app:has(#view-switch:not([hidden])) .leaflet-top.leaflet-left {
+  top: 4.5rem;
+}
+
+.map-app:has(#view-switch:not([hidden])) .video-metrics:not(.is-column) {
+  left: 12.5rem;
 }
 
 .view-switch button {
@@ -85,6 +102,7 @@ body.is-map .leaflet-container .leaflet-control-attribution {
 }
 
 .map-app {
+  position: relative;
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
@@ -528,8 +546,12 @@ body.is-resizing #map {
 
 .dock-summary {
   margin: 0 0 0.35rem;
+  min-height: 1.4em;
   font-size: 0.875rem;
   line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dock-chart {
@@ -839,23 +861,6 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   pointer-events: auto;
 }
 
-.video-minimap-drag {
-  flex: 0 0 2.75rem;
-  display: flex;
-  align-items: center;
-  padding: 0 0.75rem;
-  background: var(--tint);
-  color: var(--text);
-  font-weight: 700;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-}
-
-.video-minimap-drag:active {
-  cursor: grabbing;
-}
-
 .video-minimap-body {
   position: relative;
   flex: 1 1 auto;
@@ -951,6 +956,16 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   .video-toolbar {
     top: 0.5rem;
     right: 0.5rem;
+  }
+
+  .view-switch {
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+
+  .map-app:has(#view-switch:not([hidden])) .video-metrics:not(.is-column) {
+    top: 3.6rem;
+    left: 0.5rem;
   }
 
   .video-metrics {

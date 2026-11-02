@@ -35,7 +35,7 @@ $faq = [
     ],
     [
         'q' => 'Can I watch the clip with the map?',
-        'a' => 'Yes. After the track loads, choose Video in the top bar. The clip plays from your device, with a small map and the numbers you leave switched on. Until the first good GPS sample, the page says it is waiting for a fix.',
+        'a' => 'Yes. After the track loads, choose Video on the map. The clip plays from your device, with a small map and the numbers you leave switched on. Until the first good GPS sample, the page says it is waiting for a fix.',
     ],
     [
         'q' => 'Will this work on a phone?',
@@ -55,7 +55,7 @@ require APP_ROOT . '/includes/layout/topbar.php';
     <div class="tool-wrap tool-hero-grid">
       <div>
         <h1>GoPro GPS Extractor</h1>
-        <p class="tool-lead">Extract GPS from a GoPro video and download a GPX file. Your video stays on your device.</p>
+        <p class="tool-lead">Extract GPS from a GoPro video and download a GPX, CSV, or KML file. Your video stays on your device.</p>
         <ul class="tool-pills">
           <li>MP4 or LRV</li>
           <li>Map view</li>

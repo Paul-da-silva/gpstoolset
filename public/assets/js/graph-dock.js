@@ -82,6 +82,17 @@
     document.dispatchEvent(new CustomEvent('gpstoolset:dock'));
   }
 
+  function shareHeight() {
+    var height = clamp(state.dock.height);
+    var names = graphNames();
+    var i;
+    state.dock.height = height;
+    for (i = 0; i < names.length; i++) {
+      state.graphs[names[i]].height = height;
+    }
+    return height;
+  }
+
   function apply() {
     var open = anyOpen();
     if (!state.graphs[state.dock.tab]) {
@@ -94,10 +105,8 @@
     if (!open) {
       dock.hidden = true;
     } else {
-      state.dock.height = clamp(state.dock.height);
-      state.graphs[state.dock.tab].height = state.dock.height;
       dock.hidden = false;
-      dock.style.height = state.dock.height + 'px';
+      dock.style.height = shareHeight() + 'px';
     }
 
     var tabs = dock.querySelectorAll('[data-dock-tab]');
@@ -148,7 +157,6 @@
     graph.open = !graph.open;
     if (graph.open) {
       state.dock.tab = name;
-      state.dock.height = clamp(graph.height || state.dock.height);
     }
     apply();
     persist();
@@ -160,7 +168,6 @@
     }
     state.graphs[name].open = true;
     state.dock.tab = name;
-    state.dock.height = clamp(state.graphs[name].height || state.dock.height);
     apply();
     persist();
   }
@@ -185,7 +192,6 @@
     }
     var next = clamp(startH + (startY - event.clientY));
     state.dock.height = next;
-    state.graphs[state.dock.tab].height = next;
     dock.style.height = next + 'px';
     handle.setAttribute('aria-valuenow', String(next));
     notify();
@@ -204,6 +210,7 @@
         /* capture may already be gone */
       }
     }
+    shareHeight();
     persist();
   }
 
@@ -217,7 +224,6 @@
       return;
     }
     event.preventDefault();
-    state.graphs[state.dock.tab].height = state.dock.height;
     apply();
     persist();
   }
@@ -260,7 +266,6 @@
         return;
       }
       state.dock.height = next;
-      state.graphs[state.dock.tab].height = next;
       apply();
       persist();
     });

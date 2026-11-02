@@ -27,6 +27,12 @@ $mapAppHidden = !empty($mapAppHidden);
 $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
 ?>
 <div class="map-app" id="map-app"<?php if ($mapAppHidden) : ?> hidden<?php endif; ?>>
+<?php if ($mapShellVideo) : ?>
+  <div id="view-switch" class="view-switch" role="group" aria-label="View" hidden>
+    <button type="button" id="view-map" aria-pressed="true">Map</button>
+    <button type="button" id="view-video" aria-pressed="false">Video</button>
+  </div>
+<?php endif; ?>
   <div class="map-stage" id="map-stage">
     <div id="map" role="region" aria-label="Map"></div>
 
@@ -92,7 +98,6 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
     <div class="video-overlays">
       <div id="video-metrics" class="video-metrics" aria-live="polite"></div>
       <div id="video-minimap-frame" class="video-minimap-frame" hidden>
-        <div id="video-minimap-drag" class="video-minimap-drag">Drag</div>
         <div class="video-minimap-body">
           <div id="video-minimap" class="video-minimap" role="region" aria-label="Track on a map"></div>
           <p id="video-wait" class="video-wait" hidden>Waiting for GPS fix</p>
