@@ -5,15 +5,17 @@ require dirname(__DIR__) . '/includes/bootstrap.php';
 
 $page = [
     'title' => 'GoPro GPS Extractor — Free, No Upload',
-    'description' => 'Read the GPS track from a GoPro Hero video in your browser. Nothing is uploaded. GPS Toolset charts speed and altitude, then saves GPX, CSV, or KML on your device.',
+    'description' => 'Extract GPS from a GoPro video in your browser. View the GoPro GPS data on a map, export GPX, CSV, or KML, and play the clip with a live map. Nothing is uploaded.',
     'isMapPage' => true,
 ];
 
-$mapShellHeading = 'GPS from a GoPro video';
+$mapShellHeading = 'GoPro GPS extractor';
 $mapShellLead = 'Drop a video or choose one. Nothing is uploaded.';
-$mapShellNote = 'Works with GoPro Hero video that recorded GPS (GPMF). The video stays in this browser.';
+$mapShellNote = 'Works with GoPro HERO video that recorded GPS (GPMF). The file stays in this browser.';
 $mapShellDropText = 'Drop a GoPro video. Nothing is uploaded.';
 $mapShellAccept = '.mp4,.lrv,video/*';
+$mapShellVideo = true;
+$mapShellPreamble = APP_ROOT . '/includes/partials/gopro-preamble.php';
 
 require APP_ROOT . '/includes/layout/map-shell.php';
 ?>

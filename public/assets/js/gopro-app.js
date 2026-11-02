@@ -19,8 +19,16 @@
     smooth: [],
     idx: [],
     name: 'track',
-    timed: false
+    timed: false,
+    acc: [],
+    hasVspeed: false,
+    hasG: false,
+    videoUrl: null
   };
+  var mini = { map: null, halo: null, line: null, marker: null, fitted: false };
+  var rafId = 0;
+  var loopOn = false;
+  var resumePlay = false;
 
   function pad(n) {
     return n < 10 ? '0' + n : String(n);
@@ -122,19 +130,30 @@
       !(lat === 0 && lon === 0);
   }
 
-  function timeOf(sample) {
-    if (!sample) {
+  function gpsTimeOf(sample) {
+    if (!sample || sample.date == null) {
       return null;
     }
-    if (sample.date != null) {
-      var date = sample.date instanceof Date ? sample.date : new Date(sample.date);
-      var ms = date.getTime();
-      if (isFinite(ms)) {
-        return ms;
-      }
+    var date = sample.date instanceof Date ? sample.date : new Date(sample.date);
+    var ms = date.getTime();
+    return isFinite(ms) ? ms : null;
+  }
+
+  /* cts from extractGpmfFast / GoProTelemetry is milliseconds from video start, not the GPS clock. */
+  function ctsMs(sample) {
+    if (!sample || typeof sample.cts !== 'number' || !isFinite(sample.cts)) {
+      return null;
     }
-    if (typeof sample.cts === 'number' && isFinite(sample.cts)) {
-      return sample.cts;
+    return sample.cts;
+  }
+
+  function sampleFix(sample, value) {
+    if (value && value.length >= 9 && isFinite(Number(value[8]))) {
+      return Number(value[8]);
+    }
+    var sticky = sample && sample.sticky;
+    if (sticky && sticky.GPSF != null && isFinite(Number(sticky.GPSF))) {
+      return Number(sticky.GPSF);
     }
     return null;
   }
@@ -400,6 +419,7 @@
     job += 1;
     hideProgress();
     clearError();
+    releaseVideo();
     if (!state.points.length && global.GpsMapShell) {
       global.GpsMapShell.setEmpty(true);
     }
@@ -822,7 +842,11 @@
     state.idx = [];
     state.name = 'track';
     state.timed = false;
+    state.acc = [];
+    state.hasVspeed = false;
+    state.hasG = false;
     removeLayers();
+    clearMiniTrack();
     destroyCharts();
     setExportEnabled(false);
     renderStats();
@@ -942,6 +966,7 @@
     hideProgress();
     if (!points || !points.length) {
       clearTrack();
+      releaseVideo();
       showError('No GPS track in this file. GPS has to be on in the camera while it records.');
       if (global.GpsMapShell) {
         global.GpsMapShell.setEmpty(true);
@@ -950,6 +975,7 @@
     }
     state.points = points;
     state.name = name;
+    annotatePoints(points);
     state.timed = hasTimes(points);
     state.smooth = median(points.map(function (point) {
       return point.speed;
@@ -968,37 +994,77 @@
     if (global.GpsMapShell) {
       global.GpsMapShell.setEmpty(false);
     }
+    onTrackReady();
   }
 
-  function pointsFromTelemetry(result) {
-    var samples = [];
+  function devicesFrom(result) {
     var devices = [];
     if (Array.isArray(result)) {
-      devices = result;
-    } else if (result && typeof result === 'object') {
+      return result;
+    }
+    if (result && typeof result === 'object') {
       if (result.streams) {
-        devices = [result];
-      } else {
-        var keys = Object.keys(result);
-        var k;
-        for (k = 0; k < keys.length; k++) {
-          var device = result[keys[k]];
-          if (device && typeof device === 'object' && device.streams) {
-            devices.push(device);
-          }
+        return [result];
+      }
+      var keys = Object.keys(result);
+      var k;
+      for (k = 0; k < keys.length; k++) {
+        var device = result[keys[k]];
+        if (device && typeof device === 'object' && device.streams) {
+          devices.push(device);
         }
       }
     }
+    return devices;
+  }
+
+  function byCts(a, b) {
+    var ak = a.cts != null ? a.cts : a.t;
+    var bk = b.cts != null ? b.cts : b.t;
+    if (ak == null && bk == null) {
+      return 0;
+    }
+    if (ak == null) {
+      return 1;
+    }
+    if (bk == null) {
+      return -1;
+    }
+    return ak - bk;
+  }
+
+  function seriesFromTelemetry(result) {
+    var devices = devicesFrom(result);
+    var samples = [];
+    var accRaw = [];
     var d;
     for (d = 0; d < devices.length; d++) {
-      var streams = devices[d].streams;
+      var streams = devices[d].streams || {};
       var stream = streams.GPS9 || streams.GPS5 || streams.GPS;
-      if (!stream || !stream.samples) {
-        continue;
+      if (stream && stream.samples) {
+        var s;
+        for (s = 0; s < stream.samples.length; s++) {
+          samples.push(stream.samples[s]);
+        }
       }
-      var s;
-      for (s = 0; s < stream.samples.length; s++) {
-        samples.push(stream.samples[s]);
+      var acc = streams.ACCL;
+      if (acc && acc.samples) {
+        var a;
+        for (a = 0; a < acc.samples.length; a++) {
+          var accSample = acc.samples[a];
+          var axes = accSample && accSample.value;
+          if (!axes || axes.length < 3) {
+            continue;
+          }
+          var x = Number(axes[0]);
+          var y = Number(axes[1]);
+          var z = Number(axes[2]);
+          var cts = ctsMs(accSample);
+          if (!isFinite(x) || !isFinite(y) || !isFinite(z) || cts == null) {
+            continue;
+          }
+          accRaw.push({ cts: cts, mag: Math.sqrt(x * x + y * y + z * z) });
+        }
       }
     }
     var points = [];
@@ -1007,6 +1073,10 @@
       var sample = samples[i];
       var value = sample && sample.value;
       if (!value || value.length < 2) {
+        continue;
+      }
+      var fix = sampleFix(sample, value);
+      if (fix != null && fix < 2) {
         continue;
       }
       var lat = Number(value[0]);
@@ -1021,23 +1091,64 @@
         lon: lon,
         ele: isFinite(ele) ? ele : null,
         speed: isFinite(speed) && speed >= 0 && speed <= MAX_SPEED ? speed : null,
-        t: timeOf(sample)
+        t: gpsTimeOf(sample),
+        cts: ctsMs(sample)
       });
     }
-    points.sort(function (a, b) {
-      if (a.t == null && b.t == null) {
-        return 0;
-      }
-      if (a.t == null) {
-        return 1;
-      }
-      if (b.t == null) {
-        return -1;
-      }
-      return a.t - b.t;
-    });
+    points.sort(byCts);
     fillMissingSpeed(points);
-    return points;
+    accRaw.sort(byCts);
+    return { points: points, acc: scaleAcc(accRaw) };
+  }
+
+  function scaleAcc(samples) {
+    if (!samples.length) {
+      return [];
+    }
+    var probe = [];
+    var i;
+    for (i = 0; i < samples.length && probe.length < 40; i++) {
+      probe.push(samples[i].mag);
+    }
+    probe.sort(function (a, b) {
+      return a - b;
+    });
+    var mid = probe[Math.floor(probe.length / 2)];
+    var scale = mid > 3 ? 9.80665 : 1;
+    var out = [];
+    for (i = 0; i < samples.length; i++) {
+      out.push({ cts: samples[i].cts, g: samples[i].mag / scale });
+    }
+    return out;
+  }
+
+  function annotatePoints(points) {
+    var i;
+    state.hasVspeed = false;
+    if (!points.length) {
+      return;
+    }
+    points[0].dist = 0;
+    points[0].vspeed = null;
+    for (i = 1; i < points.length; i++) {
+      points[i].dist = points[i - 1].dist + haversine(points[i - 1], points[i]);
+      points[i].vspeed = null;
+      if (points[i].cts == null || points[i - 1].cts == null) {
+        continue;
+      }
+      var dt = (points[i].cts - points[i - 1].cts) / 1000;
+      if (dt <= 0.02 || points[i].ele == null || points[i - 1].ele == null) {
+        continue;
+      }
+      var vs = (points[i].ele - points[i - 1].ele) / dt;
+      if (Math.abs(vs) <= MAX_SPEED) {
+        points[i].vspeed = vs;
+        state.hasVspeed = true;
+      }
+    }
+    if (points.length > 1 && points[0].vspeed == null) {
+      points[0].vspeed = points[1].vspeed;
+    }
   }
 
   function messageFor(err) {
@@ -1154,7 +1265,7 @@
         rawData: extracted.rawData,
         timing: extracted.timing
       }, {
-        stream: ['GPS'],
+        stream: ['GPS', 'ACCL'],
         GPSFix: 2,
         GPSPrecision: 500,
         groupTimes: GROUP_MS,
@@ -1176,8 +1287,10 @@
         return;
       }
       setProgress(99, 'Drawing the track…');
-      var points = pointsFromTelemetry(telemetry);
-      showTrack(id, points, stem(file.name));
+      var series = seriesFromTelemetry(telemetry);
+      state.acc = series.acc;
+      state.hasG = series.acc.length > 0;
+      showTrack(id, series.points, stem(file.name));
     }).catch(function (err) {
       if (id !== job) {
         return;
@@ -1191,6 +1304,7 @@
         return;
       }
       clearTrack();
+      releaseVideo();
       showError(message);
       if (global.GpsMapShell) {
         global.GpsMapShell.setEmpty(true);
@@ -1201,6 +1315,7 @@
   function onPickedFile(file) {
     var id = nextJob();
     clearError();
+    releaseVideo();
     if (!acceptedFile(file)) {
       clearTrack();
       showError('Choose a GoPro video (.mp4 or .lrv).');
@@ -1209,6 +1324,7 @@
       }
       return;
     }
+    attachVideoFile(file);
     clearTrack();
     if (global.GpsMapShell) {
       global.GpsMapShell.setEmpty(false);
@@ -1224,6 +1340,9 @@
   function onSample() {
     var id = nextJob();
     clearError();
+    releaseVideo();
+    state.acc = [];
+    state.hasG = false;
     showName('Sample route');
     showTrack(id, samplePoints(), 'Sample route');
   }
@@ -1335,6 +1454,7 @@
         if (state.points.length) {
           renderCharts();
         }
+        paintVideo();
       });
     }
     var exp = document.getElementById('export-panel');
@@ -1380,12 +1500,644 @@
     });
   }
 
+  var OVERLAYS = [
+    { key: 'miniMap', label: 'Mini map' },
+    { key: 'speed', label: 'Speed' },
+    { key: 'altitude', label: 'Altitude' },
+    { key: 'distance', label: 'Distance' },
+    { key: 'time', label: 'Time' },
+    { key: 'gForce', label: 'G-force', needs: 'hasG' },
+    { key: 'verticalSpeed', label: 'Vertical speed', needs: 'hasVspeed' }
+  ];
+
+  function overlayOn(key) {
+    var saved = global.GpsUiState && global.GpsUiState.load();
+    var overlay = saved && saved.videoOverlay;
+    return !!(overlay && overlay[key]);
+  }
+
+  function lerp(a, b, f) {
+    if (a == null || !isFinite(a)) {
+      return b;
+    }
+    if (b == null || !isFinite(b)) {
+      return a;
+    }
+    return a + (b - a) * f;
+  }
+
+  function lerpLon(a, b, f) {
+    var delta = b - a;
+    if (delta > 180) {
+      delta -= 360;
+    }
+    if (delta < -180) {
+      delta += 360;
+    }
+    var lon = a + delta * f;
+    if (lon > 180) {
+      lon -= 360;
+    }
+    if (lon < -180) {
+      lon += 360;
+    }
+    return lon;
+  }
+
+  function firstAtOrAfter(samples, ms) {
+    var lo = 0;
+    var hi = samples.length - 1;
+    while (lo <= hi) {
+      var mid = (lo + hi) >> 1;
+      if (samples[mid].cts < ms) {
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
+    }
+    return lo;
+  }
+
+  function sampleAt(points, ms) {
+    if (!points.length || points[0].cts == null) {
+      return { waiting: true, timed: false };
+    }
+    if (ms < points[0].cts) {
+      return { waiting: true, timed: true };
+    }
+    var last = points[points.length - 1];
+    if (ms >= last.cts) {
+      return {
+        waiting: false,
+        timed: true,
+        lat: last.lat,
+        lon: last.lon,
+        ele: last.ele,
+        speed: last.speed,
+        dist: last.dist,
+        vspeed: last.vspeed
+      };
+    }
+    var idx = firstAtOrAfter(points, ms);
+    var next = points[idx];
+    var prev = points[idx - 1];
+    if (!prev || !next) {
+      var only = next || prev || last;
+      return {
+        waiting: false,
+        timed: true,
+        lat: only.lat,
+        lon: only.lon,
+        ele: only.ele,
+        speed: only.speed,
+        dist: only.dist,
+        vspeed: only.vspeed
+      };
+    }
+    var span = next.cts - prev.cts;
+    var f = span > 0 ? (ms - prev.cts) / span : 0;
+    return {
+      waiting: false,
+      timed: true,
+      lat: prev.lat + (next.lat - prev.lat) * f,
+      lon: lerpLon(prev.lon, next.lon, f),
+      ele: lerp(prev.ele, next.ele, f),
+      speed: lerp(prev.speed, next.speed, f),
+      dist: lerp(prev.dist, next.dist, f),
+      vspeed: lerp(prev.vspeed, next.vspeed, f)
+    };
+  }
+
+  function gAt(ms) {
+    var acc = state.acc;
+    if (!acc.length || acc[0].cts == null || ms < acc[0].cts) {
+      return null;
+    }
+    var last = acc[acc.length - 1];
+    if (ms >= last.cts) {
+      return last.g;
+    }
+    var idx = firstAtOrAfter(acc, ms);
+    var next = acc[idx];
+    var prev = acc[idx - 1];
+    if (!prev || !next) {
+      return next ? next.g : null;
+    }
+    var span = next.cts - prev.cts;
+    var f = span > 0 ? (ms - prev.cts) / span : 0;
+    return lerp(prev.g, next.g, f);
+  }
+
+  function selfCheckSync() {
+    var pts = [
+      { cts: 2000, lat: 0, lon: 0, ele: 0, speed: 0, dist: 0, vspeed: 0 },
+      { cts: 4000, lat: 2, lon: 4, ele: 10, speed: 8, dist: 100, vspeed: 2 }
+    ];
+    var early = sampleAt(pts, 1000);
+    var mid = sampleAt(pts, 3000);
+    var at = sampleAt(pts, 2000);
+    var end = sampleAt(pts, 9000);
+    var bad = !early.waiting || !early.timed || mid.waiting ||
+      Math.abs(mid.lat - 1) > 1e-9 || Math.abs(mid.lon - 2) > 1e-9 ||
+      Math.abs(mid.ele - 5) > 1e-9 || at.waiting || Math.abs(at.lat) > 1e-9 ||
+      end.waiting || Math.abs(end.lat - 2) > 1e-9;
+    if (bad && global.console) {
+      global.console.error('GPS sync check failed', early, mid, at, end);
+    }
+  }
+
+  function showViewSwitch(on) {
+    var host = document.getElementById('topbar-tools');
+    if (host) {
+      host.hidden = !on;
+    }
+  }
+
+  function paintViewSwitch(videoOn) {
+    var mapBtn = document.getElementById('view-map');
+    var videoBtn = document.getElementById('view-video');
+    if (mapBtn) {
+      mapBtn.setAttribute('aria-pressed', videoOn ? 'false' : 'true');
+    }
+    if (videoBtn) {
+      videoBtn.setAttribute('aria-pressed', videoOn ? 'true' : 'false');
+    }
+  }
+
+  function videoEl() {
+    return document.getElementById('gopro-video');
+  }
+
+  function stopLoop() {
+    loopOn = false;
+    if (rafId) {
+      global.cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  }
+
+  function startLoop() {
+    if (loopOn) {
+      return;
+    }
+    var stage = document.getElementById('video-stage');
+    if (!stage || stage.hidden) {
+      return;
+    }
+    loopOn = true;
+    var tick = function () {
+      if (!loopOn) {
+        return;
+      }
+      paintVideo();
+      rafId = global.requestAnimationFrame(tick);
+    };
+    rafId = global.requestAnimationFrame(tick);
+  }
+
+  function hideMiniMarker() {
+    if (mini.marker && mini.map) {
+      mini.map.removeLayer(mini.marker);
+    }
+    mini.marker = null;
+  }
+
+  function clearMiniTrack() {
+    hideMiniMarker();
+    if (mini.map) {
+      if (mini.halo) {
+        mini.map.removeLayer(mini.halo);
+      }
+      if (mini.line) {
+        mini.map.removeLayer(mini.line);
+      }
+    }
+    mini.halo = null;
+    mini.line = null;
+    mini.fitted = false;
+  }
+
+  function drawMiniTrack() {
+    if (!mini.map || !global.L || !state.points.length) {
+      return;
+    }
+    if (mini.halo) {
+      mini.map.removeLayer(mini.halo);
+      mini.halo = null;
+    }
+    if (mini.line) {
+      mini.map.removeLayer(mini.line);
+      mini.line = null;
+    }
+    var latlngs = displayLatLngs(state.points);
+    if (latlngs.length < 2) {
+      return;
+    }
+    mini.halo = global.L.polyline(latlngs, {
+      color: '#ffffff',
+      weight: 7,
+      opacity: 0.95,
+      lineJoin: 'round',
+      lineCap: 'round',
+      interactive: false
+    }).addTo(mini.map);
+    mini.line = global.L.polyline(latlngs, {
+      color: '#0369a1',
+      weight: 4,
+      opacity: 0.95,
+      lineJoin: 'round',
+      lineCap: 'round',
+      interactive: false
+    }).addTo(mini.map);
+    mini.fitted = false;
+  }
+
+  function ensureMiniMap() {
+    var el = document.getElementById('video-minimap');
+    if (!el || mini.map || !global.L || !global.GpsTiles) {
+      return;
+    }
+    mini.map = global.L.map(el, {
+      attributionControl: true,
+      zoomControl: true,
+      scrollWheelZoom: true
+    });
+    global.GpsTiles.createTileLayer(global.L).addTo(mini.map);
+    mini.map.setView([20, 0], 2);
+    drawMiniTrack();
+  }
+
+  function syncMiniMap() {
+    var el = document.getElementById('video-minimap');
+    var app = document.getElementById('map-app');
+    if (!el) {
+      return;
+    }
+    var on = overlayOn('miniMap') && app && app.classList.contains('is-video');
+    el.hidden = !on;
+    if (!on) {
+      return;
+    }
+    ensureMiniMap();
+    if (!mini.map) {
+      return;
+    }
+    var attempt = 0;
+    var fit = function () {
+      if (!mini.map) {
+        return;
+      }
+      mini.map.invalidateSize();
+      var size = mini.map.getSize();
+      if ((!size || size.x < 20) && attempt < 6) {
+        attempt += 1;
+        global.requestAnimationFrame(fit);
+        return;
+      }
+      if (mini.fitted || !size || size.x < 20) {
+        return;
+      }
+      if (mini.line) {
+        mini.map.fitBounds(mini.line.getBounds(), { padding: [18, 18], maxZoom: 16 });
+        mini.fitted = true;
+      } else if (state.points.length) {
+        mini.map.setView([state.points[0].lat, state.points[0].lon], 15);
+        mini.fitted = true;
+      }
+    };
+    global.requestAnimationFrame(fit);
+  }
+
+  function showMiniMarker(lat, lon) {
+    if (!mini.map || !global.L) {
+      return;
+    }
+    var latlng = [lat, lon];
+    if (!mini.marker) {
+      mini.marker = global.L.circleMarker(latlng, {
+        radius: 7,
+        color: '#ffffff',
+        weight: 3,
+        fillColor: '#c2410c',
+        fillOpacity: 1,
+        interactive: false
+      }).addTo(mini.map);
+    } else {
+      mini.marker.setLatLng(latlng);
+    }
+    var bounds = mini.map.getBounds();
+    if (bounds && bounds.isValid() && !bounds.pad(-0.25).contains(latlng)) {
+      mini.map.panTo(latlng, { animate: false });
+    }
+  }
+
+  function metricText(key, fix, video) {
+    if (key === 'time') {
+      return formatClock(video.currentTime || 0);
+    }
+    if (key === 'gForce') {
+      var g = gAt((video.currentTime || 0) * 1000);
+      return g == null ? '—' : g.toFixed(2) + ' g';
+    }
+    if (!fix || fix.waiting || !fix.timed) {
+      return '—';
+    }
+    if (key === 'speed') {
+      return formatSpeed(fix.speed);
+    }
+    if (key === 'altitude') {
+      return formatAlt(fix.ele);
+    }
+    if (key === 'distance') {
+      return formatDistance(fix.dist);
+    }
+    if (key === 'verticalSpeed') {
+      return formatSpeed(fix.vspeed);
+    }
+    return '—';
+  }
+
+  function paintOverlayToggles() {
+    var i;
+    for (i = 0; i < OVERLAYS.length; i++) {
+      var item = OVERLAYS[i];
+      var button = document.querySelector('#video-toggles [data-overlay="' + item.key + '"]');
+      if (!button) {
+        continue;
+      }
+      var available = !item.needs || !!state[item.needs];
+      button.hidden = !available;
+      var on = available && overlayOn(item.key);
+      button.setAttribute('aria-pressed', on ? 'true' : 'false');
+      button.classList.toggle('is-active', on);
+    }
+  }
+
+  function paintVideo() {
+    var stage = document.getElementById('video-stage');
+    var video = videoEl();
+    if (!stage || stage.hidden || !video) {
+      return;
+    }
+    var ms = (video.currentTime || 0) * 1000;
+    var fix = sampleAt(state.points, ms);
+    var wait = document.getElementById('video-wait');
+    if (wait) {
+      if (!state.points.length || !fix.timed) {
+        wait.hidden = !state.videoUrl;
+        wait.textContent = state.points.length ? 'No video timing on this track.' : 'Waiting for GPS fix';
+      } else if (fix.waiting) {
+        wait.hidden = false;
+        wait.textContent = 'Waiting for GPS fix';
+      } else {
+        wait.hidden = true;
+      }
+    }
+    var i;
+    for (i = 0; i < OVERLAYS.length; i++) {
+      var item = OVERLAYS[i];
+      if (item.key === 'miniMap') {
+        continue;
+      }
+      var chip = document.querySelector('#video-metrics [data-metric="' + item.key + '"]');
+      if (!chip) {
+        continue;
+      }
+      var available = !item.needs || !!state[item.needs];
+      chip.hidden = !available || !overlayOn(item.key);
+      var value = chip.querySelector('.metric-value');
+      if (value) {
+        value.textContent = metricText(item.key, fix, video);
+      }
+    }
+    if (!overlayOn('miniMap') || !mini.map || fix.waiting || !fix.timed) {
+      hideMiniMarker();
+      return;
+    }
+    showMiniMarker(fix.lat, fix.lon);
+  }
+
+  function applyView(mode, persist) {
+    var app = document.getElementById('map-app');
+    var stage = document.getElementById('video-stage');
+    var video = videoEl();
+    if (!app || !stage) {
+      return;
+    }
+    var want = mode === 'video' && !!state.videoUrl;
+    if (!want && video && !video.paused) {
+      resumePlay = true;
+      video.pause();
+    }
+    app.classList.toggle('is-video', want);
+    stage.hidden = !want;
+    paintViewSwitch(want);
+    if (persist && global.GpsUiState) {
+      global.GpsUiState.update(function (current) {
+        current.view = want ? 'video' : 'map';
+      });
+    }
+    if (!want) {
+      stopLoop();
+      if (global.GpsMapShell) {
+        global.GpsMapShell.invalidate();
+      }
+      return;
+    }
+    syncMiniMap();
+    paintVideo();
+    if (video && resumePlay) {
+      resumePlay = false;
+      var pending = video.play();
+      if (pending && typeof pending.catch === 'function') {
+        pending.catch(function () {});
+      }
+    } else if (video && !video.paused) {
+      startLoop();
+    }
+  }
+
+  function releaseVideo() {
+    stopLoop();
+    resumePlay = false;
+    var video = videoEl();
+    if (video) {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    }
+    if (state.videoUrl) {
+      URL.revokeObjectURL(state.videoUrl);
+      state.videoUrl = null;
+    }
+    showViewSwitch(false);
+    applyView('map', false);
+  }
+
+  function attachVideoFile(file) {
+    var video = videoEl();
+    if (!video || !file) {
+      return;
+    }
+    state.videoUrl = URL.createObjectURL(file);
+    video.src = state.videoUrl;
+  }
+
+  function onTrackReady() {
+    paintOverlayToggles();
+    drawMiniTrack();
+    if (!state.videoUrl) {
+      showViewSwitch(false);
+      applyView('map', false);
+      return;
+    }
+    showViewSwitch(true);
+    var saved = global.GpsUiState && global.GpsUiState.load();
+    applyView(saved && saved.view === 'video' ? 'video' : 'map', false);
+  }
+
+  function setOverlay(key, on) {
+    if (global.GpsUiState) {
+      global.GpsUiState.update(function (current) {
+        current.videoOverlay[key] = !!on;
+      });
+    }
+    paintOverlayToggles();
+    if (key === 'miniMap') {
+      syncMiniMap();
+    }
+    paintVideo();
+  }
+
+  function fullscreenTarget() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  function paintFullscreenButton() {
+    var button = document.getElementById('video-fullscreen');
+    var stage = document.getElementById('video-stage');
+    if (!button) {
+      return;
+    }
+    var on = !!(stage && fullscreenTarget() === stage);
+    button.textContent = on ? 'Exit fullscreen' : 'Fullscreen';
+    button.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+
+  function toggleFullscreen() {
+    var stage = document.getElementById('video-stage');
+    if (!stage) {
+      return;
+    }
+    if (fullscreenTarget() === stage) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+      return;
+    }
+    if (stage.requestFullscreen) {
+      stage.requestFullscreen();
+    } else if (stage.webkitRequestFullscreen) {
+      stage.webkitRequestFullscreen();
+    }
+  }
+
+  function mountVideo() {
+    var host = document.getElementById('topbar-tools');
+    var toggles = document.getElementById('video-toggles');
+    var metrics = document.getElementById('video-metrics');
+    var video = videoEl();
+    if (!host || !toggles || !metrics || !video || host.querySelector('#view-switch')) {
+      return;
+    }
+    host.innerHTML =
+      '<div id="view-switch" class="view-switch" role="group" aria-label="View">' +
+      '<button type="button" id="view-map" aria-pressed="true">Map</button>' +
+      '<button type="button" id="view-video" aria-pressed="false">Video</button>' +
+      '</div>';
+    document.getElementById('view-map').addEventListener('click', function () {
+      applyView('map', true);
+    });
+    document.getElementById('view-video').addEventListener('click', function () {
+      if (state.videoUrl) {
+        applyView('video', true);
+      }
+    });
+
+    var i;
+    for (i = 0; i < OVERLAYS.length; i++) {
+      var item = OVERLAYS[i];
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'chip';
+      button.setAttribute('data-overlay', item.key);
+      button.textContent = item.label;
+      button.addEventListener('click', function (event) {
+        var key = event.currentTarget.getAttribute('data-overlay');
+        setOverlay(key, !overlayOn(key));
+      });
+      toggles.appendChild(button);
+      if (item.key === 'miniMap') {
+        continue;
+      }
+      var chip = document.createElement('div');
+      chip.className = 'metric';
+      chip.setAttribute('data-metric', item.key);
+      var label = document.createElement('span');
+      label.className = 'metric-label';
+      label.textContent = item.label;
+      var value = document.createElement('span');
+      value.className = 'metric-value';
+      value.textContent = '—';
+      chip.appendChild(label);
+      chip.appendChild(value);
+      metrics.appendChild(chip);
+    }
+    paintOverlayToggles();
+
+    var fs = document.getElementById('video-fullscreen');
+    if (fs) {
+      fs.addEventListener('click', toggleFullscreen);
+    }
+    document.addEventListener('fullscreenchange', function () {
+      paintFullscreenButton();
+      syncMiniMap();
+    });
+    document.addEventListener('webkitfullscreenchange', function () {
+      paintFullscreenButton();
+      syncMiniMap();
+    });
+
+    video.addEventListener('play', startLoop);
+    video.addEventListener('pause', function () {
+      stopLoop();
+      paintVideo();
+    });
+    video.addEventListener('seeked', paintVideo);
+    video.addEventListener('ratechange', paintVideo);
+    video.addEventListener('ended', function () {
+      stopLoop();
+      resumePlay = false;
+      paintVideo();
+    });
+    video.addEventListener('timeupdate', function () {
+      if (!loopOn) {
+        paintVideo();
+      }
+    });
+    global.addEventListener('pagehide', releaseVideo);
+  }
+
   function init() {
     mountCharts();
     mountPanels();
     mountProgress();
+    mountVideo();
     bindUi();
     paintUnits();
+    selfCheckSync();
     var input = document.getElementById('file-input');
     if (input && !input.getAttribute('accept')) {
       input.setAttribute('accept', '.mp4,.lrv,video/*');

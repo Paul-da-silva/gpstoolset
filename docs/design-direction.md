@@ -10,11 +10,13 @@
 
 - **Default separation = spacing, background tints and type.** Thin neutral borders (`--border`, 1px, low contrast) are fine where useful: inputs, cards, drop zone.
 - **No accent stripes:** no thick or coloured single-side borders (e.g. coloured `border-left` on cards/callouts).
-- **Drop zone:** thick neutral `--border` (dashed; never coloured). **Drag-over = background colour change only.**
+- **Drop zone:** thin neutral `--border` (dashed or solid; never coloured or thick). **Drag-over = background colour change only.**
 - **Shadows: keep minimal.** At most one subtle token (`--shadow-float`), only for floating map chips/popovers, next to the `--surface-float` fill.
 - **Focus (keyboard):** tint change + 2px underline; no coloured ring needed.
 - **Route white halo stays** — it is a map line stroke, not a UI border.
 - **No contact page and no email address anywhere** (footer, about, errors, etc.).
+- Privacy/About links **footer only** (not topbar, not homepage mid-links).
+- OSM © attribution **on the map only** (Leaflet via tile module). **No** © OSM in the site footer. **No** “Report a map issue” anywhere.
 
 ---
 
@@ -141,7 +143,7 @@ Weight: 400 body · 600 headings/buttons. Support `[data-text-size="large"]` →
 
 | File | Route to |
 |------|----------|
-| `.mp4` / `.lrv` (GoPro) | `/gopro` |
+| `.mp4` / `.lrv` (GoPro) | `/gopro-gps-extract` |
 | `.gpx` | `/gpx-viewer` |
 | `.kml` / `.kmz` | `/kml-to-gpx` |
 | `.fit` | `/fit-to-gpx` |
@@ -241,6 +243,16 @@ Chips sit on map edges with solid `--surface-float` fill + subtle `--shadow-floa
   "chips": {
     "statsOpen": false,
     "toolsOpen": false
+  },
+  "view": "map",
+  "videoOverlay": {
+    "miniMap": true,
+    "speed": true,
+    "altitude": true,
+    "distance": true,
+    "time": true,
+    "gForce": false,
+    "verticalSpeed": false
   }
 }
 ```
@@ -248,6 +260,22 @@ Chips sit on map edges with solid `--surface-float` fill + subtle `--shadow-floa
 - One shared `dock.height` when tabs share one dock; per-graph `height` used if stacked mode is on.  
 - Unknown keys ignored; migrate by bumping to `gpstoolset.ui.v2` if breaking.  
 - Units also readable from `units` here (single source).
+
+
+### Video view (GoPro tool — after a file is loaded)
+
+`/gopro-gps-extract` offers two views once a video is loaded (toggle in top bar / chip bar):
+
+1. **Map view** — full-screen map + under-map graph dock (current shell).
+2. **Video view** — the user’s video full-screen via **object URL** (no upload), with overlays:
+   - **Mini map** (Leaflet via central tile module): track + current-position marker
+   - **Metrics** (each toggleable): speed, altitude, distance, time; optional G / vertical speed when present
+   - Overlay on/off + which view persist in `gpstoolset.ui.v1` (`view`, `videoOverlay`)
+   - Sync to `video.currentTime` using GPMF sample timestamps **relative to video start** (not GPS wall clock)
+   - Before first valid GPS fix: show “Waiting for GPS fix”, hide marker; skip invalid samples; interpolate between valid samples
+   - Handle seek / pause / play / `playbackRate`; Fullscreen API button; mobile-friendly
+
+Pre-upload: drop zone first; **rich SEO content below** (intro, how-it-works, what you get, supported cameras as compatibility, privacy, FAQ, links). Content **hides after load**. Mention the Video view in that copy. Privacy line OK in empty state; **not** in the header after load.
 
 ### Toolbar / map controls
 
@@ -307,7 +335,7 @@ Chips sit on map edges with solid `--surface-float` fill + subtle `--shadow-floa
 ## 6. Ad slots (centralized partial; **off** until monetization)
 
 **Rules:**  
-- **Full-screen map viewer/tool pages** (`/gopro`, `/gpx-viewer`, `/my-coordinates`, `/measure-distance`, and later map overlays): **no ads on the map**. Prefer **zero ads** on these pages. If monetizing later, only a **slim** unit that never covers tiles — e.g. inside the **graph dock** when open, or a discreet row inside the **☰ menu** drawer. Never sticky over controls or the track.  
+- **Full-screen map viewer/tool pages** (`/gopro-gps-extract`, `/gpx-viewer`, `/my-coordinates`, `/measure-distance`, and later map overlays): **no ads on the map**. Prefer **zero ads** on these pages. If monetizing later, only a **slim** unit that never covers tiles — e.g. inside the **graph dock** when open, or a discreet row inside the **☰ menu** drawer. Never sticky over controls or the track.  
 - **Home, guides, converters, about/privacy:** normal document ads OK.  
 - Label visually: “Advertisement” 11–12px muted.  
 - `ads.enabled=false` → render nothing (collapse; no CLS boxes at launch).

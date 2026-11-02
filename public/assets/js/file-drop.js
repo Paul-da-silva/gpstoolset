@@ -110,9 +110,14 @@
       if (!hasFiles(event)) {
         return;
       }
-      if (!stage.contains(event.target)) {
-        event.preventDefault();
-        hide();
+      if (stage.contains(event.target)) {
+        return;
+      }
+      event.preventDefault();
+      var files = event.dataTransfer && event.dataTransfer.files;
+      hide();
+      if (files && files.length) {
+        deliver(files[0]);
       }
     });
 

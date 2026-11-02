@@ -21,7 +21,13 @@ Options -Indexes
     RewriteRule ^map-demo\.php$ /map-demo [R=301,L]
 
     RewriteCond %{THE_REQUEST} \s/+gopro\.php[\s?] [NC]
-    RewriteRule ^gopro\.php$ /gopro [R=301,L]
+    RewriteRule ^gopro\.php$ /gopro-gps-extract [R=301,L]
+
+    RewriteCond %{THE_REQUEST} \s/+gopro-gps-extract\.php[\s?] [NC]
+    RewriteRule ^gopro-gps-extract\.php$ /gopro-gps-extract [R=301,L]
+
+    # Legacy path from before the tool URL was renamed.
+    RewriteRule ^gopro/?$ /gopro-gps-extract [R=301,L]
 
     # One canonical path without a trailing slash.
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -30,5 +36,5 @@ Options -Indexes
     RewriteRule ^privacy/?$ privacy.php [L]
     RewriteRule ^about/?$ about.php [L]
     RewriteRule ^map-demo/?$ map-demo.php [L]
-    RewriteRule ^gopro/?$ gopro.php [L]
+    RewriteRule ^gopro-gps-extract/?$ gopro-gps-extract.php [L]
 </IfModule>

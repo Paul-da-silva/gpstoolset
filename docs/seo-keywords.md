@@ -4,7 +4,7 @@
 
 **Site:** gpstoolset.com (PHP, browser-side file parsing, OSM street tiles).  
 **Plan:** `/workspace/gpstoolset/manager/plan.md` · [Plan Page](https://cursor.com/canvas/store-b5fa6ea4-c23f-4f9d-abc1-5e8c72bd3e8d/45607b8c-6d7a-4498-8085-a1f38e2c51ad).  
-**Rules:** No 301 from FlySync (FlySync keeps viewers; both may compete). Never name FlySight. No brand names in URLs. Never “Telemetry Extractor”. GoPro/DJI only as compatibility copy.  
+**Rules:** No 301 from FlySync (FlySync keeps viewers; both may compete). Never name FlySight. No brand names in URLs except `/gopro-gps-extract`. Never “Telemetry Extractor”. GoPro/DJI only as compatibility copy.  
 **Labels:** Planner ranges = **CHECKED** (buckets from existing TSVs). Autocomplete / SERP judgment = **FIRST-PASS** / **GUESS**. No invented volumes.
 
 Planner sources: `gpsextract-kp-historical-2026-11-01.tsv`, `gpstoolset-kp-historical-2026-11-01.tsv`.  
@@ -15,11 +15,11 @@ Planner paste list: `gpstoolset-guides-kw-list.txt`.
 
 ## 1) Tool pages — primary / secondaries / titles (CHECKED Planner)
 
-Titles ≤60 chars; no brand names in URL or title brand-stuffing beyond necessary GoPro compatibility on `/gopro`.
+Titles ≤60 chars; no brand names in URL or title brand-stuffing beyond necessary GoPro compatibility on `/gopro-gps-extract`.
 
 | Page | Primary (Planner) | Secondaries | Suggested title (≤60) |
 |---|---|---|---|
-| `/gopro` | `gopro gps extractor` **10–100** | `gopro gps data` **100–1K** · `extract gps from gopro video` **10–100** · `gopro gpx` **10–100** · (`video gps extractor` GSC only, not in Planner) | GoPro GPS Extractor — Free, No Upload |
+| `/gopro-gps-extract` | `gopro gps extractor` **10–100** | `gopro gps data` **100–1K** · `extract gps from gopro video` **10–100** · `gopro gpx` **10–100** · (`video gps extractor` GSC only, not in Planner) | GoPro GPS Extractor — Free, No Upload |
 | `/gpx-viewer` | `gpx viewer` **10K–100K** | `gpx viewer online` **1K–10K** · `gpx editor online` **1K–10K** · `gpx to csv` **100–1K** · (on-page: split/trim/simplify/reverse mostly **10–100**/blank) | Free Online GPX Viewer & Editor |
 | `/my-coordinates` | `my coordinates` **10K–100K** | `gps coordinates` **10K–100K** · `lat long finder` **10K–100K** · `find coordinates on map` **1K–10K** | My Coordinates — Find Lat & Long on a Map |
 | `/measure-distance` | `measure distance on map` **10K–100K** | `distance calculator map` **10K–100K** · `route distance calculator` **1K–10K** | Measure Distance on a Map — Free Tool |
@@ -28,9 +28,9 @@ Titles ≤60 chars; no brand names in URL or title brand-stuffing beyond necessa
 | `/gpx-to-kml` | `gpx to kml` **1K–10K** | (pair with kml↔gpx hub copy) | GPX to KML Converter — Free Online |
 | `/fit-to-gpx` | `fit to gpx` **1K–10K** | `tcx to gpx` **100–1K** · `garmin export gpx` **100–1K** (how-to lean) | FIT to GPX Converter — Free, No Upload |
 
-**Avoid on `/gopro`:** targeting `telemetry extractor` / `gopro telemetry extractor` as product phrasing (Planner has them; brand/product risk). Compatibility: say “reads GoPro video GPS (GPMF)” in body.
+**Avoid on `/gopro-gps-extract`:** targeting `telemetry extractor` / `gopro telemetry extractor` as product phrasing (Planner has them; brand/product risk). Compatibility: say “reads GoPro video GPS (GPMF)” in body.
 
-**Note:** `/gopro` primary is small in Planner but FlySync GSC still shows real clicks for that cluster — keep as anchor tool; don’t expect head-term volume.
+**Note:** `/gopro-gps-extract` primary is small in Planner but FlySync GSC still shows real clicks for that cluster — keep as anchor tool; don’t expect head-term volume.
 
 ---
 
@@ -66,7 +66,7 @@ Definitional “what is …” queries are usually owned by **Wikipedia / gov / 
 | **AC** | Weak for exact `gps file formats` (few suggests); strong for pairwise compares — FIRST-PASS |
 | **Who ranks** | Mix of Wikipedia format pages + converter/blog roundups — **reachable** with a clear comparison table + tool links |
 | **Angle** | One table: format → typical source → open with / convert with |
-| **Links to** | All converters + `/gopro` + `/gpx-viewer` |
+| **Links to** | All converters + `/gopro-gps-extract` + `/gpx-viewer` |
 
 ### `/guides/gpx`
 | | |
@@ -115,8 +115,8 @@ Definitional “what is …” queries are usually owned by **Wikipedia / gov / 
 | **Secondary** | `extract gps from gopro video` **10–100** · `gopro gps data` **100–1K** · avoid “telemetry extractor” product phrasing |
 | **AC** | `what is gpmf` empty; `gopro gpmf` few suggests — FIRST-PASS **weak head term** |
 | **Who ranks** | [gopro.github.io/gpmf-parser](https://gopro.github.io/gpmf-parser/), GitHub — niche/dev |
-| **Angle** | Plain-language “GPS inside GoPro video” → use `/gopro` tool (no upload). Don’t chase GPMF as a volume keyword |
-| **Links to** | `/gopro` |
+| **Angle** | Plain-language “GPS inside GoPro video” → use `/gopro-gps-extract` tool (no upload). Don’t chase GPMF as a volume keyword |
+| **Links to** | `/gopro-gps-extract` |
 
 ### `/guides/dji-srt`
 | | |
@@ -147,7 +147,7 @@ Definitional “what is …” queries are usually owned by **Wikipedia / gov / 
 3. **`kml vs kmz` + convert** — feed `/kml-to-gpx`.  
 4. **`what is a fit file` → convert** — feed `/fit-to-gpx` (Planner convert term is the volume).  
 5. **`dji srt file`** — real Planner band; guide now, tool later.  
-6. **`gopro` GPMF guide** — weak AC for “GPMF”; write as support content for `/gopro`, not a traffic play.  
+6. **`gopro-gps-extract` GPMF guide** — weak AC for “GPMF”; write as support content for `/gopro-gps-extract`, not a traffic play.  
 7. **Pure `what is gps` / GNSS constellation pages** — **don’t expect to outrank** wiki/gov; keep short, link tools.
 
 ---

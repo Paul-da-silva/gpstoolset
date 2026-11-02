@@ -17,14 +17,53 @@ body.is-map .topbar-inner {
   max-width: none;
 }
 
-body.is-map .nav-note {
-  display: inline-block;
-  padding: 0.35rem 0.7rem;
-  color: var(--brand);
-  font-size: 0.8rem;
-  font-weight: 650;
-  line-height: 1.3;
-  white-space: nowrap;
+.topbar-tools {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.topbar-tools[hidden] {
+  display: none;
+}
+
+.topbar-inner:has(.topbar-tools:not([hidden])) .site-nav,
+.topbar-inner:has(.topbar-tools:not([hidden])) .nav-burger {
+  margin-left: 0.35rem;
+}
+
+.view-switch {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.view-switch button {
+  appearance: none;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+}
+
+.view-switch button[aria-pressed="true"] {
+  background: var(--brand);
+  color: #fff;
+}
+
+[data-theme="dark"] .view-switch button[aria-pressed="true"] {
+  color: #042f2e;
 }
 
 body.is-map .map-app,
@@ -290,7 +329,12 @@ body.is-map .leaflet-control-attribution a {
 .file-overlay[hidden],
 .map-progress[hidden],
 .graph-dock[hidden],
-.chip[hidden] {
+.chip[hidden],
+.video-stage[hidden],
+.video-wait[hidden],
+.video-minimap[hidden],
+.metric[hidden],
+#tool-preamble[hidden] {
   display: none;
 }
 
@@ -535,8 +579,7 @@ body.is-resizing #map {
     display: flex;
   }
 
-  body.is-map .nav-link,
-  body.is-map .nav-note {
+  body.is-map .nav-link {
     padding: 0.65rem 0.75rem;
     white-space: normal;
   }
@@ -568,5 +611,253 @@ body.is-resizing #map {
   body.is-map .leaflet-bottom.leaflet-right {
     top: 0;
     bottom: auto;
+  }
+
+  .video-minimap .leaflet-bottom.leaflet-right {
+    top: auto;
+    bottom: 0;
+  }
+}
+
+body.is-map:has(#tool-preamble:not([hidden])) {
+  height: auto;
+  max-height: none;
+  overflow: auto;
+}
+
+body.is-map:has(#tool-preamble:not([hidden])) .map-app {
+  flex: 0 0 auto;
+  height: calc(100dvh - var(--header-h) - env(safe-area-inset-top, 0px));
+  min-height: 24rem;
+}
+
+.tool-preamble {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.preamble-inner {
+  width: min(42rem, calc(100% - 2.5rem));
+  margin: 0 auto;
+  padding: 2.5rem 0 0.5rem;
+}
+
+.preamble-inner h2 {
+  margin: 1.8rem 0 0.55rem;
+  font-size: 1.35rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.preamble-inner h2:first-child {
+  margin-top: 0;
+}
+
+.preamble-inner p,
+.preamble-inner li {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.preamble-inner p + p,
+.preamble-inner ul,
+.preamble-inner ol {
+  margin: 0.7rem 0 0;
+}
+
+.preamble-inner ul,
+.preamble-inner ol {
+  padding-left: 1.25rem;
+}
+
+.faq-item {
+  margin-top: 0.35rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--line);
+}
+
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.faq-item p {
+  margin: 0 0 0.85rem;
+}
+
+.map-app.is-video .map-stage,
+.map-app.is-video .graph-dock {
+  display: none;
+}
+
+.video-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: #000;
+}
+
+.video-player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.video-overlays {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.video-wait {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  max-width: calc(100% - 2rem);
+  margin: 0;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--text);
+  font-weight: 700;
+  text-align: center;
+  pointer-events: none;
+}
+
+.video-metrics {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  max-width: min(28rem, calc(100% - 16rem));
+  pointer-events: none;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 5.5rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--text);
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.video-minimap {
+  position: absolute;
+  left: 0.75rem;
+  bottom: calc(3.4rem + env(safe-area-inset-bottom, 0px));
+  width: min(16rem, 46vw);
+  height: min(11rem, 30vh);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  pointer-events: auto;
+  background: var(--bg);
+}
+
+.video-minimap .leaflet-container {
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-sans);
+  background: var(--bg);
+}
+
+.video-minimap .leaflet-bar a,
+.video-minimap .leaflet-touch .leaflet-bar a {
+  width: 1.75rem;
+  height: 1.75rem;
+  line-height: 1.75rem;
+  margin-bottom: 0.2rem;
+}
+
+.video-toolbar {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.45rem;
+  max-width: min(22rem, calc(100% - 1.5rem));
+  pointer-events: auto;
+}
+
+.video-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.video-toggles .chip,
+#video-fullscreen {
+  min-height: 2.75rem;
+}
+
+.video-stage:fullscreen,
+.video-stage:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+@media (max-width: 720px) {
+  .video-toolbar {
+    top: 0.5rem;
+    right: 0.5rem;
+    left: 0.5rem;
+    max-width: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .video-toggles {
+    justify-content: flex-start;
+  }
+
+  .video-metrics {
+    top: auto;
+    left: 0.5rem;
+    bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100% - 8.75rem);
+  }
+
+  .video-minimap {
+    left: auto;
+    right: 0.5rem;
+    width: 7.75rem;
+    height: 7.75rem;
+  }
+
+  .metric {
+    min-width: 4.6rem;
+    padding: 0.35rem 0.5rem;
   }
 }

@@ -2,7 +2,7 @@
 
 # GPS Toolset · Cursor prompts
 **Repo:** `/var/www/gpstoolset` · **Local:** http://gpstoolset.lan/ → `public/`  
-**Server:** Apache 2.4.58 · PHP 8.4 · remote `git@github.com:Paul-da-silva/gpstoolset.git`
+**Server:** Apache 2.4.58 · PHP 8.4
 
 Run **one prompt at a time**. Commit after each.
 
@@ -10,142 +10,97 @@ Run **one prompt at a time**. Commit after each.
 - **No email address and no `mailto:`** anywhere on the site.
 - **No contact page** and no links to one.
 - **Borders:** normal thin borders / box-shadows are fine. **No heavy coloured one-sided borders** (accent stripes like a thick coloured `border-left`). Drag-over = background tint (and/or normal border), not a thick accent stripe.
-- Keep OSM **“Report a map issue”** → https://www.openstreetmap.org/fixthemap
+- **Privacy / About links:** footer only (not topbar, not homepage mid-links).
+- **OSM:** attribution **on the map only** (Leaflet control via central tile module). **No** “© OpenStreetMap contributors” in the footer. **No** “Report a map issue” anywhere (Paul).
+- Brand-in-URL exception: **`/gopro-gps-extract`** only (not bare `/gopro`).
 
 ---
 
 ## P1 — Foundation ✅ done
-
-Paul already ran this. Left for history only — do not re-run. (Had contact page + email placeholders; cleaned by P1b.)
-
----
-
-## P1b — Cleanup (done/sent)
-
-```
-Cleanup pass on gpstoolset: 1. Remove every email address and mailto: link from the whole site. 2. Delete the contact page and all links to it. 3. Borders: keep normal thin borders / box-shadows if useful; remove any heavy coloured one-sided borders (accent stripes like a thick coloured border-left) on drop zones, cards, panels, buttons. Drag-over = background colour change (and/or normal border), not a thick accent stripe. 4. Keep the OSM 'Report a map issue' link. 5. Make base_url env-aware: use http://gpstoolset.lan locally and https://gpstoolset.com in production (detect via host / env — no hardcoded prod URL for local). 6. Make the initial git commit for the foundation + this cleanup.
-
-When done, tell me what to check at http://gpstoolset.lan/ :
-- no mailto / email strings in view-source
-- /contact gone (404 or redirect); no Contact links in nav/footer
-- no heavy coloured one-sided accent borders; drag-over is tint (normal borders OK)
-- "Report a map issue" still present
-- base_url resolves to gpstoolset.lan on this host
-- git log shows an initial commit
-```
+## P1b — Cleanup ✅ done (env-aware base_url, initial commit, border correction)
+## P2 — Map shell ✅ done
+## P3 — /gopro port ✅ done (URL superseded by P4 → `/gopro-gps-extract`)
 
 ---
 
-## P2 — Map shell
+## P4 — Chrome cleanup + /gopro-gps-extract + video overlay view
 
 ```
-Continue in /var/www/gpstoolset (Apache docroot = public/). Foundation from P1 + P1b cleanup already exists — reuse layout, tokens, config/tiles.php, tiles.js, ads rules. Do not rewrite the whole site.
+Continue in /var/www/gpstoolset. Keep .cursor/rules (no email/mailto, no contact page, thin borders OK, no heavy coloured one-sided accent borders, central tile module only, ads only via partial and never on map/viewer pages). Do not edit /var/www/skylog. Commit when done.
 
-Hard rules (Paul):
-- No email address and no mailto: anywhere. No contact page / links.
-- Borders: normal thin borders / box-shadows OK. No heavy coloured one-sided borders (accent stripes / thick coloured border-left) on drop zones, cards, panels, chips, buttons, empty-state UI. Drag-over / active drop = background tint (and/or normal border), not a thick accent stripe.
-- Keep OSM "Report a map issue" → https://www.openstreetmap.org/fixthemap
+Real files today (use/extend these):
+- public/index.php — home has Privacy/About in .home-links (REMOVE those links)
+- includes/layout/topbar.php — Privacy + About nav links; on map pages also "Report a map issue" + privacy note
+- includes/layout/footer.php — Privacy/About + "© OpenStreetMap contributors" + "Report a map issue"
+- includes/layout/map-shell.php, public/assets/js/{map-shell,file-drop,graph-dock,ui-state,gopro-app}.js, public/assets/css/map-shell.css
+- public/gopro.php + public/.htaccess routes for /gopro
+- config/tiles.php + includes/partials/tile-config.php + public/assets/js/tiles.js (Leaflet attribution source of truth)
+- public/sitemap.xml (does not list /gopro yet)
 
-Goal of THIS prompt only: reusable FULL-SCREEN map page shell (no GoPro parsing yet).
+### 1) Homepage chrome — Privacy/About only in the footer
+- Remove Privacy and About from includes/layout/topbar.php (site-wide).
+- Remove the .home-links Privacy/About block from public/index.php.
+- Keep Privacy + About ONLY in includes/layout/footer.php.
+- Keep the homepage privacy sentence ("Your file never leaves your device.") — that is copy, not a duplicate nav link.
 
-UX (mandatory — Paul):
-- Full-screen map fills the viewport MINUS the slim top bar (logo + menu only). Like Google Maps / ADS-B Exchange globe.
-- NO permanent side panel. NO mobile bottom sheet for tools.
-- Floating chips/buttons ON the map for: Open/Replace file, Stats (placeholder), graph toggles (Speed, Altitude), Export (placeholder). Normal thin borders OK; no heavy coloured one-sided accent stripes.
-- Graph dock docks UNDER the map (map shrinks). Charts never overlay tiles. Drag handle (≥24px) resizes height. Dock chrome: normal borders OK; no heavy coloured one-sided accent stripes.
-- Dock min 120px, default 180px, max 45vh desktop / 40vh mobile.
-- Persist UI in localStorage key exactly: gpstoolset.ui.v1
-  Suggested schema:
-  {
-    "units": "metric",
-    "graphs": {
-      "speed":    { "open": false, "height": 180 },
-      "altitude": { "open": false, "height": 180 }
-    },
-    "dock": { "height": 180, "tab": "speed" },
-    "chips": { "statsOpen": false, "toolsOpen": false }
-  }
-- File drop: whole-map overlay on dragenter (background tint; normal border OK — no heavy coloured accent stripe); empty state = centered card over map ("Drop a file or choose one. Nothing is uploaded.") + Choose file + Sample button (Sample can no-op or draw a fake polyline). Empty-state card: normal borders OK; no thick coloured border-left stripes.
-- Mobile: top bar ~48px + safe-area; thumb-reachable controls; dock max ~40vh.
-- Privacy: empty-state chip + menu item: "Your file never leaves your device."
-- Menu/footer links: Privacy, About, Tools, Guides — never Contact. No email in chrome.
+### 2) Drop "Report a map issue" everywhere
+- Remove from topbar (map-page branch), footer, about copy if present, and any other chrome.
+- Do not add it back. OSM attribution stays on the map only (see §5).
 
-Create:
-- includes/layout/map-shell.php — layout for map tools (topbar + #map + #graph-dock + chip mounts). No footer on map pages.
-- public/assets/css/map-shell.css — no heavy coloured one-sided accent borders (normal borders OK)
-- public/assets/js/ui-state.js — load/save gpstoolset.ui.v1
-- public/assets/js/graph-dock.js — open/close tabs, resize handle, apply heights from ui-state
-- public/assets/js/file-drop.js — drag overlay + picker hooks (callback when File chosen); drag-over = bg tint only
-- public/assets/js/map-shell.js — init Leaflet map using tiles.js ONLY; fitBounds helper; resize map when dock opens
-- public/map-demo.php — temporary page to verify shell with a hardcoded demo polyline. Clean URL /map-demo OK for now.
-- Ensure Leaflet 1.9.4 is vendored locally (from P1 or finish that here).
+### 3) Rename tool URL to /gopro-gps-extract
+- Canonical path: /gopro-gps-extract (replace /gopro everywhere: .htaccess, nav/tools links, sitemap, canonical, internal links, empty-state copy, docs).
+- Prefer renaming public/gopro.php → public/gopro-gps-extract.php (or keep filename but rewrite cleanly — pick one approach and be consistent).
+- .htaccess: serve /gopro-gps-extract; optional cheap 301 from /gopro and /gopro.php → /gopro-gps-extract (not launched yet, but fine).
+- Sitemap: add https://gpstoolset.com/gopro-gps-extract
+- Brand-in-URL exception is now /gopro-gps-extract (not bare /gopro). Update docs/.cursor/rules mentions.
 
-OSM rules: attribution visible; no restrictive Referrer-Policy; no tile prefetch; menu/footer link "Report a map issue" (no contact email).
+### 4) Pre-upload content on /gopro-gps-extract (SEO + UX)
+Drop zone / empty card stays FIRST (above the fold). BELOW it, add a substantial original content block (NOT FlySync copy; never "Telemetry Extractor"; never FlySight; GoPro only as compatibility wording).
+Include:
+- Intro aimed at primary "gopro gps extractor" (+ secondaries from docs/seo-keywords.md: gopro gps data, extract gps from gopro video, gopro gpx)
+- How it works (short numbered steps: choose video → browser reads GPMF → track on map → export)
+- What you get: track on map, speed + altitude graphs, export GPX / CSV / KML, and play your video with a live map + speed overlay (link/mention the Video view)
+- Supported cameras: compatibility wording for GoPro HERO models that embed GPS (GPMF) — not a product endorsement
+- Privacy: file never leaves your device / no upload
+- FAQ (3–6 short Qs)
+- Links toward future /gpx-viewer and /guides/ (can be "coming soon" anchors if pages missing)
+Title/meta stay original (current direction OK: "GoPro GPS Extractor — Free, No Upload") with meta matching the new URL.
+When a video loads successfully: HIDE this whole pre-upload content block (and the empty-state card); map/video UI takes the full viewport under the slim top bar.
 
-Ads: isMapPage=true → zero ads.
+### 5) Footer vs map OSM attribution
+- Footer must NOT say "© OpenStreetMap contributors" (makes the site look like an OSM project).
+- Attribution is REQUIRED only ON THE MAP via Leaflet attribution control, driven from config/tiles.php → tiles.js. Keep that. Nowhere else in chrome.
 
-When done, tell me what to check at http://gpstoolset.lan/ :
-- open /map-demo: map is full-screen under slim bar
-- toggle Speed/Altitude → dock appears under map, map shrinks; drag handle resizes; refresh restores gpstoolset.ui.v1
-- drag a file over the map → tint overlay (no thick accent stripe); picker works
-- no side panel; no ads; OSM attribution visible; no email/mailto; no Contact link
+### 6) After a video is loaded — header chrome
+- Do NOT show "Report a map issue" (already gone site-wide).
+- Do NOT show "Your file never leaves your device" in the header/topbar once a file is loaded.
+- Empty-state privacy chip before load is fine; remove/hide header privacy note on load (topbar map-page privacy span should go entirely).
+
+### 7) Two views after load + clear entry to Video view
+Add a view toggle (top bar and/or chip bar) once a video is loaded:
+(A) Map view — keep current full-screen map + under-map graph dock + export (fine for now).
+(B) Video view — user's video full-screen via object URL (no upload) with overlays:
+    - Mini map (Leaflet via central tiles.js): track + current-position marker
+    - Metrics: speed, altitude, distance, time; optionally G-force / vertical speed if present in telemetry — each metric toggleable on/off
+    - Persist toggles + which view in localStorage key exactly gpstoolset.ui.v1 (extend schema, e.g. view: "map"|"video", videoOverlay: { miniMap, speed, altitude, distance, time, gForce, verticalSpeed })
+Sync overlays to video.currentTime using GPMF sample timestamps relative to video start (cts / timing from extractGpmfFast + GoProTelemetry) — NOT the GPS wall clock.
+GPS fix often starts after video start:
+- Before first valid fix (GPSF/fix 0, or invalid/dropped samples): show "Waiting for GPS fix", hide the position marker
+- Skip invalid lat/lon samples; interpolate between valid samples for smooth marker motion
+- Handle seek, pause, play, playbackRate; rAF or timeupdate; clean up on replace/unload
+- Mobile-friendly overlays; Fullscreen API button for the video stage
+Pre-upload copy must mention this Video view ("play your video with a live map and speed overlay"). Toggle must be obvious after load.
+
+### 8) Docs
+Update docs/plan.md, docs/cursor-prompts.md, docs/design-direction.md, docs/seo-keywords.md, docs/README.md, and .cursor/rules/*.mdc for: /gopro-gps-extract, no Report-a-map-issue, map-only OSM attribution, footer without © OSM, video overlay view + gpstoolset.ui.v1 fields, Privacy/About footer-only.
+
+When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
+- Privacy/About only in footer on home; not in topbar or home mid-links
+- No "Report a map issue" anywhere; footer has no "© OpenStreetMap contributors"; map still shows OSM attribution bottom-right
+- Pre-upload: drop zone first, rich content below; content hides after load
+- After load: Map | Video toggle; Video view syncs mini-map + metrics to currentTime (waiting-for-fix before first good sample; seek works); fullscreen works; toggles survive refresh via gpstoolset.ui.v1
+- /gopro 301s (or redirects) to /gopro-gps-extract; sitemap/canonical use new URL; no email/contact; no thick coloured border-left stripes
 ```
 
----
 
-## P3 — /gopro (port FlySync client extractor)
-
-```
-Continue in /var/www/gpstoolset. Reuse the map shell from P2 (full-screen map, under-map graph dock, gpstoolset.ui.v1, file-drop). Do NOT edit any FlySync/skylog files — COPY only.
-
-Hard rules (Paul):
-- No email address and no mailto: anywhere. No contact page / links.
-- Borders: normal thin borders / box-shadows OK. No heavy coloured one-sided borders (accent stripes / thick coloured border-left) on drop zones, cards, panels, chips, buttons, empty states, export UI. Drag-over = background tint (and/or normal border), not a thick accent stripe.
-- Keep OSM "Report a map issue" link.
-
-Goal: ship http://gpstoolset.lan/gopro — client-side GoPro GPMF → track on map + graphs + export. 100% in-browser. No uploads. No server parse.
-
-COPY these files FROM paul-desktop into gpstoolset (read-only sources — never modify originals):
-
-  /var/www/skylog/webroot/js/gpmf-fast.js
-    → public/assets/vendor/gopro/gpmf-fast.js
-    Global: window.extractGpmfFast(file, opts) → { rawData, timing } (same shape as gpmf-extract)
-
-  /var/www/skylog/webroot/js/gopro-telemetry-bundle.min.js
-    → public/assets/vendor/gopro/gopro-telemetry-bundle.min.js
-    Globals: window.GPMFExtract, window.GoProTelemetry
-    (bundle of Juan Irache gpmf-extract + gopro-telemetry)
-
-Reference-only (do NOT copy PHP into production blindly; rewrite UI in our shell):
-  /var/www/skylog/views/publicviewer/goprogps.php
-    — extract flow: extractGpmfFast first, fallback GPMFExtract; then GoProTelemetry({...}); builds track; Leaflet polyline; Highcharts charts; GPX export
-  /var/www/skylog/controllers/PublicViewer.php → goproGPS() sets pageJs = [gpmf-fast, gopro-telemetry-bundle]
-
-FlySync Leaflet is CDN 1.9.4 — we already vendor locally. FlySync charts use Highcharts (commercial). Do NOT copy Highcharts. Use Chart.js (MIT) vendored locally, or lightweight canvas charts, for Speed + Altitude in the graph dock. Match UX idea (combined time series, hover scrub on track) without Highcharts.
-
-Implement:
-- public/gopro.php + clean URL /gopro via .htaccess
-- public/assets/js/gopro-app.js — wire file-drop → extract → GoProTelemetry → lat/lon/alt/speed series → draw polyline via map-shell (route color #0369a1 + white halo) → graphs in dock → Export popover: GPX, CSV, KML (client-side download)
-- Accept .mp4 / .lrv (and video/*). Progress UI for large files. Cancel if feasible.
-- Empty state + errors in plain language ("No GPS track in this file" etc.) — normal borders OK; no heavy coloured one-sided accent stripes
-- Units metric/imperial from gpstoolset.ui.v1
-
-Copy / SEO constraints (hard):
-- Page title/meta must be NEW and DIFFERENT from FlySync (FlySync title is like "GoPro GPS Extractor: Extract GPS data from GoPro videos - FlySync"). Suggested direction: "GoPro GPS Extractor — Free, No Upload" + body angle: privacy / multi-tool hub / gpstoolset — not a paste of FlySync FAQ.
-- GoPro only as compatibility ("works with GoPro Hero video GPS / GPMF"). Never brand the product as GoPro.
-- NEVER use the words "Telemetry Extractor" / "telemetry extractor" as product naming.
-- NEVER mention FlySight (or other FlySync-only brands).
-- No server upload endpoint for the video.
-- No email / mailto / contact page in copy or chrome.
-
-When done, tell me what to check at http://gpstoolset.lan/gopro :
-- drop a GoPro MP4 with GPS → track on full-screen map, no network upload of the file (DevTools)
-- Speed/Altitude docks work; refresh keeps dock prefs (gpstoolset.ui.v1)
-- Export GPX/CSV/KML downloads locally
-- copy/title clearly not a FlySync clone; no "Telemetry Extractor"; OSM attribution visible; no ads
-- no email/mailto; no Contact; no heavy coloured one-sided accent borders
-```
-
----
-
-*GPS Toolset Manager · Cursor prompts · updated 2026-11-02 Europe/Tallinn · P1 done · P1b cleanup · hard rules: no email/contact · no heavy coloured one-sided borders*
+*GPS Toolset Manager · Cursor prompts · updated 2026-11-02 Europe/Tallinn · next: P4*

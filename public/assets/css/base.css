@@ -172,13 +172,6 @@ a.nav-link:hover {
   background: var(--tint-strong);
 }
 
-.home-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1.1rem;
-  margin-top: 1.25rem;
-}
-
 .ad-slot {
   display: block;
   margin: 1rem 0;

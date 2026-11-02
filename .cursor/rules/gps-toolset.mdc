@@ -16,8 +16,8 @@ Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side par
 ## Docs (read these)
 
 - `docs/plan.md` — features, rollout, hard rules
-- `docs/cursor-prompts.md` — ordered Cursor prompts
-- `docs/design-direction.md` — layout / tokens / `gpstoolset.ui.v1`
+- `docs/cursor-prompts.md` — ordered Cursor prompts (next: P4)
+- `docs/design-direction.md` — layout / tokens / `gpstoolset.ui.v1` / video view
 - `docs/seo-keywords.md` — keyword notes for tools + guides
 
 ## Stack
@@ -25,27 +25,29 @@ Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side par
 - PHP 8.4 · Apache 2.4 with `.htaccess` clean URLs (not nginx)
 - Only `public/` is the docroot; `config/`, `includes/`, `docs/` stay above it
 - No framework, no build step, no npm app bundler — plain PHP + vanilla JS + CSS
-- Vendor libs locally under `public/assets/vendor/` (Leaflet 1.9.4, Chart.js, GoPro GPMF bundles, etc.) — no CDN for production pages
+- Vendor libs locally under `public/assets/vendor/` (Leaflet 1.9.4, Chart.js, GoPro GPMF bundles, etc.)
 
 ## Privacy
 
 - All user-file parsing happens **in the browser**. Never upload tracks/videos to the server.
 - No analytics / tracking beyond planned ads (ads off for now).
-- Privacy line: “Your file never leaves your device.”
+- Privacy line: “Your file never leaves your device.” — empty state / pre-upload OK; **not in the header after a file is loaded**.
+- **Privacy / About links: footer only** (not topbar, not homepage mid-links). No contact page. No email / `mailto:`.
 
 ## Maps / OSM
 
 - Tile URLs **only** from the central tile module (`config/tiles.php` + `assets/js/tiles.js`)
 - OSM street tiles: `https://tile.openstreetmap.org/{z}/{x}/{y}.png`, maxZoom 19
-- Visible attribution: © OpenStreetMap contributors
+- Visible attribution **on the map only** (Leaflet attribution control): © OpenStreetMap contributors
+- **No** “© OpenStreetMap contributors” in the site footer
+- **No** “Report a map issue” link anywhere
 - No restrictive `Referrer-Policy` that strips Referer; no tile prefetch / offline bulk download
-- Keep “Report a map issue” → https://www.openstreetmap.org/fixthemap
-- **No contact email** (Paul) — attribution + report link only
 
 ## Layout (map tools)
 
 - Full-screen map minus slim top bar (logo + menu). No permanent side panel.
 - Graphs/stats/export dock **under** the map (map shrinks); resizable; persist in `localStorage` key `gpstoolset.ui.v1`
+- `/gopro-gps-extract` after load: **Map** view and **Video** view (object-URL video + toggleable mini-map + metrics, synced to `video.currentTime` via GPMF relative timestamps; waiting-for-GPS-fix before first valid sample). Prefs in `gpstoolset.ui.v1`.
 - Ads: central partial only; **never on map/viewer pages at launch**; max 2 when enabled elsewhere
 
 ## Design
@@ -61,8 +63,8 @@ Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side par
 - **No contact page** and no links to one
 - Never mention **FlySight** → say “GNSS logger CSV exports”
 - Never brand as **“Telemetry Extractor”**
-- GoPro / DJI = **compatibility wording only**; `/gopro` is the one allowed brand-in-URL exception
-- `/gopro` copy must be clearly different from FlySync’s page
+- GoPro / DJI = **compatibility wording only**; `/gopro-gps-extract` is the one allowed brand-in-URL exception
+- `/gopro-gps-extract` copy must be clearly different from FlySync’s page; rich pre-upload content below the drop zone
 
 ## FlySync / skylog
 

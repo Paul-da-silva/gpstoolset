@@ -8,6 +8,18 @@
   var KEY = 'gpstoolset.ui.v1';
   var cache = null;
 
+  function blankOverlay() {
+    return {
+      miniMap: true,
+      speed: true,
+      altitude: true,
+      distance: true,
+      time: true,
+      gForce: false,
+      verticalSpeed: false
+    };
+  }
+
   function blank() {
     return {
       units: 'metric',
@@ -16,7 +28,9 @@
         altitude: { open: false, height: 180 }
       },
       dock: { height: 180, tab: 'speed' },
-      chips: { statsOpen: false, toolsOpen: false }
+      chips: { statsOpen: false, toolsOpen: false },
+      view: 'map',
+      videoOverlay: blankOverlay()
     };
   }
 
@@ -56,6 +70,14 @@
     var chips = data.chips && typeof data.chips === 'object' ? data.chips : {};
     next.chips.statsOpen = !!chips.statsOpen;
     next.chips.toolsOpen = !!chips.toolsOpen;
+
+    next.view = data.view === 'video' ? 'video' : 'map';
+    var overlay = data.videoOverlay && typeof data.videoOverlay === 'object' ? data.videoOverlay : {};
+    Object.keys(next.videoOverlay).forEach(function (key) {
+      if (typeof overlay[key] === 'boolean') {
+        next.videoOverlay[key] = overlay[key];
+      }
+    });
     return next;
   }
 

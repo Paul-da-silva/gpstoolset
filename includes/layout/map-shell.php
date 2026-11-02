@@ -9,6 +9,8 @@ declare(strict_types=1);
  * Set $mapShellEmpty = false before including when the page already has a track.
  * Optional copy: $mapShellHeading, $mapShellLead, $mapShellNote,
  * $mapShellDropText, $mapShellAccept.
+ * $mapShellVideo: include the video stage (GoPro tool).
+ * $mapShellPreamble: absolute path of HTML shown under the map until a file loads.
  */
 
 if (!isset($page) || !is_array($page)) {
@@ -29,6 +31,8 @@ if (isset($mapShellDropText) && is_string($mapShellDropText) && $mapShellDropTex
     $mapShellDrop = $mapShellDropText;
 }
 $mapShellAccept = isset($mapShellAccept) && is_string($mapShellAccept) ? $mapShellAccept : '';
+$mapShellVideo = !empty($mapShellVideo);
+$mapShellPreamble = isset($mapShellPreamble) && is_string($mapShellPreamble) ? $mapShellPreamble : '';
 
 require __DIR__ . '/head.php';
 require __DIR__ . '/topbar.php';
@@ -81,6 +85,21 @@ require __DIR__ . '/topbar.php';
     <input id="file-input" class="file-input" type="file" tabindex="-1" aria-hidden="true"<?php if ($mapShellAccept !== '') : ?> accept="<?= e($mapShellAccept) ?>"<?php endif; ?>>
   </div>
 
+<?php if ($mapShellVideo) : ?>
+  <div id="video-stage" class="video-stage" hidden>
+    <video id="gopro-video" class="video-player" playsinline controls controlsList="nofullscreen" preload="metadata" aria-label="Video from this device"></video>
+    <div class="video-overlays">
+      <p id="video-wait" class="video-wait" hidden>Waiting for GPS fix</p>
+      <div id="video-metrics" class="video-metrics" aria-live="polite"></div>
+      <div id="video-minimap" class="video-minimap" role="region" aria-label="Track on a map" hidden></div>
+      <div class="video-toolbar">
+        <div id="video-toggles" class="video-toggles" role="group" aria-label="Video overlays"></div>
+        <button type="button" class="chip" id="video-fullscreen">Fullscreen</button>
+      </div>
+    </div>
+  </div>
+<?php endif; ?>
+
   <section id="graph-dock" class="graph-dock" aria-label="Graphs" hidden>
     <div
       id="dock-handle"
@@ -107,6 +126,16 @@ require __DIR__ . '/topbar.php';
     </div>
   </section>
 </div>
+<?php if ($mapShellPreamble !== '' && is_file($mapShellPreamble)) : ?>
+<div id="tool-preamble" class="tool-preamble">
+<?php
+    require $mapShellPreamble;
+    $footerInPreamble = true;
+    require __DIR__ . '/footer.php';
+    $footerInPreamble = false;
+?>
+</div>
+<?php endif; ?>
 <?php require APP_ROOT . '/includes/partials/tile-config.php'; ?>
 <script src="/assets/vendor/leaflet/leaflet.js"></script>
 <script src="/assets/js/ui-state.js"></script>

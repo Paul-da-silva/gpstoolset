@@ -14,6 +14,10 @@
     if (empty) {
       empty.hidden = !show;
     }
+    var preamble = document.getElementById('tool-preamble');
+    if (preamble) {
+      preamble.hidden = !show;
+    }
   }
 
   function setFileLabel(file) {
