@@ -24,10 +24,9 @@ gpstoolset/
     pages/               ← bodies for plain pages: home, privacy, about, not-found
     partials/            ← ads, tile-config, scripts-map (the one map script stack)
   tools/
-    gopro-gps-extract/
-      meta.php           ← title, description, flags, styles, scripts, faq (merged over the registry entry)
-      content.php        ← pre-upload landing HTML only
-      page.php           ← thin: head, topbar, content, map-app, scripts, JSON-LD
+    gopro-gps-extract/   ← meta.php, content.php, page.php
+    gpx-viewer/          ← same three files; edit tools on the shared map shell
+    measure-distance/    ← same three files
   public/                ← the only document root
     index.php            ← front controller (all HTML routes + /sitemap.xml)
     .htaccess            ← real files as files; everything else → index.php
@@ -40,12 +39,12 @@ gpstoolset/
         tool-landing.css ← landing page for a map tool (hero, drop card, steps, prose)
         map-shell.css    ← map, chips placement, popovers, graph dock, video view only
       js/
-        core/            ← track.js  format.js  exporters.js  ui-state.js  file-drop.js
+        core/            ← track.js  format.js  exporters.js  ui-state.js  file-drop.js  edit.js
         map/             ← tiles.js  map-shell.js  graph-dock.js  track-layer.js
-                           track-charts.js  panels.js
-        parsers/         ← gpmf.js   (gpx.js · kml.js · fit.js later)
+                           track-charts.js  panels.js  edit-tools.js
+        parsers/         ← gpmf.js  gpx.js   (kml.js · fit.js later)
         video/           ← overlay.js  sync.js
-        tools/           ← gopro-gps-extract.js   (one thin app per tool)
+        tools/           ← gopro-gps-extract.js  gpx-viewer.js  measure-distance.js
         dropzone.js      ← home page placeholder (classic script, not a module)
       vendor/            ← leaflet 1.9.4 · chartjs 4.4.7 · gopro (gpmf-fast, telemetry bundle)
   docs/                  ← plan, architecture, prompts, SEO, design
@@ -74,7 +73,7 @@ gpstoolset/
 
 ## Shared JS (native ES modules, no build)
 
-- **Track** (`core/track.js`): `{ points: [{ lat, lon, ele?, speed?, t?, cts?, dist?, vspeed? }], acc: [{ cts, g }], smooth, idx, meta: { name, timed, hasVspeed, hasG } }`. A parser returns raw `{ points, acc }`; `buildTrack()` fills in the rest.
+- **Track** (`core/track.js`): `{ points: [{ lat, lon, ele?, speed?, t?, cts?, dist?, vspeed? }], acc: [{ cts, g }], smooth, idx, meta: { name, timed, hasVspeed, hasG } }`. A parser returns raw `{ points, acc }` (GPX also returns `segments` and `waypoints`); `buildTrack()` fills in the rest. Edits (`core/edit.js`) return a new point list: simplify, trim, split, reverse, elevation fix.
 - **Parsers** (`parsers/*.js`): `parse(file, options)` → `{ points, acc }`. `gpmf.js` wraps the vendored FlySync-derived classic scripts (`extractGpmfFast`, `GPMFExtract`, `GoProTelemetry`). Never edit those.
 - **Map** (`map/*.js`): `map-shell.js` owns the Leaflet map, popovers, drop stage; `tiles.js` is the **only** place that creates a tile layer (reads `window.GPS_TILE_CONFIG` from `config/tiles.php`); `track-layer.js` draws the line, markers and scrub dot; `track-charts.js` draws the dock graphs (Chart.js global); `panels.js` fills Stats/Export and the unit switch; `graph-dock.js` is the dock UI.
 - **Video** (`video/overlay.js`): the whole Video view. Tool app calls `init()`, `attach(file, track?)`, `setTrack(track)`, `clearTrack()`, `detach()`, `refresh()`, `closeMenu()`. `video/sync.js` maps video time to a GPS sample (GPMF-relative `cts`).
@@ -124,7 +123,7 @@ Guides: add `config/guides.php` (rows with `slug`, `inSitemap`) and an article l
 - [x] **P5h** one scripts partial; `map-demo` and `layout/map-shell.php` retired
 - [x] **P5i** docs + rules pass
 
-Still open (not part of P5): a real home page that routes dropped files to tools; the other 7 tools; `/guides/`; `config/guides.php`.
+Still open (not part of P5): a real home page that routes dropped files to tools; the remaining tools; `/guides/`; `config/guides.php`.
 
 ---
 

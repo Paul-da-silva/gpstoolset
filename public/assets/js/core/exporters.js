@@ -47,12 +47,15 @@ export function download(filename, mime, text) {
   }, 1500);
 }
 
-export function toGpx(points, name) {
-  var lines = [
+function gpxHeader() {
+  return [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<gpx version="1.1" creator="GPS Toolset" xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1">',
-    '<trk><name>' + xml(name) + '</name><trkseg>'
+    '<gpx version="1.1" creator="GPS Toolset" xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1">'
   ];
+}
+
+function appendTrack(lines, points, name) {
+  lines.push('<trk><name>' + xml(name) + '</name><trkseg>');
   var i;
   for (i = 0; i < points.length; i++) {
     var point = points[i];
@@ -70,7 +73,33 @@ export function toGpx(points, name) {
     }
     lines.push('</trkpt>');
   }
-  lines.push('</trkseg></trk></gpx>');
+  lines.push('</trkseg></trk>');
+}
+
+export function toGpx(points, name) {
+  var lines = gpxHeader();
+  appendTrack(lines, points, name);
+  lines.push('</gpx>');
+  return lines.join('');
+}
+
+/**
+ * One GPX file with several tracks.
+ * tracks: [{ name, points }] or an array of point arrays.
+ */
+export function toGpxTracks(tracks, name) {
+  var lines = gpxHeader();
+  var base = name || 'track';
+  var i;
+  for (i = 0; i < tracks.length; i++) {
+    var part = tracks[i];
+    var points = part && part.points ? part.points : part;
+    var partName = part && part.name ? part.name : base + ' ' + (i + 1);
+    if (points && points.length) {
+      appendTrack(lines, points, partName);
+    }
+  }
+  lines.push('</gpx>');
   return lines.join('');
 }
 

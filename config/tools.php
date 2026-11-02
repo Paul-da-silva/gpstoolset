@@ -53,4 +53,16 @@ return [
         'entry' => 'tools/gopro-gps-extract/page.php',
         'meta' => 'tools/gopro-gps-extract/meta.php',
     ],
+    'gpx-viewer' => [
+        'slug' => 'gpx-viewer',
+        'inSitemap' => true,
+        'entry' => 'tools/gpx-viewer/page.php',
+        'meta' => 'tools/gpx-viewer/meta.php',
+    ],
+    'measure-distance' => [
+        'slug' => 'measure-distance',
+        'inSitemap' => true,
+        'entry' => 'tools/measure-distance/page.php',
+        'meta' => 'tools/measure-distance/meta.php',
+    ],
 ];

@@ -39,7 +39,8 @@ public/assets/css/{tokens,base,components,tool-landing,map-shell}.css
 guides/ config/guides.php ← not created yet
 ```
 
-- Shared **Track** model from every parser (`core/track.js`); tool apps stay thin
+- Shared **Track** model from every parser (`core/track.js`); edits in `core/edit.js`; tool apps stay thin
+- Shipped tools: `/gopro-gps-extract`, `/gpx-viewer`, `/measure-distance` (same map shell; edit tools only on the GPX viewer)
 - Native ES modules, no build; tile URLs only via `config/tiles.php` + `map/tiles.js`
 - Sitemap / meta via `includes/seo.php` + registry (`/sitemap.xml` is generated; no static file)
 - **Adding a tool:** register in `config/tools.php` → create `tools/<slug>/` → parser if needed → `public/assets/js/tools/<slug>.js` → check on `.lan` → leave uncommitted for Paul  
@@ -59,6 +60,7 @@ guides/ config/guides.php ← not created yet
 ## Layout
 
 - Map tools: full-screen map + slim top bar; dock under map; `gpstoolset.ui.v1`
+- **No sample files.** Do not invent a demo track, a Sample button, or a “try a sample” file. The user opens their own file.
 - `/gopro-gps-extract`: Map + Video views (video overlay module)
 - Ads: central partial; none on map tools at launch
 

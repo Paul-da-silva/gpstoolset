@@ -130,6 +130,7 @@ function route_page(array $route): array
         'mapAssets' => !empty($flags['map']),
         'allowAds' => !empty($flags['ads']),
         'styles' => is_array($route['styles']) ? $route['styles'] : [],
+        'bodyClass' => isset($route['bodyClass']) && is_string($route['bodyClass']) ? $route['bodyClass'] : '',
     ];
 }
 

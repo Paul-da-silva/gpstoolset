@@ -67,16 +67,6 @@ function bindPopover(buttonId, panelId, persistKey) {
   });
 }
 
-function bindSample() {
-  var sample = document.getElementById('chip-sample');
-  if (!sample) {
-    return;
-  }
-  sample.addEventListener('click', function () {
-    document.dispatchEvent(new CustomEvent('gpstoolset:sample'));
-  });
-}
-
 export function invalidate() {
   if (!map) {
     return;
@@ -118,8 +108,9 @@ export function fitBounds(target, options) {
   map.fitBounds(bounds, pad);
 }
 
-function createMap() {
+function createMap(options) {
   var el = document.getElementById('map');
+  var opts = options || {};
   if (!el || !window.L) {
     throw new Error('Leaflet is required before the map shell starts.');
   }
@@ -127,7 +118,8 @@ function createMap() {
   map = window.L.map(el, {
     attributionControl: true,
     zoomControl: true,
-    scrollWheelZoom: true
+    scrollWheelZoom: true,
+    doubleClickZoom: opts.doubleClickZoom !== false
   });
 
   createTileLayer(window.L).addTo(map);
@@ -167,21 +159,29 @@ export function onReady(fn) {
   waiters.push(fn);
 }
 
-export function init() {
+/**
+ * Start the map. options.files === false skips file drop and the
+ * track popovers (a tool with no file, such as measure distance).
+ * options.doubleClickZoom === false leaves double-click for the tool.
+ */
+export function init(options) {
   if (ready || map) {
     return map;
   }
+  var opts = options || {};
+  if (opts.files !== false) {
   bindPopover('chip-stats', 'stats-panel', 'statsOpen');
   bindPopover('chip-graphs', 'graphs-panel', 'graphsOpen');
+  bindPopover('chip-edit', 'edit-panel', 'toolsOpen');
   bindPopover('chip-export', 'export-panel', null);
-  bindSample();
-  graphDock.init();
-  if (fileDrop.isBound()) {
-    fileDrop.addStage('#map-stage', '#file-overlay');
-  } else {
-    fileDrop.init({ onFile: onFile });
+    graphDock.init();
+    if (fileDrop.isBound()) {
+      fileDrop.addStage('#map-stage', '#file-overlay');
+    } else {
+      fileDrop.init({ onFile: onFile });
+    }
   }
-  createMap();
+  createMap(opts);
   flush();
   return map;
 }

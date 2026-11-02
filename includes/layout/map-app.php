@@ -43,6 +43,9 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
         <span class="chip chip-static" id="file-name" hidden></span>
         <button type="button" class="chip" id="chip-stats" aria-pressed="false" aria-expanded="false" aria-controls="stats-panel">Stats</button>
         <button type="button" class="chip" id="chip-graphs" aria-pressed="false" aria-expanded="false" aria-controls="graphs-panel">Graphs</button>
+        <?php if (!empty($mapShellEdit)) : ?>
+        <button type="button" class="chip" id="chip-edit" aria-pressed="false" aria-expanded="false" aria-controls="edit-panel">Edit</button>
+        <?php endif; ?>
         <button type="button" class="chip" id="chip-export" aria-pressed="false" aria-expanded="false" aria-controls="export-panel">Export</button>
       </div>
       <div id="graphs-panel" class="map-popover" hidden>
@@ -60,6 +63,60 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
         <p class="popover-kicker">Stats</p>
         <p>Stats will appear here.</p>
       </div>
+      <?php if (!empty($mapShellEdit)) : ?>
+      <div id="edit-panel" class="map-popover" hidden>
+        <p class="popover-kicker">Edit</p>
+        <p class="popover-note" id="edit-note">Choose one edit. The track stays as it is until you apply it.</p>
+        <div class="edit-actions">
+          <button type="button" class="chip" id="edit-undo" disabled>Undo</button>
+        </div>
+        <div id="edit-parts" class="edit-parts" hidden></div>
+        <div class="edit-actions" role="group" aria-label="Choose an edit">
+          <button type="button" class="chip" data-edit-mode="simplify" aria-pressed="false" disabled>Simplify</button>
+          <button type="button" class="chip" data-edit-mode="trim" aria-pressed="false" disabled>Trim</button>
+          <button type="button" class="chip" data-edit-mode="reverse" aria-pressed="false" disabled>Reverse</button>
+          <button type="button" class="chip" data-edit-mode="elevation" aria-pressed="false" disabled>Fix elevation</button>
+        </div>
+        <div id="edit-mode-simplify" class="edit-block" hidden>
+          <div class="edit-field">
+            <label for="edit-simplify">Distance</label>
+            <span class="edit-readout" id="edit-simplify-label">Off</span>
+          </div>
+          <input id="edit-simplify" type="range" min="0" max="200" value="0" step="1" disabled>
+          <p class="popover-note">Off leaves every point. Move the slider to preview, then simplify.</p>
+          <div class="edit-actions">
+            <button type="button" class="chip" id="edit-simplify-apply" disabled>Simplify</button>
+          </div>
+        </div>
+        <div id="edit-mode-trim" class="edit-block" hidden>
+          <div class="edit-field">
+            <span id="edit-trim-caption">Keep</span>
+            <span class="edit-readout" id="edit-trim-label">Whole track</span>
+          </div>
+          <div class="range-pair" id="edit-trim-range">
+            <div class="range-pair-fill" id="edit-trim-fill"></div>
+            <input id="edit-trim-start" type="range" min="0" max="1" value="0" step="1" disabled aria-label="Trim start">
+            <input id="edit-trim-end" type="range" min="0" max="1" value="1" step="1" disabled aria-label="Trim end">
+          </div>
+          <p class="popover-note">The bright line is the part this trim keeps.</p>
+          <div class="edit-actions">
+            <button type="button" class="chip" id="edit-trim-apply" disabled>Trim</button>
+          </div>
+        </div>
+        <div id="edit-mode-reverse" class="edit-block" hidden>
+          <p class="popover-note">Flips the direction. The clock still runs forward.</p>
+          <div class="edit-actions">
+            <button type="button" class="chip" id="edit-reverse" disabled>Reverse track</button>
+          </div>
+        </div>
+        <div id="edit-mode-elevation" class="edit-block" hidden>
+          <p class="popover-note">Smooths spikes and short gaps using nearby points in the file. It does not download new heights.</p>
+          <div class="edit-actions">
+            <button type="button" class="chip" id="edit-elev" disabled>Fix elevation</button>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
       <div id="export-panel" class="map-popover" hidden>
         <p class="popover-kicker">Export</p>
         <p>Export will be available here.</p>
@@ -78,7 +135,6 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
         <p id="empty-error" class="empty-error" role="alert" hidden></p>
         <div class="empty-actions">
           <button type="button" class="chip" data-file-pick>Choose file</button>
-          <button type="button" class="chip" id="chip-sample">Sample</button>
         </div>
         <p class="chip chip-static empty-privacy">Your file never leaves your device.</p>
       </div>

@@ -124,7 +124,7 @@ $faq = $route['faq'];
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
       <h2>More on GPS Toolset</h2>
-      <p>A GPX viewer is coming on this site for a track you already have. Short guides to GPS files will live with the other tools.</p>
+      <p>Open a track you already have in the <a href="/gpx-viewer">GPX viewer</a>. Short guides to GPS files will live with the other tools.</p>
       <p class="tool-credit">GPS reading uses the open-source libraries <a href="https://github.com/JuanIrache/gpmf-extract">gpmf-extract</a> and <a href="https://github.com/JuanIrache/gopro-telemetry">gopro-telemetry</a> by Juan Irache, under the ISC license.</p>
     </div>
   </section>

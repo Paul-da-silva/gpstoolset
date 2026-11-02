@@ -28,6 +28,13 @@ require __DIR__ . '/tile-config.php';
 <script src="<?= e($assetPath($src)) ?>"></script>
 <?php endif; ?>
 <?php endforeach; ?>
-<?php if ($assetPath($route['module'] ?? null) !== '') : ?>
-<script type="module" src="<?= e($assetPath($route['module'])) ?>"></script>
+<?php
+$moduleSrc = $assetPath($route['module'] ?? null);
+if ($moduleSrc !== '') {
+    $moduleFile = APP_ROOT . '/public' . $moduleSrc;
+    $moduleSrc .= '?v=' . (is_file($moduleFile) ? filemtime($moduleFile) : '1');
+}
+?>
+<?php if ($moduleSrc !== '') : ?>
+<script type="module" src="<?= e($moduleSrc) ?>"></script>
 <?php endif; ?>

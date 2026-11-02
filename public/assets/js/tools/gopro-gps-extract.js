@@ -9,10 +9,10 @@
  * includes/layout/map-app.php.
  */
 import * as fileDrop from '../core/file-drop.js';
-import { buildTrack, fillMissingSpeed } from '../core/track.js';
+import { buildTrack } from '../core/track.js';
 import { exportTrack, stem } from '../core/exporters.js';
 import * as mapShell from '../map/map-shell.js';
-import * as trackLayer from '../map/track-layer.js';
+import * as trackLayer from '../map/track-layer.js?v=3';
 import * as charts from '../map/track-charts.js';
 import * as panels from '../map/panels.js';
 import * as gpmf from '../parsers/gpmf.js';
@@ -171,25 +171,6 @@ function clearTrack() {
   panels.renderStats(null);
 }
 
-function samplePoints() {
-  var start = Date.UTC(2026, 5, 21, 8, 30, 0);
-  var points = [];
-  var count = 90;
-  var i;
-  for (i = 0; i < count; i++) {
-    var f = i / (count - 1);
-    points.push({
-      lat: 59.437 + Math.sin(f * Math.PI * 2) * 0.008,
-      lon: 24.745 + f * 0.02,
-      ele: 15 + Math.sin(f * Math.PI) * 55,
-      speed: null,
-      t: start + i * 4000
-    });
-  }
-  fillMissingSpeed(points);
-  return points;
-}
-
 function showTrack(id, points, name, acc) {
   if (id !== job) {
     return;
@@ -271,14 +252,6 @@ function onPickedFile(file) {
   readFile(file, id, active);
 }
 
-function onSample() {
-  var id = nextJob();
-  clearError();
-  overlay.detach();
-  showName('Sample route');
-  showTrack(id, samplePoints(), 'Sample route', []);
-}
-
 function mountProgress() {
   if (document.getElementById('map-progress')) {
     return;
@@ -328,13 +301,6 @@ function bindUi() {
       onPickedFile(file);
     }
   });
-  document.addEventListener('gpstoolset:sample', onSample);
-  var landingSample = document.getElementById('landing-sample');
-  if (landingSample) {
-    landingSample.addEventListener('click', function () {
-      document.dispatchEvent(new CustomEvent('gpstoolset:sample'));
-    });
-  }
   var landingCancel = document.getElementById('landing-cancel');
   if (landingCancel) {
     landingCancel.addEventListener('click', onCancel);

@@ -1,0 +1,184 @@
+/* Measure distance. Map chrome is in map-shell.css.
+   The guide is in the page and hidden while the map is open. */
+
+body.is-map .tool-guide,
+body.is-map .site-footer {
+  display: none;
+}
+
+body:not(.is-map) .map-app {
+  display: none;
+}
+
+.measure-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.35rem 0.9rem 0.85rem;
+}
+
+.measure-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+}
+
+.measure-dock h1 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.measure-kicker {
+  margin: 0.45rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--text) 68%, transparent);
+}
+
+.measure-total {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.measure-head .unit-switch {
+  margin-top: 0;
+}
+
+.measure-dock .chip {
+  background: var(--surface);
+}
+
+.measure-dock .chip:hover,
+.measure-dock .chip.is-active,
+.measure-dock .chip[aria-pressed="true"] {
+  background: var(--tint-strong);
+}
+
+.measure-dock .chip:disabled,
+.measure-dock .chip:disabled:hover {
+  background: var(--surface);
+}
+
+.measure-note,
+.measure-next,
+.measure-status {
+  margin: 0.55rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.measure-next {
+  font-weight: 650;
+}
+
+.measure-status:empty {
+  display: none;
+}
+
+.measure-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+/* This page has no chips over the map, so the credit stays at the
+   bottom of the tiles. The shared mobile rule lifts it for other tools. */
+@media (max-width: 720px) {
+  body.is-map .map-app:has(.measure-dock) .leaflet-bottom.leaflet-right {
+    top: auto;
+    bottom: 0;
+  }
+}
+
+.measure-legs {
+  list-style: none;
+  margin: 0.85rem 0 0;
+  padding: 0;
+}
+
+.measure-leg {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  gap: 0.35rem 0.6rem;
+  align-items: center;
+  padding: 0.28rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.measure-leg-num {
+  font-weight: 700;
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+
+.measure-leg-text {
+  font-variant-numeric: tabular-nums;
+}
+
+.measure-remove {
+  appearance: none;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--link);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 650;
+  line-height: 1.2;
+  min-height: 2.25rem;
+  padding: 0.2rem 0.1rem;
+  cursor: pointer;
+}
+
+.measure-remove:hover {
+  text-decoration: underline;
+}
+
+.leaflet-div-icon.measure-pin {
+  background: transparent;
+  border: 0;
+}
+
+.measure-pin span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-theme="dark"] .measure-pin span {
+  color: #042f2e;
+}
+
+.tool-landing .measure-card p {
+  margin: 0;
+}
+
+.tool-landing .measure-card .tool-btn {
+  margin-top: 1rem;
+}
+
+.tool-landing .measure-card h2 {
+  margin-bottom: 0.85rem;
+}

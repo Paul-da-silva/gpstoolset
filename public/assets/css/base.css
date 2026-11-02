@@ -131,6 +131,53 @@ a.nav-link:hover {
   color: color-mix(in srgb, var(--text) 45%, var(--bg));
 }
 
+.nav-group {
+  position: relative;
+}
+
+.nav-group > .nav-link {
+  cursor: default;
+}
+
+.nav-group.is-active > .nav-link {
+  color: var(--brand);
+  font-weight: 650;
+}
+
+.nav-sub {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 30;
+  min-width: 9rem;
+  padding: 0.35rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.nav-group:hover .nav-sub,
+.nav-group:focus-within .nav-sub {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-sublink {
+  display: block;
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-sublink:hover,
+.nav-sublink.is-active {
+  color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  text-decoration: none;
+}
+
 .home,
 .page {
   width: min(40rem, calc(100% - 2.5rem));
@@ -247,5 +294,20 @@ a.nav-link:hover {
 
   .nav-link {
     padding: 0.65rem 0.75rem;
+  }
+
+  .nav-sub {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 0 0 0.25rem 0.85rem;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .nav-sublink {
+    padding: 0.45rem 0.75rem;
   }
 }

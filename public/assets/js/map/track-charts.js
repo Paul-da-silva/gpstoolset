@@ -4,7 +4,7 @@
  * speed and G-force for one Track. Hovering a graph moves a dot on the map.
  */
 import * as graphDock from './graph-dock.js';
-import { hideScrub, showScrub } from './track-layer.js';
+import { hideScrub, showScrub } from './track-layer.js?v=3';
 import {
   anyNumber, durationMs, elapsedSec, maxOf, minOf, nearestPointIndex, totalDistance
 } from '../core/track.js';

@@ -31,11 +31,16 @@ function blankMiniMap() {
   return { x: null, y: null, w: null, h: null };
 }
 
+function blankMeasure() {
+  return { height: 300 };
+}
+
 function blank() {
   return {
     units: 'metric',
     graphs: blankGraphs(),
     dock: { height: 180, tab: 'speed' },
+    measure: blankMeasure(),
     chips: { statsOpen: false, toolsOpen: false, graphsOpen: false },
     view: 'map',
     metricsLayout: 'row',
@@ -90,6 +95,10 @@ function sanitize(raw) {
   var dock = data.dock && typeof data.dock === 'object' ? data.dock : {};
   next.dock.height = cleanHeight(dock.height);
   next.dock.tab = GRAPH_NAMES.indexOf(dock.tab) === -1 ? 'speed' : dock.tab;
+
+  var measure = data.measure && typeof data.measure === 'object' ? data.measure : {};
+  var measureHeight = measure.height == null ? 300 : measure.height;
+  next.measure.height = cleanHeight(measureHeight);
 
   var chips = data.chips && typeof data.chips === 'object' ? data.chips : {};
   next.chips.statsOpen = !!chips.statsOpen;

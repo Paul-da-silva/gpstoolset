@@ -6,8 +6,67 @@ import * as mapShell from './map-shell.js';
 import { displayLatLngs } from '../core/track.js';
 
 var layers = { halo: null, line: null, start: null, end: null, scrub: null };
+var preview = { line: null, dots: null };
+
+function restoreLine() {
+  if (layers.line) {
+    layers.line.setStyle({ color: '#0369a1', opacity: 0.95, weight: 4 });
+  }
+  if (layers.halo) {
+    layers.halo.setStyle({ opacity: 0.95 });
+  }
+}
+
+/** Remove the edit preview and put the saved track line back. */
+export function clearPreview() {
+  var map = mapShell.getMap();
+  if (preview.line && map) {
+    map.removeLayer(preview.line);
+  }
+  if (preview.dots && map) {
+    map.removeLayer(preview.dots);
+  }
+  preview.line = null;
+  preview.dots = null;
+  restoreLine();
+}
+
+/**
+ * Draw what an edit would keep, on top of a faded copy of the current line.
+ * keepPoints is the preview. Dots mark the points that would remain.
+ * The map is not refitted.
+ */
+export function showPreview(keepPoints) {
+  var map = mapShell.getMap();
+  if (!map || !window.L || !keepPoints || keepPoints.length < 2) {
+    clearPreview();
+    return;
+  }
+  clearPreview();
+  if (layers.line) {
+    layers.line.setStyle({ color: '#94a3b8', opacity: 0.55, weight: 3 });
+  }
+  if (layers.halo) {
+    layers.halo.setStyle({ opacity: 0.2 });
+  }
+  preview.line = window.L.polyline(displayLatLngs(keepPoints), {
+    color: '#c2410c',
+    weight: 5,
+    opacity: 0.95,
+    lineJoin: 'round',
+    lineCap: 'round',
+    interactive: false
+  }).addTo(map);
+  if (layers.start) {
+    layers.start.bringToFront();
+  }
+  if (layers.end) {
+    layers.end.bringToFront();
+  }
+}
 
 export function removeLayers() {
+  clearPreview();
   var map = mapShell.getMap();
   var keys = ['halo', 'line', 'start', 'end', 'scrub'];
   var i;

@@ -14,10 +14,18 @@ $GLOBALS['page'] = $page;
 $isMapPage = !empty($page['isMapPage']);
 $wantMapAssets = $isMapPage || !empty($page['mapAssets']);
 // Landing-first map tools stay a document until JS adds is-map.
-$bodyClass = '';
+// A tool that opens on the map sets $page['bodyClass'] (for example "is-map").
 $viewport = 'width=device-width, initial-scale=1';
 if ($wantMapAssets) {
     $viewport .= ', viewport-fit=cover';
+}
+$bodyClass = '';
+if (
+    isset($page['bodyClass'])
+    && is_string($page['bodyClass'])
+    && preg_match('/^[a-zA-Z][a-zA-Z0-9 -]*$/', $page['bodyClass']) === 1
+) {
+    $bodyClass = ' class="' . e($page['bodyClass']) . '"';
 }
 $extraStyles = [];
 if (!empty($page['styles']) && is_array($page['styles'])) {
