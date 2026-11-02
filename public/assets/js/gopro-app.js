@@ -2390,6 +2390,36 @@
     applyView(saved && saved.view === 'video' ? 'video' : 'map', false);
   }
 
+  function metricsLayout() {
+    var saved = global.GpsUiState && global.GpsUiState.load();
+    return saved && saved.metricsLayout === 'column' ? 'column' : 'row';
+  }
+
+  function paintMetricsLayout() {
+    var metrics = document.getElementById('video-metrics');
+    var layout = metricsLayout();
+    if (metrics) {
+      metrics.classList.toggle('is-column', layout === 'column');
+    }
+    var buttons = document.querySelectorAll('[data-metrics-layout]');
+    var i;
+    for (i = 0; i < buttons.length; i++) {
+      var on = buttons[i].getAttribute('data-metrics-layout') === layout;
+      buttons[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+      buttons[i].classList.toggle('is-active', on);
+    }
+  }
+
+  function setMetricsLayout(layout) {
+    var next = layout === 'column' ? 'column' : 'row';
+    if (global.GpsUiState) {
+      global.GpsUiState.update(function (current) {
+        current.metricsLayout = next;
+      });
+    }
+    paintMetricsLayout();
+  }
+
   function setOverlay(key, on) {
     if (global.GpsUiState) {
       global.GpsUiState.update(function (current) {
@@ -2501,6 +2531,7 @@
       metrics.appendChild(chip);
     }
     paintOverlayToggles();
+    paintMetricsLayout();
     bindMiniFrame();
 
     var menuBtn = document.getElementById('video-menu-btn');
@@ -2508,6 +2539,12 @@
       menuBtn.addEventListener('click', function () {
         var menu = document.getElementById('video-menu');
         setVideoMenu(!menu || menu.hidden);
+      });
+    }
+    var layoutButtons = document.querySelectorAll('[data-metrics-layout]');
+    for (i = 0; i < layoutButtons.length; i++) {
+      layoutButtons[i].addEventListener('click', function (event) {
+        setMetricsLayout(event.currentTarget.getAttribute('data-metrics-layout'));
       });
     }
     document.addEventListener('click', function (event) {

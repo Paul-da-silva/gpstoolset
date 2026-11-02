@@ -41,6 +41,7 @@
       dock: { height: 180, tab: 'speed' },
       chips: { statsOpen: false, toolsOpen: false, graphsOpen: false },
       view: 'map',
+      metricsLayout: 'row',
       videoOverlay: blankOverlay(),
       videoMiniMap: blankMiniMap()
     };
@@ -108,6 +109,7 @@
     }
 
     next.view = data.view === 'video' ? 'video' : 'map';
+    next.metricsLayout = data.metricsLayout === 'column' ? 'column' : 'row';
     var overlay = data.videoOverlay && typeof data.videoOverlay === 'object' ? data.videoOverlay : {};
     Object.keys(next.videoOverlay).forEach(function (key) {
       if (typeof overlay[key] === 'boolean') {

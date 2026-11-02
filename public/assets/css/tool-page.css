@@ -321,4 +321,12 @@
   .tool-steps {
     grid-template-columns: 1fr;
   }
+
+  .tool-drop {
+    display: none;
+  }
+
+  .tool-card h2 {
+    margin-bottom: 0;
+  }
 }

@@ -769,11 +769,31 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
+  right: 16rem;
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   gap: 0.4rem;
-  max-width: min(28rem, calc(100% - 16rem));
   pointer-events: none;
+}
+
+.video-metrics.is-column {
+  top: 4.2rem;
+  right: 0.75rem;
+  bottom: auto;
+  left: auto;
+  width: max-content;
+  max-height: calc(100% - 7.6rem - env(safe-area-inset-bottom, 0px));
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  overflow: auto;
+  pointer-events: auto;
+}
+
+.video-metrics.is-column .metric-label,
+.video-metrics.is-column .metric-value {
+  white-space: nowrap;
 }
 
 .metric {
@@ -934,7 +954,16 @@ body.is-map:has(#tool-preamble:not([hidden])) .map-app {
   }
 
   .video-metrics {
-    max-width: calc(100% - 11rem);
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 11rem;
+  }
+
+  .video-metrics.is-column {
+    top: 3.9rem;
+    right: 0.5rem;
+    left: auto;
+    max-height: calc(100% - 7.3rem - env(safe-area-inset-bottom, 0px));
   }
 
   .video-minimap-frame {

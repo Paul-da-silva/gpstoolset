@@ -107,6 +107,10 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
               <button type="button" class="chip" data-units="metric" aria-pressed="true">Metric</button>
               <button type="button" class="chip" data-units="imperial" aria-pressed="false">Imperial</button>
             </div>
+            <div class="unit-switch" role="group" aria-label="Metrics layout">
+              <button type="button" class="chip" data-metrics-layout="row" aria-pressed="true">Row</button>
+              <button type="button" class="chip" data-metrics-layout="column" aria-pressed="false">Column</button>
+            </div>
             <div id="video-toggles" class="video-toggles" role="group" aria-label="Video overlays"></div>
           </div>
         </div>
