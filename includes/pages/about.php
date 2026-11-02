@@ -1,13 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/includes/bootstrap.php';
-
-$page = [
-    'title' => 'About',
-    'description' => 'GPS Toolset is a set of browser tools for GPS files and maps.',
-    'isMapPage' => false,
-];
+/** About page body. Routed by includes/router.php (config/tools.php: about). */
 
 require APP_ROOT . '/includes/layout/head.php';
 require APP_ROOT . '/includes/layout/topbar.php';

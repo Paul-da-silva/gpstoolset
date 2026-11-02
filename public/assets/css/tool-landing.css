@@ -1,5 +1,6 @@
-/* Document layout for a tool that should rank as a page.
-   The map stays hidden until a track is ready. */
+/* Landing page for a map tool: hero, drop card, how-it-works, prose.
+   The map stays hidden until a track is ready.
+   Buttons, cards and FAQ rows are in components.css. */
 
 .tool-landing {
   position: relative;
@@ -67,20 +68,6 @@
   font-weight: 650;
 }
 
-.tool-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 1.15rem;
-}
-
-.tool-card h2 {
-  margin: 0 0 0.85rem;
-  font-size: 1.05rem;
-  line-height: 1.3;
-  font-weight: 700;
-}
-
 .tool-drop {
   width: 100%;
   margin: 0;
@@ -133,43 +120,6 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.9rem;
-}
-
-.tool-btn {
-  appearance: none;
-  margin: 0;
-  border: 0;
-  border-radius: 999px;
-  background: var(--brand);
-  color: #fff;
-  font: inherit;
-  font-size: 0.95rem;
-  font-weight: 650;
-  line-height: 1.2;
-  min-height: 2.75rem;
-  padding: 0.55rem 1.1rem;
-  cursor: pointer;
-}
-
-.tool-btn:hover {
-  background: color-mix(in srgb, var(--brand) 82%, #000);
-}
-
-[data-theme="dark"] .tool-btn {
-  color: #042f2e;
-}
-
-[data-theme="dark"] .tool-btn:hover {
-  background: color-mix(in srgb, var(--brand) 82%, #fff);
-}
-
-.tool-btn-quiet {
-  background: transparent;
-  color: var(--link);
-}
-
-.tool-btn-quiet:hover {
-  background: var(--tint);
 }
 
 .tool-privacy {

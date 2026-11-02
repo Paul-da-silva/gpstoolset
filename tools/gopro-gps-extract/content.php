@@ -1,50 +1,13 @@
 <?php
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/includes/bootstrap.php';
+/**
+ * GoPro GPS Extractor: pre-upload landing HTML only (hero, how it works, FAQ).
+ * Hidden by public/assets/js/tools/gopro-gps-extract.js once a video loads.
+ * Expects $route (config/tools.php entry merged with meta.php).
+ */
 
-$page = [
-    'title' => 'GoPro GPS Extractor — Free, No Upload',
-    'description' => 'Extract GPS from a GoPro video in your browser. Read the GoPro GPS data, view the track, and download a GPX, CSV, or KML file. Nothing is uploaded.',
-    'isMapPage' => false,
-    'allowAds' => false,
-    'mapAssets' => true,
-    'styles' => ['/assets/css/tool-page.css'],
-];
-
-$faq = [
-    [
-        'q' => 'Does the video get uploaded?',
-        'a' => 'No. The browser reads the file where it already is. GPS Toolset does not receive a copy.',
-    ],
-    [
-        'q' => 'Which cameras does this read?',
-        'a' => 'GoPro HERO models that store GPS in the video file. Many HERO5 and newer cameras do that when GPS was on while the clip was recorded. A video shot with GPS off has no track to read.',
-    ],
-    [
-        'q' => 'Why is there no GPS data in my video?',
-        'a' => 'GPS has to be on in the camera before you record, and the camera needs time outdoors to get a fix. Indoor clips, or clips that start before the fix, can have little or no usable track.',
-    ],
-    [
-        'q' => 'What is a GPX file?',
-        'a' => 'GPX is a common file for a GPS track. Maps, watches, and sports apps can open it. This page can also save CSV for a spreadsheet or KML for an earth-style map.',
-    ],
-    [
-        'q' => 'How large can the video be?',
-        'a' => 'The limit is the memory in your browser. The page reads the GPS data in the file, not the picture stream, so a long clip is lighter than it looks. The smaller .LRV proxy has the same GPS and is quicker to open.',
-    ],
-    [
-        'q' => 'Can I watch the clip with the map?',
-        'a' => 'Yes. After the track loads, choose Video on the map. The clip plays from your device, with a small map and the numbers you leave switched on. Until the first good GPS sample, the page says it is waiting for a fix.',
-    ],
-    [
-        'q' => 'Will this work on a phone?',
-        'a' => 'Yes. Pick the video from your phone. After the track loads you can use the map or play the video. The controls are large enough to tap.',
-    ],
-];
-
-require APP_ROOT . '/includes/layout/head.php';
-require APP_ROOT . '/includes/layout/topbar.php';
+$faq = $route['faq'];
 ?>
 <main class="tool-landing" id="tool-landing">
   <div id="landing-overlay" class="landing-overlay" hidden>
@@ -83,7 +46,6 @@ require APP_ROOT . '/includes/layout/topbar.php';
           <button type="button" class="tool-btn" data-file-pick>Choose video</button>
           <p class="tool-privacy">Your file never leaves your device.</p>
         </div>
-        
       </div>
     </div>
   </section>
@@ -167,72 +129,3 @@ require APP_ROOT . '/includes/layout/topbar.php';
     </div>
   </section>
 </main>
-<?php
-$footerClose = false;
-require APP_ROOT . '/includes/layout/footer.php';
-
-$mapShellHeading = '';
-$mapShellLead = 'Drop a video or choose one. Nothing is uploaded.';
-$mapShellNote = 'Works with GoPro HERO video that recorded GPS. The file stays in this browser.';
-$mapShellDropText = 'Drop a GoPro video. Nothing is uploaded.';
-$mapShellAccept = '.mp4,.lrv,video/*';
-$mapShellVideo = true;
-$mapShellEmpty = true;
-$mapAppHidden = true;
-$mapAppFileInput = false;
-require APP_ROOT . '/includes/layout/map-app.php';
-?>
-<input id="file-input" class="file-input" type="file" tabindex="-1" aria-hidden="true" accept=".mp4,.lrv,video/*">
-<?php require APP_ROOT . '/includes/partials/tile-config.php'; ?>
-<script src="/assets/vendor/leaflet/leaflet.js"></script>
-<script src="/assets/js/ui-state.js"></script>
-<script src="/assets/js/graph-dock.js"></script>
-<script src="/assets/js/file-drop.js"></script>
-<script src="/assets/js/map-shell.js"></script>
-<script src="/assets/vendor/chartjs/chart.umd.min.js"></script>
-<script src="/assets/vendor/gopro/gpmf-fast.js"></script>
-<script src="/assets/vendor/gopro/gopro-telemetry-bundle.min.js"></script>
-<script src="/assets/js/gopro-app.js"></script>
-<script type="application/ld+json">
-<?php
-$faqEntities = [];
-foreach ($faq as $item) {
-    $faqEntities[] = [
-        '@type' => 'Question',
-        'name' => $item['q'],
-        'acceptedAnswer' => [
-            '@type' => 'Answer',
-            'text' => $item['a'],
-        ],
-    ];
-}
-$schema = [
-    '@context' => 'https://schema.org',
-    '@graph' => [
-        [
-            '@type' => 'SoftwareApplication',
-            'name' => 'GoPro GPS Extractor',
-            'applicationCategory' => 'UtilitiesApplication',
-            'operatingSystem' => 'Web',
-            'url' => base_url('gopro-gps-extract'),
-            'description' => $page['description'],
-            'offers' => [
-                '@type' => 'Offer',
-                'price' => '0',
-                'priceCurrency' => 'USD',
-            ],
-        ],
-        [
-            '@type' => 'FAQPage',
-            'url' => base_url('gopro-gps-extract'),
-            'mainEntity' => $faqEntities,
-        ],
-    ],
-];
-echo json_encode(
-    $schema,
-    JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR
-);
-?>
-</script>
-<?php require APP_ROOT . '/includes/layout/close.php'; ?>

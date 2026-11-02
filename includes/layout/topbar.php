@@ -11,6 +11,7 @@ declare(strict_types=1);
     <input type="checkbox" id="nav-toggle" class="nav-toggle">
     <label for="nav-toggle" class="nav-burger"><span class="nav-burger-bar"></span>Menu</label>
     <nav class="site-nav" aria-label="Primary">
+      <a class="nav-link<?= nav_active('/gopro-gps-extract') ?>" href="/gopro-gps-extract">GoPro GPS</a>
       <span class="nav-link is-soon" title="Coming soon">Tools</span>
       <span class="nav-link is-soon" title="Coming soon">Guides</span>
     </nav>

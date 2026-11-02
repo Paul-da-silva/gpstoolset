@@ -1,4 +1,6 @@
-# DocumentRoot is this directory. Config and includes live outside it.
+# DocumentRoot is this directory. Config, includes, and tools live outside it.
+# Real files (assets, robots.txt, favicon) are served as files.
+# Every other route goes to index.php, which reads config/tools.php.
 
 DirectoryIndex index.php
 Options -Indexes
@@ -6,24 +8,15 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # /privacy.php -> /privacy (and the same for the other stubs).
+    # /index.php -> /
     # THE_REQUEST avoids a loop with the internal rewrite below.
     RewriteCond %{THE_REQUEST} \s/+index\.php[\s?] [NC]
     RewriteRule ^index\.php$ / [R=301,L]
 
-    RewriteCond %{THE_REQUEST} \s/+privacy\.php[\s?] [NC]
+    # Old *.php stubs from before the front controller.
     RewriteRule ^privacy\.php$ /privacy [R=301,L]
-
-    RewriteCond %{THE_REQUEST} \s/+about\.php[\s?] [NC]
     RewriteRule ^about\.php$ /about [R=301,L]
-
-    RewriteCond %{THE_REQUEST} \s/+map-demo\.php[\s?] [NC]
-    RewriteRule ^map-demo\.php$ /map-demo [R=301,L]
-
-    RewriteCond %{THE_REQUEST} \s/+gopro\.php[\s?] [NC]
     RewriteRule ^gopro\.php$ /gopro-gps-extract [R=301,L]
-
-    RewriteCond %{THE_REQUEST} \s/+gopro-gps-extract\.php[\s?] [NC]
     RewriteRule ^gopro-gps-extract\.php$ /gopro-gps-extract [R=301,L]
 
     # Legacy path from before the tool URL was renamed.
@@ -33,8 +26,12 @@ Options -Indexes
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.+)/$ /$1 [R=301,L]
 
-    RewriteRule ^privacy/?$ privacy.php [L]
-    RewriteRule ^about/?$ about.php [L]
-    RewriteRule ^map-demo/?$ map-demo.php [L]
-    RewriteRule ^gopro-gps-extract/?$ gopro-gps-extract.php [L]
+    # A missing file under assets/ is a plain 404, not an HTML page.
+    RewriteRule ^assets/ - [L]
+
+    # Everything that is not a real file or directory is a routed page
+    # (including /sitemap.xml, which is generated).
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
 </IfModule>

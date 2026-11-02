@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 /**
  * Map application markup (stage, chips, optional video, graph dock).
- * The caller includes the document chrome and scripts.
+ * The caller includes the document chrome (head, topbar). Print
+ * includes/partials/scripts-map.php once, after this file, for the scripts.
  *
  * $mapAppHidden: render the app hidden until a track is ready.
  * $mapAppFileInput: set false when the page already has #file-input.

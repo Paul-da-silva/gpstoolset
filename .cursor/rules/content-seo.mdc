@@ -1,10 +1,12 @@
 ---
 description: Copy, SEO, and brand hygiene for GPS Toolset pages
-globs: public/**/*.php,includes/**/*.php,docs/**/*.md
+globs: public/**/*.php,includes/**/*.php,tools/**/*.php,config/**/*.php,docs/**/*.md
 alwaysApply: false
 ---
 
 # Content & SEO
+
+See also `docs/architecture.md` (registry + SEO helper).
 
 ## Never
 
@@ -27,7 +29,7 @@ alwaysApply: false
 
 - Unique title (≤ ~60 chars where possible) + meta description
 - Canonical URL from env-aware `base_url`
-- Update `public/sitemap.xml` when adding a route
+- Add the route to `config/tools.php` (`inSitemap`); `/sitemap.xml` is generated, never hand-edited
 - Privacy / About in footer only; no Contact
 
 ## `/gopro-gps-extract` pre-upload

@@ -1,89 +1,82 @@
 ---
-description: What GPS Toolset is — product intent, stack, and non-negotiables for every change
+description: What GPS Toolset is — product intent, stack, non-negotiables, and structure
 alwaysApply: true
 ---
 
 # GPS Toolset
 
-Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side parsing (no uploads). Clear · Private · Practical. Ads later via a central partial (off at launch).
+Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side parsing (no uploads). Clear · Private · Practical.
 
 ## Environments
 
 - **Dev:** http://gpstoolset.lan/ → `/var/www/gpstoolset/public/`
 - **Prod:** https://gpstoolset.com
-- `base_url` must be **env-aware** (detect host / env). Never hardcode prod URL for local.
+- `base_url` env-aware. Never hardcode prod for local.
 
-## Docs (read these)
+## Docs
 
-- `docs/plan.md` — features, rollout, hard rules
-- `docs/cursor-prompts.md` — ordered Cursor prompts (next: P4)
-- `docs/design-direction.md` — layout / tokens / `gpstoolset.ui.v1` / video view
-- `docs/seo-keywords.md` — keyword notes for tools + guides
+- `docs/architecture.md` — **structure on disk** + request flow + how to add a tool
+- `docs/plan.md` · `docs/cursor-prompts.md` · `docs/design-direction.md` · `docs/seo-keywords.md`
 
 ## Stack
 
-- PHP 8.4 · Apache 2.4 with `.htaccess` clean URLs (not nginx)
-- Only `public/` is the docroot; `config/`, `includes/`, `docs/` stay above it
-- No framework, no build step, no npm app bundler — plain PHP + vanilla JS + CSS
-- Vendor libs locally under `public/assets/vendor/` (Leaflet 1.9.4, Chart.js, GoPro GPMF bundles, etc.)
+- PHP 8.4 · Apache · `.htaccess` / front controller · **no framework · no build step**
+- Only `public/` is docroot; `config/`, `includes/`, `tools/`, `guides/`, `docs/` stay above it
+- Vendored libs under `public/assets/vendor/` (Leaflet 1.9.4, Chart.js 4.4.7, GoPro GPMF bundles)
 
-## Privacy
+## Structure (P5 refactor done — matches the tree on disk)
 
-- All user-file parsing happens **in the browser**. Never upload tracks/videos to the server.
-- No analytics / tracking beyond planned ads (ads off for now).
-- Privacy line: “Your file never leaves your device.” — empty state / pre-upload OK; **not in the header after a file is loaded**.
-- **Privacy / About links: footer only** (not topbar, not homepage mid-links). No contact page. No email / `mailto:`.
+```
+config/tools.php          ← page/tool registry (slug, entry, meta, inSitemap, flags)
+includes/router.php seo.php bootstrap.php
+includes/layout/          ← head topbar footer close map-app
+includes/pages/           ← home privacy about not-found bodies
+includes/partials/        ← ads tile-config scripts-map
+tools/<slug>/{meta,content,page}.php
+public/index.php          ← front controller (all HTML routes + /sitemap.xml)
+public/assets/js/core|map|parsers|video|tools/   ← ES modules, tool app = tools/<slug>.js
+public/assets/css/{tokens,base,components,tool-landing,map-shell}.css
+guides/ config/guides.php ← not created yet
+```
+
+- Shared **Track** model from every parser (`core/track.js`); tool apps stay thin
+- Native ES modules, no build; tile URLs only via `config/tiles.php` + `map/tiles.js`
+- Sitemap / meta via `includes/seo.php` + registry (`/sitemap.xml` is generated; no static file)
+- **Adding a tool:** register in `config/tools.php` → create `tools/<slug>/` → parser if needed → `public/assets/js/tools/<slug>.js` → check on `.lan` → leave uncommitted for Paul  
+  Full steps: `docs/architecture.md` ("Add a new tool")
+
+## Privacy / chrome
+
+- Parse in the browser only. Never upload user files.
+- Privacy line OK on empty/pre-upload; **not** in header after load
+- Privacy/About links **footer only**. No contact. No email / `mailto:`.
 
 ## Maps / OSM
 
-- Tile URLs **only** from the central tile module (`config/tiles.php` + `assets/js/tiles.js`)
-- OSM street tiles: `https://tile.openstreetmap.org/{z}/{x}/{y}.png`, maxZoom 19
-- Visible attribution **on the map only** (Leaflet attribution control): © OpenStreetMap contributors
-- **No** “© OpenStreetMap contributors” in the site footer
-- **No** “Report a map issue” link anywhere
-- No restrictive `Referrer-Policy` that strips Referer; no tile prefetch / offline bulk download
+- Central tile module only. Attribution **on the map only**.
+- No © OSM in footer. No “Report a map issue”.
 
-## Layout (map tools)
+## Layout
 
-- Full-screen map minus slim top bar (logo + menu). No permanent side panel.
-- Graphs/stats/export dock **under** the map (map shrinks); resizable; persist in `localStorage` key `gpstoolset.ui.v1`
-- `/gopro-gps-extract` after load: **Map** view and **Video** view (object-URL video + toggleable mini-map + metrics, synced to `video.currentTime` via GPMF relative timestamps; waiting-for-GPS-fix before first valid sample). Prefs in `gpstoolset.ui.v1`.
-- Ads: central partial only; **never on map/viewer pages at launch**; max 2 when enabled elsewhere
+- Map tools: full-screen map + slim top bar; dock under map; `gpstoolset.ui.v1`
+- `/gopro-gps-extract`: Map + Video views (video overlay module)
+- Ads: central partial; none on map tools at launch
 
 ## Design
 
-- Tokens as CSS variables (teal `#115e59`, dark brand `#2dd4a0`, orange `#c2410c`, route `#0369a1`)
-- Thin neutral borders / light shadows OK
-- **No heavy coloured one-sided accent borders** (thick coloured `border-left` stripes)
-- Drag-over = background tint (and/or normal border), not a thick accent stripe
+- Tokens teal `#115e59` / `#2dd4a0` · orange `#c2410c` · route `#0369a1`
+- Thin borders OK · **no heavy coloured one-sided accent borders**
 
-## Hard content rules
+## Content
 
-- **No email address and no `mailto:`** anywhere
-- **No contact page** and no links to one
-- Never mention **FlySight** → say “GNSS logger CSV exports”
-- Never brand as **“Telemetry Extractor”**
-- GoPro / DJI = **compatibility wording only**; `/gopro-gps-extract` is the one allowed brand-in-URL exception
-- `/gopro-gps-extract` copy must be clearly different from FlySync’s page; rich pre-upload content below the drop zone
-
-## FlySync / skylog
-
-- May **COPY** client JS from `/var/www/skylog` (e.g. `gpmf-fast.js`, `gopro-telemetry-bundle.min.js`) into this repo
-- **Never edit** FlySync / skylog files
-- Do not copy Highcharts (commercial); use Chart.js or canvas
-
-## SEO (every public page)
-
-- Unique `<title>` + meta description
-- Canonical via env-aware `base_url`
-- Add/keep sitemap entry when shipping a new URL
-- Clean URLs via `.htaccess`
+- Never “Telemetry Extractor”. Never FlySight → “GNSS logger CSV exports”
+- GoPro/DJI = compatibility wording; brand URL exception `/gopro-gps-extract` only
+- May COPY from `/var/www/skylog`; **never edit** FlySync. No Highcharts.
 
 ## Git (hard rule — Paul)
 
-- **Never** `git commit`, `git push`, `git amend`, or stage-and-commit.
-- Leave all changes **uncommitted** for Paul. He alone commits.
-- Do not create commits “to wrap up” a prompt.
+- **Never** `git commit`, `git push`, `git amend`, or stage-and-commit
+- Leave all changes **uncommitted** for Paul
 
 ## Workflow
 

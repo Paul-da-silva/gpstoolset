@@ -11,20 +11,6 @@ $page += [
 ];
 $GLOBALS['page'] = $page;
 
-$siteName = site('name');
-$pageTitle = trim((string) $page['title']);
-if ($pageTitle === '' || $pageTitle === $siteName) {
-    $fullTitle = $siteName;
-} else {
-    $fullTitle = $pageTitle . ' · ' . $siteName;
-}
-
-$description = trim((string) $page['description']);
-if ($description === '') {
-    $description = 'Browser tools for GPS files. Your file never leaves your device.';
-}
-
-$canonical = base_url(current_path());
 $isMapPage = !empty($page['isMapPage']);
 $wantMapAssets = $isMapPage || !empty($page['mapAssets']);
 $bodyClass = $isMapPage ? ' class="is-map"' : '';
@@ -48,16 +34,10 @@ if (!empty($page['styles']) && is_array($page['styles'])) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="<?= e($viewport) ?>">
-<title><?= e($fullTitle) ?></title>
-<meta name="description" content="<?= e($description) ?>">
-<link rel="canonical" href="<?= e($canonical) ?>">
-<meta property="og:site_name" content="<?= e($siteName) ?>">
-<meta property="og:type" content="website">
-<meta property="og:title" content="<?= e($fullTitle) ?>">
-<meta property="og:description" content="<?= e($description) ?>">
-<meta property="og:url" content="<?= e($canonical) ?>">
+<?= seo_head_tags($page) ?>
 <link rel="stylesheet" href="/assets/css/tokens.css">
 <link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
 <?php foreach ($extraStyles as $href): ?>
 <link rel="stylesheet" href="<?= e($href) ?>">
 <?php endforeach; ?>

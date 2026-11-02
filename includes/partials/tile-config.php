@@ -2,8 +2,9 @@
 declare(strict_types=1);
 
 /**
- * Inject config/tiles.php for public/assets/js/tiles.js.
- * Include this on map pages only, before the map creates its tile layer.
+ * Inject config/tiles.php as window.GPS_TILE_CONFIG for
+ * public/assets/js/map/tiles.js (an ES module imported by the map shell).
+ * Included by partials/scripts-map.php, before any map module runs.
  * Do not add a Referrer-Policy tag here.
  */
 $tiles = $GLOBALS['TILES'] ?? [];
@@ -20,4 +21,3 @@ $json = json_encode(
 <script>
 window.GPS_TILE_CONFIG = <?= $json ?>;
 </script>
-<script src="/assets/js/tiles.js"></script>

@@ -1,0 +1,154 @@
+/**
+ * Stats and Export popovers, and the Metric / Imperial switch (ES module).
+ * The map shell opens and closes the popovers; this fills them.
+ */
+import * as uiState from '../core/ui-state.js';
+import {
+  durationMs, maxOf, minOf, totalDistance
+} from '../core/track.js';
+import {
+  formatAlt, formatDistance, formatDuration, formatSpeed, unitMode
+} from '../core/format.js';
+
+var idleExportNote = 'Open a file to export the track.';
+
+function stat(id, text) {
+  var el = document.getElementById(id);
+  if (el) {
+    el.textContent = text;
+  }
+}
+
+/**
+ * Fill #stats-panel and #export-panel. noun completes the export hint,
+ * e.g. 'a video' gives "Open a video to export the track."
+ */
+export function mount(noun) {
+  var thing = noun || 'a file';
+  idleExportNote = 'Open ' + thing + ' to export the track.';
+  var stats = document.getElementById('stats-panel');
+  var exp = document.getElementById('export-panel');
+  if (stats) {
+    stats.innerHTML =
+      '<p class="popover-kicker">Track</p>' +
+      '<div class="unit-switch" role="group" aria-label="Units">' +
+      '<button type="button" class="chip" data-units="metric" aria-pressed="true">Metric</button>' +
+      '<button type="button" class="chip" data-units="imperial" aria-pressed="false">Imperial</button>' +
+      '</div>' +
+      '<dl class="stat-list">' +
+      '<div><dt>Points</dt><dd id="stat-points">—</dd></div>' +
+      '<div><dt>Duration</dt><dd id="stat-duration">—</dd></div>' +
+      '<div><dt>Distance</dt><dd id="stat-distance">—</dd></div>' +
+      '<div><dt>Average speed</dt><dd id="stat-avg">—</dd></div>' +
+      '<div><dt>Max speed</dt><dd id="stat-max">—</dd></div>' +
+      '<div><dt>Lowest altitude</dt><dd id="stat-low">—</dd></div>' +
+      '<div><dt>Highest altitude</dt><dd id="stat-high">—</dd></div>' +
+      '</dl>';
+  }
+  if (exp) {
+    exp.innerHTML =
+      '<p class="popover-kicker">Export</p>' +
+      '<p class="popover-note" id="export-note">' + idleExportNote + '</p>' +
+      '<div class="export-actions">' +
+      '<button type="button" class="chip" data-export="gpx" disabled>GPX</button>' +
+      '<button type="button" class="chip" data-export="csv" disabled>CSV</button>' +
+      '<button type="button" class="chip" data-export="kml" disabled>KML</button>' +
+      '</div>';
+  }
+}
+
+/** Fill the stat list from a Track, or reset it when track is null. */
+export function renderStats(track) {
+  var points = track ? track.points : [];
+  if (!points.length) {
+    stat('stat-points', '—');
+    stat('stat-duration', '—');
+    stat('stat-distance', '—');
+    stat('stat-avg', '—');
+    stat('stat-max', '—');
+    stat('stat-low', '—');
+    stat('stat-high', '—');
+    return;
+  }
+  var meters = totalDistance(points);
+  var elapsed = durationMs(points);
+  var average = elapsed ? meters / (elapsed / 1000) : null;
+  var eles = points.map(function (point) {
+    return point.ele;
+  });
+  stat('stat-points', points.length.toLocaleString());
+  stat('stat-duration', formatDuration(elapsed));
+  stat('stat-distance', formatDistance(meters));
+  stat('stat-avg', formatSpeed(average));
+  stat('stat-max', formatSpeed(maxOf(track.smooth)));
+  stat('stat-low', formatAlt(minOf(eles)));
+  stat('stat-high', formatAlt(maxOf(eles)));
+}
+
+/** Show which unit button is on. */
+export function paintUnits() {
+  var mode = unitMode();
+  var buttons = document.querySelectorAll('[data-units]');
+  var i;
+  for (i = 0; i < buttons.length; i++) {
+    var on = buttons[i].getAttribute('data-units') === mode;
+    buttons[i].classList.toggle('is-active', on);
+    buttons[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+}
+
+/** Enable or disable the export buttons and update the hint. */
+export function setExportEnabled(on) {
+  var buttons = document.querySelectorAll('#export-panel [data-export]');
+  var i;
+  for (i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = !on;
+  }
+  var note = document.getElementById('export-note');
+  if (note) {
+    note.textContent = on
+      ? 'Saves a file on this device. Nothing is uploaded.'
+      : idleExportNote;
+  }
+}
+
+/** Save the unit choice, repaint the buttons, then call onChange(). */
+export function bindUnits(onChange) {
+  var buttons = document.querySelectorAll('[data-units]');
+  var i;
+  for (i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', function (event) {
+      var mode = event.currentTarget.getAttribute('data-units');
+      if (mode !== 'metric' && mode !== 'imperial') {
+        return;
+      }
+      uiState.update(function (current) {
+        current.units = mode;
+      });
+      paintUnits();
+      if (typeof onChange === 'function') {
+        onChange(mode);
+      }
+    });
+  }
+}
+
+/** Call onExport('gpx' | 'csv' | 'kml') when an enabled export button is clicked. */
+export function bindExport(onExport) {
+  var exp = document.getElementById('export-panel');
+  if (!exp) {
+    return;
+  }
+  exp.addEventListener('click', function (event) {
+    var node = event.target;
+    while (node && node !== exp) {
+      if (node.getAttribute && node.getAttribute('data-export')) {
+        if (!node.disabled) {
+          onExport(node.getAttribute('data-export'));
+        }
+        return;
+      }
+      node = node.parentNode;
+    }
+  });
+}

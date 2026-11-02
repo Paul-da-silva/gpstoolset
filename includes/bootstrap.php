@@ -20,6 +20,8 @@ $GLOBALS['ADS'] = $ADS;
 $GLOBALS['TILES'] = $TILES;
 
 require APP_ROOT . '/includes/partials/ads.php';
+require APP_ROOT . '/includes/seo.php';
+require APP_ROOT . '/includes/router.php';
 
 /**
  * Read one site setting as a string.

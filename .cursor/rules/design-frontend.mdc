@@ -1,10 +1,12 @@
 ---
 description: Design tokens, map-shell UX, video overlay view, and CSS constraints for GPS Toolset
-globs: public/**/*.{css,js,php},includes/**/*.php
+globs: public/**/*.{css,js,php},includes/**/*.php,tools/**/*.php
 alwaysApply: false
 ---
 
 # Design & frontend
+
+CSS/JS layout (as on disk): `docs/architecture.md`.
 
 ## Tokens
 

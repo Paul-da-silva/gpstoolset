@@ -2,27 +2,25 @@
 
 # GPS Toolset docs
 
-**Source of truth:** this folder (`/var/www/gpstoolset/docs/`). Older `/workspace` copies may lag unless mirrored.
+**Source of truth:** `/var/www/gpstoolset/docs/`.
 
-Local: http://gpstoolset.lan/ → `public/` · Prod: https://gpstoolset.com
+Local: http://gpstoolset.lan/ · Prod: https://gpstoolset.com
 
 ## Index
 
 | File | Purpose |
 |------|---------|
-| [plan.md](plan.md) | Site plan: stack, tools, guides, rollout, hard rules |
-| [cursor-prompts.md](cursor-prompts.md) | Copy-paste Cursor prompts (next: **P4**) |
-| [design-direction.md](design-direction.md) | Design & UX (map shell, video overlay view, tokens) |
-| [seo-keywords.md](seo-keywords.md) | Guides + tool page keyword notes |
+| [architecture.md](architecture.md) | **Structure on disk** · request flow · how to add a tool · P5 checklist |
+| [plan.md](plan.md) | Site plan, rollout, hard rules |
+| [cursor-prompts.md](cursor-prompts.md) | Cursor prompts (P5 refactor done) |
+| [design-direction.md](design-direction.md) | UX / tokens / `gpstoolset.ui.v1` |
+| [seo-keywords.md](seo-keywords.md) | Tool + guide keywords |
 
 ## Hard rules (quick)
 
-- No email / `mailto:`; no contact page
-- Privacy/About links **footer only**
-- Thin neutral borders OK; **no heavy coloured one-sided accent borders**
-- Client-side parse only — never upload user files
-- OSM tiles only via the central tile module; **attribution on the map only** (no © OSM in footer; no “Report a map issue”)
-- Never mention FlySight; never “Telemetry Extractor”; GoPro/DJI = compatibility wording only
-- Brand-in-URL exception: **`/gopro-gps-extract`**
-- **Git:** never commit/push/amend — leave changes uncommitted; Paul commits
+- No email / `mailto:` · no contact · Privacy/About footer only
+- Thin borders OK · no heavy coloured one-sided accent borders
+- Client-side parse only · central tile module · map-only OSM ©
+- Brand URL: `/gopro-gps-extract`
+- **Git:** never commit/push/amend — leave uncommitted; Paul commits
 - Cursor rules: `.cursor/rules/`

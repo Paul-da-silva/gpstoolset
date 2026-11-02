@@ -2,7 +2,8 @@
 
 # GPS Toolset · Site plan (planning only)
 **Site:** gpstoolset.com · **Repo:** `/var/www/gpstoolset` · **Docroot:** `public/`  
-**This doc:** features, content, SEO, design gist, rollout — **Cursor builds later**.
+**This doc:** features, content, SEO, design gist, rollout.
+**Structure:** see `docs/architecture.md` (structure on disk + how to add a tool).
 
 ---
 

@@ -1,4 +1,6 @@
-/* Full-screen map shell. Separation is spacing and tint, never a border or shadow. */
+/* Full-screen map shell: map, chips' placement, popovers, graph dock, video view.
+   Separation is spacing and tint, never a border or shadow.
+   Shared pieces live in components.css (chips, progress bar, FAQ). */
 
 body.is-map {
   min-height: 0;
@@ -197,50 +199,11 @@ body.is-map .leaflet-control-attribution a {
   pointer-events: auto;
 }
 
-.chip {
-  appearance: none;
-  margin: 0;
-  background: var(--tint);
-  color: var(--text);
-  font: inherit;
-  font-size: 0.92rem;
-  font-weight: 650;
-  line-height: 1.2;
-  padding: 0.55rem 0.9rem;
-  min-height: 2.75rem;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.chip:hover,
-.chip.is-active,
-.chip[aria-pressed="true"] {
-  background: var(--tint-strong);
-}
-
-.chip-static {
-  display: inline-flex;
-  align-items: center;
-  cursor: default;
-  font-weight: 650;
-}
-
 #file-name {
   max-width: 14rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.chip:disabled,
-.chip:disabled:hover {
-  background: var(--tint);
-  cursor: default;
-  opacity: 0.55;
-}
-
-.chip-static:hover {
-  background: var(--tint);
 }
 
 .unit-switch,
@@ -305,21 +268,6 @@ body.is-map .leaflet-control-attribution a {
   line-height: 1.35;
 }
 
-.progress-track {
-  align-self: stretch;
-  height: 0.45rem;
-  border-radius: 999px;
-  background: var(--tint-strong);
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0;
-  border-radius: 999px;
-  background: var(--brand);
-}
-
 .map-popover {
   width: min(16rem, 100%);
   padding: 0.85rem 1rem;
@@ -381,8 +329,7 @@ body.is-map .leaflet-control-attribution a {
 .video-wait[hidden],
 .video-minimap-frame[hidden],
 .video-menu[hidden],
-.metric[hidden],
-#tool-preamble[hidden] {
+.metric[hidden] {
   display: none;
 }
 
@@ -669,75 +616,6 @@ body.is-resizing #map {
     top: auto;
     bottom: 0;
   }
-}
-
-body.is-map:has(#tool-preamble:not([hidden])) {
-  height: auto;
-  max-height: none;
-  overflow: auto;
-}
-
-body.is-map:has(#tool-preamble:not([hidden])) .map-app {
-  flex: 0 0 auto;
-  height: calc(100dvh - var(--header-h) - env(safe-area-inset-top, 0px));
-  min-height: 24rem;
-}
-
-.tool-preamble {
-  background: var(--bg);
-  color: var(--text);
-}
-
-.preamble-inner {
-  width: min(42rem, calc(100% - 2.5rem));
-  margin: 0 auto;
-  padding: 2.5rem 0 0.5rem;
-}
-
-.preamble-inner h2 {
-  margin: 1.8rem 0 0.55rem;
-  font-size: 1.35rem;
-  line-height: 1.25;
-  font-weight: 700;
-}
-
-.preamble-inner h2:first-child {
-  margin-top: 0;
-}
-
-.preamble-inner p,
-.preamble-inner li {
-  font-size: 1rem;
-  line-height: 1.55;
-}
-
-.preamble-inner p + p,
-.preamble-inner ul,
-.preamble-inner ol {
-  margin: 0.7rem 0 0;
-}
-
-.preamble-inner ul,
-.preamble-inner ol {
-  padding-left: 1.25rem;
-}
-
-.faq-item {
-  margin-top: 0.35rem;
-  padding-top: 0.35rem;
-  border-top: 1px solid var(--line);
-}
-
-.faq-item summary {
-  display: flex;
-  align-items: center;
-  min-height: 2.75rem;
-  font-weight: 650;
-  cursor: pointer;
-}
-
-.faq-item p {
-  margin: 0 0 0.85rem;
 }
 
 .map-app.is-video .map-stage,
