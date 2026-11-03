@@ -38,7 +38,7 @@ tools/<slug>/{content,page}.php
 public/index.php          ← front controller + /sitemap.xml
 public/assets/js/core|map|parsers|video|viewer|editor|converter|tools/
 public/assets/css/{tokens,base,components,tool-landing,map-shell}.css
-guides/ config/guides.php ← not created yet
+guides/ · config/guides.php · includes/guides/<slug>.php · includes/pages/guide{,s-index}.php
 ```
 
 - Shared **Track** model; edits in `core/edit.js` (used by `/gpx-editor`)
@@ -89,3 +89,5 @@ guides/ config/guides.php ← not created yet
 - Verify at http://gpstoolset.lan/
 - Leave changes uncommitted; Paul commits
 - Do not edit `/etc/apache2` unless Paul asks
+
+- **Example coordinates / default map view:** never Tallinn, Estonia or anywhere near Paul. Use the Eiffel Tower (48.8584, 2.2945) or another famous neutral landmark, or a world view for the map default.

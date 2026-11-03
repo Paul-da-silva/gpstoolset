@@ -54,7 +54,7 @@ declare(strict_types=1);
           </a>
         </div>
       </div>
-      <span class="nav-link is-soon" title="Coming soon">Guides</span>
+      <a class="nav-link<?= nav_active('/guides') ?><?= str_starts_with(current_path(), '/guides/') ? ' is-active' : '' ?>" href="/guides">Guides</a>
     </nav>
   </div>
 </header>

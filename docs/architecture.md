@@ -34,11 +34,12 @@ gpstoolset/
     site.php  ads.php  tiles.php
     tools.php            ← HTML route registry (landings, meta tools, utilities)
     formats.php          ← format registry: id, extensions, magic, parser, exporter, landing slug…
-    guides.php           ← optional; sitemap picks it up if present
+    guides.php           ← guide registry (sitemap + /guides/<slug> routes)
   includes/
-    bootstrap.php  router.php  seo.php
+    bootstrap.php  router.php  seo.php  guides-lib.php
+    guides/<slug>.php    ← static guide HTML bodies (from docs/guides/*.md)
     layout/              ← head, topbar, footer, close, map-app
-    pages/               ← home, privacy, about, not-found
+    pages/               ← home, privacy, about, not-found, guides-index, guide
     partials/            ← ads, tile-config, scripts-map, scripts-module, converter-card…
   tools/                 ← .htaccess Require all denied
     gopro-gps-extract/   ← SEO landing + GPMF + video; map → viewer module
@@ -135,7 +136,8 @@ Same as before: register → `tools/<slug>/` → optional parser → thin `tools
 - [x] P6 small fixes
 - [x] **P7** meta tools (generic `viewer/` · `editor/` · `converter/` modules · SEO landings · format registry · 301s)
 - Landed: home handoff · format viewers · `/gpx-editor` · `/convert` + pairs · measure · coordinate-converter · GoPro on the shared viewer
-- Still open after P7: `/my-coordinates` · `/guides/` + `config/guides.php` · later roadmap in `docs/plan.md`
+- Guides Wave A published: `/guides/` + `config/guides.php` + static `includes/guides/<slug>.php`
+- Still open after P7: `/my-coordinates` · later roadmap in `docs/plan.md`
 
 ---
 

@@ -177,4 +177,36 @@ foreach (is_array($pairs) ? $pairs : [] as $pair) {
     ];
 }
 
+$tools['guides'] = [
+    'slug' => 'guides',
+    'path' => '/guides',
+    'title' => 'GPS Guides',
+    'description' => 'Practical guides for GPX, KML, KMZ, FIT and converting GPS files in your browser. No upload.',
+    'inSitemap' => true,
+    'entry' => 'includes/pages/guides-index.php',
+    'styles' => ['/assets/css/guides.css'],
+    'flags' => ['map' => false, 'video' => false, 'ads' => true],
+];
+
+foreach (guides_registry() as $key => $guide) {
+    if (!is_array($guide) || empty($guide['published'])) {
+        continue;
+    }
+    $slug = (string) ($guide['slug'] ?? $key);
+    // Sitemap URLs come from config/guides.php via seo_sitemap_urls().
+    $tools['guide-' . $slug] = [
+        'slug' => 'guide-' . $slug,
+        'path' => '/guides/' . $slug,
+        'title' => (string) ($guide['title'] ?? $slug),
+        'description' => (string) ($guide['description'] ?? ''),
+        'inSitemap' => false,
+        'entry' => 'includes/pages/guide.php',
+        'content' => (string) ($guide['content'] ?? 'includes/guides/' . $slug . '.php'),
+        'styles' => ['/assets/css/guides.css'],
+        'flags' => ['map' => false, 'video' => false, 'ads' => true],
+        'guideSlug' => $slug,
+        'faq' => is_array($guide['faq'] ?? null) ? $guide['faq'] : [],
+    ];
+}
+
 return $tools;

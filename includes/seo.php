@@ -134,11 +134,9 @@ function seo_sitemap_urls(): array
         }
     }
 
-    $guides = APP_ROOT . '/config/guides.php';
-    if (is_file($guides)) {
-        $list = require $guides;
-        foreach (is_array($list) ? $list : [] as $key => $guide) {
-            if (!is_array($guide) || empty($guide['inSitemap'])) {
+    if (function_exists('guides_registry')) {
+        foreach (guides_registry() as $key => $guide) {
+            if (!is_array($guide) || empty($guide['inSitemap']) || empty($guide['published'])) {
                 continue;
             }
             $slug = (string) ($guide['slug'] ?? $key);

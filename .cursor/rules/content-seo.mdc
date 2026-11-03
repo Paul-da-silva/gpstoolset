@@ -62,3 +62,4 @@ See also `docs/architecture.md` (registry + SEO helper).
 - **Link targets:** converters → `/convert/<pair>` · open/view → format landings (`/gpx-viewer` …) · edit → `/gpx-editor`
 - Link tools ↔ guides both ways
 - Never invent Planner volumes; follow verified vs unverified labels in the brief
+- **Example coordinates:** never use Tallinn, Estonia or anywhere near Paul. Use the Eiffel Tower (48.8584, 2.2945; KML lon,lat 2.2945,48.8584) or another famous neutral landmark. Same for demo tracks, placeholders, default map centre and test files.

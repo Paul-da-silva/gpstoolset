@@ -22,6 +22,7 @@ $GLOBALS['TILES'] = $TILES;
 require APP_ROOT . '/includes/partials/ads.php';
 require APP_ROOT . '/includes/seo.php';
 require APP_ROOT . '/includes/router.php';
+require APP_ROOT . '/includes/guides-lib.php';
 
 /**
  * Read one site setting as a string.

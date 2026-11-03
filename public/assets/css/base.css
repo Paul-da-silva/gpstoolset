@@ -334,6 +334,41 @@ a.nav-link:hover {
   line-height: 1.4;
 }
 
+.home-guides {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.home-guides h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+}
+
+.home-guides > p {
+  margin: 0 0 0.75rem;
+  color: color-mix(in srgb, var(--text) 72%, transparent);
+  font-size: 0.95rem;
+}
+
+.home-guides-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-guides-list a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.home-guides-list a:hover {
+  text-decoration: underline;
+}
+
 [data-theme="dark"] .dropzone-error {
   color: #f87171;
 }
