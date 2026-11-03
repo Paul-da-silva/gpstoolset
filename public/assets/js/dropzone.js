@@ -1,17 +1,10 @@
 /**
- * Home drop zone. Routes a file to the matching viewer.
+ * Home drop zone. Detects a GPS file and opens its viewer.
+ * GoPro video (.mp4 / .lrv) still opens the GoPro page.
  * The File is handed off in this browser. It is not uploaded.
  */
 import { stash } from './core/file-handoff.js';
-
-var ROUTES = {
-  gpx: { slug: 'gpx-viewer', path: '/gpx-viewer' },
-  kml: { slug: 'kml-to-gpx', path: '/kml-to-gpx' },
-  kmz: { slug: 'kml-to-gpx', path: '/kml-to-gpx' },
-  fit: { slug: 'fit-to-gpx', path: '/fit-to-gpx' },
-  mp4: { slug: 'gopro-gps-extract', path: '/gopro-gps-extract' },
-  lrv: { slug: 'gopro-gps-extract', path: '/gopro-gps-extract' }
-};
+import { detect, extensionOf } from './core/detect.js';
 
 var zone = document.querySelector('.dropzone');
 var input = document.getElementById('home-file');
@@ -30,12 +23,6 @@ function hasFiles(event) {
     }
   }
   return false;
-}
-
-function extension(file) {
-  var name = String(file && file.name || '').toLowerCase();
-  var dot = name.lastIndexOf('.');
-  return dot >= 0 ? name.slice(dot + 1) : '';
 }
 
 function showError(message) {
@@ -58,22 +45,37 @@ function setBusy(on, label) {
   }
 }
 
+function go(file, slug, path) {
+  setBusy(true, 'Opening…');
+  stash(file, slug).then(function () {
+    window.location.assign(path);
+  }).catch(function (err) {
+    setBusy(false);
+    showError((err && err.message) || 'Couldn’t open that file. Try the tool page instead.');
+  });
+}
+
 function send(file) {
   if (!file || busy) {
     return;
   }
-  var route = ROUTES[extension(file)];
-  if (!route) {
-    showError('Drop a GPX, KML, KMZ, or FIT file, or a GoPro .MP4 or .LRV.');
+  showError('');
+  var ext = extensionOf(file);
+  if (ext === 'mp4' || ext === 'lrv') {
+    go(file, 'gopro-gps-extract', '/gopro-gps-extract');
     return;
   }
-  showError('');
-  setBusy(true, 'Opening…');
-  stash(file, route.slug).then(function () {
-    window.location.assign(route.path);
+  setBusy(true, 'Checking the file…');
+  detect(file).then(function (format) {
+    if (!format || !format.landing || !format.slug) {
+      setBusy(false);
+      showError('Drop a GPX, KML, KMZ, or FIT file, or a GoPro .MP4 or .LRV.');
+      return;
+    }
+    go(file, format.slug, format.landing);
   }).catch(function () {
     setBusy(false);
-    showError('Couldn’t open that file. Try the tool page instead.');
+    showError('Couldn’t read that file. Try the tool page instead.');
   });
 }
 
@@ -124,19 +126,6 @@ function bind() {
       }
     });
   }
-
-  document.addEventListener('dragover', function (event) {
-    if (hasFiles(event)) {
-      event.preventDefault();
-    }
-  });
-
-  document.addEventListener('drop', function (event) {
-    if (!hasFiles(event)) {
-      return;
-    }
-    event.preventDefault();
-  });
 }
 
 bind();

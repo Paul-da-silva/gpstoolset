@@ -10,6 +10,22 @@ declare(strict_types=1);
  */
 
 /**
+ * Format registry from config/formats.php. Cached. tools.php and the
+ * format-config partial both read this.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function formats_registry(): array
+{
+    static $formats = null;
+    if ($formats === null) {
+        $loaded = require APP_ROOT . '/config/formats.php';
+        $formats = is_array($loaded) ? $loaded : [];
+    }
+    return $formats;
+}
+
+/**
  * The registry from config/tools.php, keyed by slug, each entry normalised.
  *
  * @return array<string, array<string, mixed>>

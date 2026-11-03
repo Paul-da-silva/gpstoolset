@@ -206,6 +206,16 @@ body.is-map .leaflet-control-attribution a {
   white-space: nowrap;
 }
 
+.track-parts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.track-parts[hidden] {
+  display: none;
+}
+
 .unit-switch,
 .export-actions {
   display: flex;

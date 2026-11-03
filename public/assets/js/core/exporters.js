@@ -1,7 +1,9 @@
 /**
- * Track export (ES module): GPX, CSV, KML text and a browser download.
+ * Track export (ES module): GPX, CSV, KML, KMZ and a browser download.
  * Files are built here and saved on the device. Nothing is uploaded.
+ * KMZ is a stored zip of the KML (parsers/zip.js).
  */
+import { zipStore } from '../parsers/zip.js';
 
 function xml(value) {
   return String(value)
@@ -33,8 +35,7 @@ function isoTime(ms) {
   return date.toISOString();
 }
 
-export function download(filename, mime, text) {
-  var blob = new Blob([text], { type: mime });
+function saveBlob(filename, blob) {
   var url = URL.createObjectURL(blob);
   var link = document.createElement('a');
   link.href = url;
@@ -45,6 +46,14 @@ export function download(filename, mime, text) {
   window.setTimeout(function () {
     URL.revokeObjectURL(url);
   }, 1500);
+}
+
+export function download(filename, mime, text) {
+  saveBlob(filename, new Blob([text], { type: mime }));
+}
+
+export function downloadBytes(filename, mime, bytes) {
+  saveBlob(filename, new Blob([bytes], { type: mime }));
 }
 
 function gpxHeader() {
@@ -138,17 +147,18 @@ function pointTime(point) {
   return isoTime(point.t);
 }
 
+/** True when at least one point has a time. A mix still uses gx:Track. */
 function trackIsTimed(points) {
   var i;
-  if (!points.length) {
+  if (!points || !points.length) {
     return false;
   }
   for (i = 0; i < points.length; i++) {
-    if (!pointTime(points[i])) {
-      return false;
+    if (pointTime(points[i])) {
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
 function trackHasElevation(points) {
@@ -161,13 +171,20 @@ function trackHasElevation(points) {
   return false;
 }
 
+function partsOf(doc) {
+  if (!doc) {
+    return [];
+  }
+  return doc.segments || doc.tracks || [];
+}
+
 /**
  * GPX with several tracks and waypoints.
- * doc: { name, tracks: [{ name, points }], waypoints: [{ lat, lon, ele?, name?, t? }] }
+ * doc: { name, tracks or segments: [{ name, points }], waypoints }
  */
 export function toGpxDocument(doc) {
   var name = doc && doc.name ? doc.name : 'track';
-  var tracks = doc && doc.tracks ? doc.tracks : [];
+  var tracks = partsOf(doc);
   var waypoints = doc && doc.waypoints ? doc.waypoints : [];
   var lines = gpxHeader();
   lines.push('<metadata><name>' + xml(name) + '</name></metadata>');
@@ -216,7 +233,8 @@ function kmlTrack(points, name) {
     var mode = trackHasElevation(points) ? 'absolute' : 'clampToGround';
     lines.push('<gx:Track><altitudeMode>' + mode + '</altitudeMode>');
     for (i = 0; i < points.length; i++) {
-      lines.push('<when>' + pointTime(points[i]) + '</when>');
+      var when = pointTime(points[i]);
+      lines.push(when ? '<when>' + when + '</when>' : '<when></when>');
     }
     for (i = 0; i < points.length; i++) {
       var point = points[i];
@@ -242,11 +260,12 @@ function kmlTrack(points, name) {
 
 /**
  * KML with one placemark per track, plus a placemark per waypoint.
- * Timed tracks use gx:Track so the times are kept.
+ * A track with any times uses gx:Track. Untimed points get an empty when.
+ * A track with no times at all is a LineString.
  */
 export function toKmlDocument(doc) {
   var name = doc && doc.name ? doc.name : 'track';
-  var tracks = doc && doc.tracks ? doc.tracks : [];
+  var tracks = partsOf(doc);
   var waypoints = doc && doc.waypoints ? doc.waypoints : [];
   var lines = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -283,4 +302,69 @@ export function exportTrack(kind, track) {
   } else if (kind === 'kml') {
     download(name + '.kml', 'application/vnd.google-earth.kml+xml', toKml(track.points, name));
   }
+}
+
+function modelOf(doc, label) {
+  var name = stem(label || (doc && doc.name) || 'track');
+  return {
+    name: name,
+    tracks: (doc && (doc.segments || doc.tracks)) || [],
+    waypoints: (doc && doc.waypoints) || []
+  };
+}
+
+/**
+ * Build a download for a document. kind is gpx, kml, kmz, or csv.
+ * CSV uses activePoints when those are passed, otherwise the first track.
+ * Returns null when there is nothing to write. Nothing is uploaded.
+ */
+export function buildExport(kind, doc, label, activePoints) {
+  var model = modelOf(doc, label);
+  var name = model.name;
+  if (kind === 'gpx') {
+    return { filename: name + '.gpx', mime: 'application/gpx+xml', text: toGpxDocument(model) };
+  }
+  if (kind === 'kml') {
+    return { filename: name + '.kml', mime: 'application/vnd.google-earth.kml+xml', text: toKmlDocument(model) };
+  }
+  if (kind === 'kmz') {
+    return {
+      filename: name + '.kmz',
+      mime: 'application/vnd.google-earth.kmz',
+      bytes: zipStore('doc.kml', toKmlDocument(model))
+    };
+  }
+  if (kind === 'csv') {
+    var points = activePoints;
+    if (!points) {
+      var parts = model.tracks;
+      var i;
+      points = [];
+      for (i = 0; i < parts.length; i++) {
+        var part = parts[i];
+        var list = part && part.points ? part.points : part;
+        if (list && list.length) {
+          points = list;
+          break;
+        }
+      }
+    }
+    if (!points || !points.length) {
+      return null;
+    }
+    return { filename: name + '.csv', mime: 'text/csv', text: toCsv(points) };
+  }
+  return null;
+}
+
+/** Save the object returned by buildExport. */
+export function saveBuilt(built) {
+  if (!built) {
+    return;
+  }
+  if (built.bytes) {
+    downloadBytes(built.filename, built.mime, built.bytes);
+    return;
+  }
+  download(built.filename, built.mime, built.text || '');
 }

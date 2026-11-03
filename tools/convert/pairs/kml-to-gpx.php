@@ -1,36 +1,33 @@
 <?php
 declare(strict_types=1);
 
-/**
- * FIT to GPX: page copy.
- * Expects $route (config/tools.php entry merged with meta.php).
- */
+/** KML to GPX pair copy. Expects $route. */
 
 $faq = $route['faq'];
 $convertCardTitle = 'Convert a file';
-$convertDropTitle = 'Drop a FIT file here';
+$convertDropTitle = 'Drop a KML file here';
 $convertDropNote = 'or choose a file. Nothing is uploaded.';
-$convertChoose = 'Choose FIT';
-$convertAccept = '.fit,application/vnd.ant.fit';
+$convertChoose = 'Choose KML';
+$convertAccept = '.kml,.kmz,.gpx,.fit';
 $convertDownload = 'Download GPX';
 $convertView = 'View on the map';
 ?>
-<main class="tool-landing" id="tool-landing">
+<main class="tool-landing" id="tool-landing" data-from="kml" data-to="gpx">
   <div id="landing-overlay" class="landing-overlay" hidden>
-    <p>Drop a FIT file. Nothing is uploaded.</p>
+    <p>Drop a KML file. Nothing is uploaded.</p>
   </div>
 
   <section class="tool-hero">
     <div class="tool-wrap tool-hero-grid">
       <div>
-        <h1>FIT to GPX</h1>
-        <p class="tool-lead">Convert a FIT file to GPX in the browser. The file stays on your device.</p>
+        <h1>KML to GPX</h1>
+        <p class="tool-lead">Convert a KML file to GPX in the browser. The file stays on your device.</p>
         <ul class="tool-pills">
-          <li>FIT to GPX</li>
-          <li>Watch and bike computer</li>
+          <li>KML to GPX</li>
+          <li>Tracks and waypoints</li>
           <li>Nothing uploaded</li>
         </ul>
-        <p class="tool-copy">FIT is the activity file saved by many watches and bike computers, including a Garmin export. Drop the .fit file here. This page reads the GPS positions and writes a GPX file you can open on a map or in another app.</p>
+        <p class="tool-copy">KML is the map file used by Google Earth and many other maps. This page reads it and writes a GPX file: one track for each line, and a waypoint for each point. Time and elevation are kept when the file has them.</p>
       </div>
       <?php require APP_ROOT . '/includes/partials/converter-card.php'; ?>
     </div>
@@ -40,22 +37,22 @@ $convertView = 'View on the map';
 
   <section class="tool-section">
     <div class="tool-wrap">
-      <h2>How to convert FIT to GPX</h2>
+      <h2>How to convert KML to GPX</h2>
       <ol class="tool-steps">
         <li class="tool-step">
           <span class="tool-step-num">1</span>
-          <h3>Export the activity</h3>
-          <p>Save the activity as a .fit file from the watch or its app. If the app already offers GPX, you can open that in the GPX viewer instead.</p>
+          <h3>Open the file</h3>
+          <p>Drop a .kml file, or choose one. A file from Google Earth, a phone, or another map all work the same way.</p>
         </li>
         <li class="tool-step">
           <span class="tool-step-num">2</span>
           <h3>Read it here</h3>
-          <p>Drop the FIT file. The browser reads the positions, times, elevation, and speed. Nothing is sent to a server.</p>
+          <p>The browser reads the paths and the points. Nothing is sent to a server.</p>
         </li>
         <li class="tool-step">
           <span class="tool-step-num">3</span>
           <h3>Save or view</h3>
-          <p>Download the GPX, or open it on the map. The original FIT file on your device is left as it was.</p>
+          <p>Download the GPX, or open it on the map. The original KML on your device is left as it was.</p>
         </li>
       </ol>
     </div>
@@ -65,11 +62,12 @@ $convertView = 'View on the map';
     <div class="tool-wrap tool-prose">
       <h2>What the GPX contains</h2>
       <ul>
-        <li>The GPS path becomes a track. Time, elevation, and speed are kept when the FIT file recorded them.</li>
-        <li>If the file contains more than one sport and marks where each one starts, each sport becomes its own track.</li>
-        <li>Heart rate, cadence, and power stay in the FIT file. They are not written into the GPX.</li>
-        <li>An indoor activity with no GPS positions cannot be drawn. The page will say so.</li>
+        <li>A line becomes a GPX track. Several lines become several tracks in the one file.</li>
+        <li>A track that has a time for each point keeps those times.</li>
+        <li>A point placemark becomes a waypoint. It is not joined into the line.</li>
+        <li>Photos, network links, and ground overlays are skipped.</li>
       </ul>
+      <p>A KMZ file is the zipped form of KML. Convert that on <a href="/convert/kmz-to-gpx">KMZ to GPX</a>. You can also drop a KMZ here and the format list will follow the file.</p>
     </div>
   </section>
 
@@ -97,7 +95,7 @@ $convertView = 'View on the map';
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
       <h2>More on GPS Toolset</h2>
-      <p>Open the GPX in the <a href="/gpx-viewer">GPX viewer</a> to see the track or edit it. A KML or KMZ file converts on the <a href="/kml-to-gpx">KML to GPX converter</a>, and the other direction is the <a href="/gpx-to-kml">GPX to KML converter</a>.</p>
+      <p>Open the GPX in the <a href="/gpx-viewer">GPX viewer</a>. Edit it in the <a href="/gpx-editor">GPX editor</a>. The other direction is <a href="/convert/gpx-to-kml">GPX to KML</a>. A FIT activity file converts on <a href="/convert/fit-to-gpx">FIT to GPX</a>.</p>
     </div>
   </section>
 </main>

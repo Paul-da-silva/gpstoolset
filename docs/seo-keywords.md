@@ -20,13 +20,15 @@ Titles ≤60 chars; no brand names in URL or title brand-stuffing beyond necessa
 | Page | Primary (Planner) | Secondaries | Suggested title (≤60) |
 |---|---|---|---|
 | `/gopro-gps-extract` | `gopro gps extractor` **10–100** | `gopro gps data` **100–1K** · `extract gps from gopro video` **10–100** · `gopro gpx` **10–100** · (`video gps extractor` GSC only, not in Planner) | GoPro GPS Extractor — Free, No Upload |
-| `/gpx-viewer` | `gpx viewer` **10K–100K** | `gpx viewer online` **1K–10K** · `gpx editor online` **1K–10K** · `gpx to csv` **100–1K** · (on-page: split/trim/simplify/reverse mostly **10–100**/blank) | Free Online GPX Viewer & Editor |
+| `/gpx-viewer` | `gpx viewer` **10K–100K** | `gpx viewer online` **1K–10K** · `gpx to csv` **100–1K** | Free Online GPX Viewer |
+| `/gpx-editor` | `gpx editor online` **1K–10K** | split / trim / simplify / reverse mostly **10–100** | Free Online GPX / Track Editor |
 | `/my-coordinates` | `my coordinates` **10K–100K** | `gps coordinates` **10K–100K** · `lat long finder` **10K–100K** · `find coordinates on map` **1K–10K** | My Coordinates — Find Lat & Long on a Map |
 | `/measure-distance` | `measure distance on map` **10K–100K** | `distance calculator map` **10K–100K** · `route distance calculator` **1K–10K** | Measure Distance on a Map — Free Tool |
 | `/coordinate-converter` | `coordinate converter` **10K–100K** | `lat long converter` **10K–100K** · `dms to decimal` / `decimal to dms` **1K–10K** · `utm converter` / `utm to lat long` **1K–10K** · `mgrs converter` **1K–10K** | Coordinate Converter — DMS, UTM & MGRS |
-| `/kml-to-gpx` | `kml to gpx` **10K–100K** | `kmz to gpx` **10K–100K** | KML / KMZ to GPX Converter — Free |
-| `/gpx-to-kml` | `gpx to kml` **1K–10K** | (pair with kml↔gpx hub copy) | GPX to KML Converter — Free Online |
-| `/fit-to-gpx` | `fit to gpx` **1K–10K** | `tcx to gpx` **100–1K** · `garmin export gpx` **100–1K** (how-to lean) | FIT to GPX Converter — Free, No Upload |
+| `/convert/kml-to-gpx` | `kml to gpx` **10K–100K** | | KML to GPX Converter — Free |
+| `/convert/gpx-to-kml` | `gpx to kml` **1K–10K** | (pair with kml↔gpx hub copy) | GPX to KML Converter — Free Online |
+| `/convert/fit-to-gpx` | `fit to gpx` **1K–10K** | `tcx to gpx` **100–1K** · `garmin export gpx` **100–1K** (how-to lean) | FIT to GPX Converter — Free, No Upload |
+| `/convert/kmz-to-gpx` | `kmz to gpx` **10K–100K** | | KMZ to GPX Converter — Free |
 
 **Avoid on `/gopro-gps-extract`:** targeting `telemetry extractor` / `gopro telemetry extractor` as product phrasing (Planner has them; brand/product risk). Compatibility: say “reads GoPro video GPS (GPMF)” in body.
 
@@ -76,7 +78,7 @@ Definitional “what is …” queries are usually owned by **Wikipedia / gov / 
 | **AC** | Strong — FIRST-PASS |
 | **Who ranks** | [Wikipedia GPX](https://en.wikipedia.org/wiki/GPS_Exchange_Format) owns “what is”; **tools/how-to** SERPs more open (gpx.studio, GPS Visualizer, Garmin help) — FIRST-PASS/GUESS |
 | **Angle** | “What a GPX holds” briefly + **open online / edit / convert** — win the how-to cluster |
-| **Links to** | `/gpx-viewer`, `/gpx-to-kml`, `/kml-to-gpx` |
+| **Links to** | `/gpx-viewer`, `/gpx-editor`, `/convert/gpx-to-kml`, `/convert/kml-to-gpx` |
 
 ### `/guides/kml-kmz`
 | | |
@@ -86,7 +88,7 @@ Definitional “what is …” queries are usually owned by **Wikipedia / gov / 
 | **AC** | Strong — FIRST-PASS |
 | **Who ranks** | Google Earth / Google docs + Wikipedia — hard on pure definition; **convert KML→GPX** is the money link |
 | **Angle** | KML vs KMZ in one screen + convert to GPX for watches/apps |
-| **Links to** | `/kml-to-gpx`, `/gpx-to-kml` |
+| **Links to** | `/convert/kml-to-gpx`, `/convert/gpx-to-kml`, `/kml-viewer`, `/kmz-viewer` |
 
 ### `/guides/fit`
 | | |
@@ -96,7 +98,7 @@ Definitional “what is …” queries are usually owned by **Wikipedia / gov / 
 | **AC** | Strong — FIRST-PASS |
 | **Who ranks** | [Garmin FIT SDK](https://developer.garmin.com/fit/overview/), blogs — definitional tough; **convert FIT→GPX** is the actionable win |
 | **Angle** | FIT = watch activity binary → export/convert to GPX to view on a map |
-| **Links to** | `/fit-to-gpx` (mention TCX as sibling) |
+| **Links to** | `/convert/fit-to-gpx`, `/fit-viewer` (mention TCX as sibling) |
 
 ### `/guides/nmea`
 | | |
@@ -144,8 +146,8 @@ Definitional “what is …” queries are usually owned by **Wikipedia / gov / 
 
 1. **`how to open gpx file` / online** — tools can rank; feed `/gpx-viewer`.  
 2. **`gpx vs kml` / format hub** — comparison content + converters.  
-3. **`kml vs kmz` + convert** — feed `/kml-to-gpx`.  
-4. **`what is a fit file` → convert** — feed `/fit-to-gpx` (Planner convert term is the volume).  
+3. **`kml vs kmz` + convert** — feed `/convert/kml-to-gpx`.
+4. **`what is a fit file` → convert** — feed `/convert/fit-to-gpx` (Planner convert term is the volume).
 5. **`dji srt file`** — real Planner band; guide now, tool later.  
 6. **`gopro-gps-extract` GPMF guide** — weak AC for “GPMF”; write as support content for `/gopro-gps-extract`, not a traffic play.  
 7. **Pure `what is gps` / GNSS constellation pages** — **don’t expect to outrank** wiki/gov; keep short, link tools.

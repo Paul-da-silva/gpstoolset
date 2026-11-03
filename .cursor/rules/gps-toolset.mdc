@@ -16,7 +16,7 @@ Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side par
 ## Docs
 
 - `docs/architecture.md` — **structure on disk** + request flow + how to add a tool
-- `docs/plan.md` · `docs/cursor-prompts.md` · `docs/design-direction.md` · `docs/seo-keywords.md`
+- `docs/plan.md` · `docs/cursor-prompts.md` · `docs/guides-brief.md` · `docs/design-direction.md` · `docs/seo-keywords.md`
 
 ## Stack
 
@@ -24,27 +24,31 @@ Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side par
 - Only `public/` is docroot; `config/`, `includes/`, `tools/`, `guides/`, `docs/` stay above it
 - Vendored libs under `public/assets/vendor/` (Leaflet 1.9.4, Chart.js 4.4.7, GoPro GPMF bundles)
 
-## Structure (P5 refactor done — matches the tree on disk)
+## Structure (P7 on disk)
 
 ```
-config/tools.php          ← page/tool registry (slug, entry, meta, inSitemap, flags)
+config/tools.php          ← HTML route registry (viewers generated from formats.php)
+config/formats.php        ← format registry (parser, exporter, detection, landing meta)
+config/convert.php        ← converter SEO pairs
 includes/router.php seo.php bootstrap.php
-includes/layout/          ← head topbar footer close map-app
-includes/pages/           ← home privacy about not-found bodies
-includes/partials/        ← ads tile-config scripts-map scripts-module converter-card
-tools/<slug>/{meta,content,page}.php
-public/index.php          ← front controller (all HTML routes + /sitemap.xml)
-public/assets/js/core|map|parsers|video|tools/   ← ES modules, tool app = tools/<slug>.js
+includes/layout/ pages/ partials/
+tools/<slug>/{content,page}.php
+  format landings: gpx|kml|kmz|fit-viewer + gopro → parse then viewer/
+  gpx-editor/  convert/  gopro-gps-extract/  measure-distance/  coordinate-converter/
+public/index.php          ← front controller + /sitemap.xml
+public/assets/js/core|map|parsers|video|viewer|editor|converter|tools/
 public/assets/css/{tokens,base,components,tool-landing,map-shell}.css
 guides/ config/guides.php ← not created yet
 ```
 
-- Shared **Track** model from every parser (`core/track.js`); edits in `core/edit.js`; tool apps stay thin
-- Shipped tools: `/gopro-gps-extract`, `/gpx-viewer`, `/measure-distance` (same map shell; edit tools only on the GPX viewer), `/coordinate-converter` (document page, small preview map). Converters `/kml-to-gpx`, `/gpx-to-kml`, `/fit-to-gpx` are document pages (shared `convert-app.js`; Tools menu, Convert subsection)
-- Native ES modules, no build; tile URLs only via `config/tiles.php` + `map/tiles.js`
-- Sitemap / meta via `includes/seo.php` + registry (`/sitemap.xml` is generated; no static file)
-- **Adding a tool:** register in `config/tools.php` → create `tools/<slug>/` → parser if needed → `public/assets/js/tools/<slug>.js` → check on `.lan` → leave uncommitted for Paul  
-  Full steps: `docs/architecture.md` ("Add a new tool")
+- Shared **Track** model; edits in `core/edit.js` (used by `/gpx-editor`)
+- **One generic viewer module** (`assets/js/viewer/`): format-agnostic; landings (incl. GoPro) parse then hand a track in. Refactor current gpx-viewer JS into it. GoPro adds GPMF + video only
+- **One generic editor** (`assets/js/editor/`) and **one converter** (`assets/js/converter/`): same split — `/gpx-editor` and `/convert/...` are SEO landings that parse then hand off. Editor shares map/chart components with the viewer. **No duplicated map/chart code anywhere**
+- **Menu:** Viewers (GPX, KML, KMZ, FIT, then a More section for GoPro) · Tools (Coordinate converter, Measure distance, Converter `/convert`)
+- Converter SEO pairs under `/convert/<pair>`; old `/kml-to-gpx` etc. 301 → `/convert/...`
+- Adding a **format** or convert pair = config + content only (no new JS). Full steps: `docs/architecture.md`
+- Native ES modules; tiles only via `config/tiles.php` + `map/tiles.js`
+- Sitemap from registry via `includes/seo.php`
 
 ## Privacy / chrome
 
@@ -61,7 +65,7 @@ guides/ config/guides.php ← not created yet
 
 - Map tools: full-screen map + slim top bar; dock under map; `gpstoolset.ui.v1`
 - **No sample files.** Do not invent a demo track, a Sample button, or a “try a sample” file. The user opens their own file.
-- `/gopro-gps-extract`: Map + Video views (video overlay module)
+- `/gopro-gps-extract`: SEO landing → generic viewer for map · Video overlay (GPMF + video only)
 - Ads: central partial; none on map tools at launch
 
 ## Design

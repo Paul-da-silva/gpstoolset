@@ -22,6 +22,7 @@ $mapShellNote = 'Works with GoPro HERO video that recorded GPS. The file stays i
 $mapShellDropText = 'Drop a GoPro video. Nothing is uploaded.';
 $mapShellAccept = '.mp4,.lrv,video/*';
 $mapShellVideo = true;
+$mapShellEditHref = '/gpx-editor';
 $mapShellEmpty = true;
 $mapAppHidden = true;
 $mapAppFileInput = false;

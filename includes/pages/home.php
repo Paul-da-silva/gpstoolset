@@ -21,6 +21,7 @@ require APP_ROOT . '/includes/layout/topbar.php';
 $dropzone = '/assets/js/dropzone.js';
 $dropzoneFile = APP_ROOT . '/public' . $dropzone;
 $dropzone .= '?v=' . (is_file($dropzoneFile) ? (string) filemtime($dropzoneFile) : '1');
+require APP_ROOT . '/includes/partials/format-config.php';
 ?>
 <script type="module" src="<?= e($dropzone) ?>"></script>
 <?php require APP_ROOT . '/includes/layout/footer.php'; ?>

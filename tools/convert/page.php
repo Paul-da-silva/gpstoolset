@@ -2,13 +2,19 @@
 declare(strict_types=1);
 
 /**
- * Converter page shell. The body copy is content.php in this folder.
+ * Converter page. /convert and every /convert/<pair> share this file.
+ * Pair pages set pairContent. The module is public/assets/js/converter/.
  * Expects $page and $route.
  */
 
 require APP_ROOT . '/includes/layout/head.php';
 require APP_ROOT . '/includes/layout/topbar.php';
-require __DIR__ . '/content.php';
+
+$pair = (string) ($route['pairContent'] ?? '');
+$file = $pair !== '' ? route_file($pair) : route_file('tools/convert/content.php');
+if ($file !== null) {
+    require $file;
+}
 
 $footerClose = false;
 require APP_ROOT . '/includes/layout/footer.php';

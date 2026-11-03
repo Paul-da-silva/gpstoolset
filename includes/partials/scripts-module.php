@@ -5,6 +5,8 @@ declare(strict_types=1);
  * One ES module for a document tool. No Leaflet and no Chart.js.
  * Expects $route from route_dispatch(). The path starts with /assets/.
  */
+require __DIR__ . '/format-config.php';
+
 $moduleSrc = '';
 if (
     isset($route['module'])

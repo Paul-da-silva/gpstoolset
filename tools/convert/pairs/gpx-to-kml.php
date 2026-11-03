@@ -1,21 +1,18 @@
 <?php
 declare(strict_types=1);
 
-/**
- * GPX to KML: page copy.
- * Expects $route (config/tools.php entry merged with meta.php).
- */
+/** GPX to KML pair copy. Expects $route. */
 
 $faq = $route['faq'];
 $convertCardTitle = 'Convert a file';
 $convertDropTitle = 'Drop a GPX file here';
 $convertDropNote = 'or choose a file. Nothing is uploaded.';
 $convertChoose = 'Choose GPX';
-$convertAccept = '.gpx,application/gpx+xml';
+$convertAccept = '.gpx,.kml,.kmz,.fit';
 $convertDownload = 'Download KML';
-$convertView = 'View the GPX';
+$convertView = 'View on the map';
 ?>
-<main class="tool-landing" id="tool-landing">
+<main class="tool-landing" id="tool-landing" data-from="gpx" data-to="kml">
   <div id="landing-overlay" class="landing-overlay" hidden>
     <p>Drop a GPX file. Nothing is uploaded.</p>
   </div>
@@ -71,6 +68,7 @@ $convertView = 'View the GPX';
         <li>Elevation is kept when the GPX has it.</li>
         <li>If every point on a track has a time, the KML keeps those times.</li>
       </ul>
+      <p>If the map wants a packed file, use <a href="/convert/gpx-to-kmz">GPX to KMZ</a> instead.</p>
     </div>
   </section>
 
@@ -98,7 +96,7 @@ $convertView = 'View the GPX';
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
       <h2>More on GPS Toolset</h2>
-      <p>Open the same GPX in the <a href="/gpx-viewer">GPX viewer</a> to see it on a map or edit the track. The other direction is the <a href="/kml-to-gpx">KML to GPX converter</a>. A FIT activity file converts on the <a href="/fit-to-gpx">FIT to GPX converter</a>.</p>
+      <p>Open the KML in the <a href="/kml-viewer">KML viewer</a>, or the original GPX in the <a href="/gpx-viewer">GPX viewer</a>. Edit the track in the <a href="/gpx-editor">GPX editor</a>. The other direction is <a href="/convert/kml-to-gpx">KML to GPX</a>.</p>
     </div>
   </section>
 </main>

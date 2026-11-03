@@ -7,6 +7,7 @@
 var bound = false;
 var stages = [];
 var onFile = null;
+var onFiles = null;
 
 function node(ref) {
   if (!ref) {
@@ -36,6 +37,27 @@ function deliver(file) {
     return;
   }
   onFile(file);
+}
+
+function deliverList(fileList) {
+  var files = [];
+  var i;
+  if (!fileList) {
+    return;
+  }
+  for (i = 0; i < fileList.length; i++) {
+    if (fileList[i]) {
+      files.push(fileList[i]);
+    }
+  }
+  if (!files.length) {
+    return;
+  }
+  if (typeof onFiles === 'function') {
+    onFiles(files);
+    return;
+  }
+  deliver(files[0]);
 }
 
 function hideAll() {
@@ -113,7 +135,7 @@ function watch(stage, overlay) {
     var files = event.dataTransfer && event.dataTransfer.files;
     hide();
     if (files && files.length) {
-      deliver(files[0]);
+      deliverList(files);
     }
   });
 
@@ -138,7 +160,7 @@ function bindDocument() {
     var files = event.dataTransfer && event.dataTransfer.files;
     hideAll();
     if (files && files.length) {
-      deliver(files[0]);
+      deliverList(files);
     }
   });
 
@@ -147,8 +169,13 @@ function bindDocument() {
 
 export function init(options) {
   var opts = options || {};
-  if (typeof opts.onFile === 'function' && !bound) {
-    onFile = opts.onFile;
+  if (!bound) {
+    if (typeof opts.onFile === 'function') {
+      onFile = opts.onFile;
+    }
+    if (typeof opts.onFiles === 'function') {
+      onFiles = opts.onFiles;
+    }
   }
   if (opts.stage) {
     watch(node(opts.stage), node(opts.overlay));
@@ -164,10 +191,17 @@ export function init(options) {
   var input = node(opts.input || '#file-input');
   if (input) {
     input.addEventListener('change', function () {
-      var file = input.files && input.files[0];
+      var chosen = input.files;
+      var copy = [];
+      var i;
+      if (chosen) {
+        for (i = 0; i < chosen.length; i++) {
+          copy.push(chosen[i]);
+        }
+      }
       input.value = '';
-      if (file) {
-        deliver(file);
+      if (copy.length) {
+        deliverList(copy);
       }
     });
   }

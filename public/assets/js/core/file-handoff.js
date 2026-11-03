@@ -7,6 +7,11 @@ var DB_NAME = 'gpstoolset.handoff';
 var STORE = 'files';
 var KEY = 'pending';
 var MAX_AGE_MS = 2 * 60 * 1000;
+var MAX_BYTES = 64 * 1024 * 1024;
+
+function tooLarge(file) {
+  return !!(file && file.size > MAX_BYTES);
+}
 
 function openDb() {
   return new Promise(function (resolve, reject) {
@@ -45,6 +50,9 @@ function txDone(tx) {
 }
 
 export function stash(file, slug) {
+  if (tooLarge(file)) {
+    return Promise.reject(new Error('That file is larger than 64 MB.'));
+  }
   return openDb().then(function (db) {
     var tx = db.transaction(STORE, 'readwrite');
     tx.objectStore(STORE).put({
@@ -75,17 +83,14 @@ export function take(slug) {
           resolve(null);
           return;
         }
+        var blob = row.blob;
         var fresh = (Date.now() - row.at) <= MAX_AGE_MS;
-        var mine = fresh && row.slug === slug;
-        if (!fresh || mine) {
+        var oversized = tooLarge(blob);
+        var mine = fresh && !oversized && row.slug === slug;
+        if (!fresh || mine || oversized) {
           store.delete(KEY);
         }
-        if (!mine) {
-          resolve(null);
-          return;
-        }
-        var blob = row.blob;
-        if (!blob) {
+        if (!mine || !blob) {
           resolve(null);
           return;
         }

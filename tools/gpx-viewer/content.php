@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 /**
  * GPX viewer: pre-upload landing HTML only.
- * Hidden by public/assets/js/tools/gpx-viewer.js once a file loads.
- * Expects $route (config/tools.php entry merged with meta.php).
+ * Hidden once a file loads. Expects $route.
  */
 
 $faq = $route['faq'];
 ?>
-<main class="tool-landing" id="tool-landing">
+<main class="tool-landing" id="tool-landing" data-format="gpx" data-slug="gpx-viewer">
   <div id="landing-overlay" class="landing-overlay" hidden>
     <p>Drop a GPX file. Nothing is uploaded.</p>
   </div>
@@ -17,14 +16,14 @@ $faq = $route['faq'];
   <section class="tool-hero">
     <div class="tool-wrap tool-hero-grid">
       <div>
-        <h1>GPX Viewer &amp; Editor</h1>
-        <p class="tool-lead">Open a GPX file on a map, check the speed and altitude, and edit the track. The file stays on your device.</p>
+        <h1>GPX Viewer</h1>
+        <p class="tool-lead">Open a GPX file on a map and read the speed and altitude. The file stays on your device.</p>
         <ul class="tool-pills">
           <li>GPX viewer online</li>
-          <li>Edit the track</li>
-          <li>GPX to CSV</li>
+          <li>Speed and altitude</li>
+          <li>Nothing uploaded</li>
         </ul>
-        <p class="tool-copy">This GPX viewer reads a track, a route, or waypoints. After it loads, the map fills the page. Speed, altitude, distance, and time sit under the map. Trim, simplify, reverse, or fix elevation spikes, then download GPX, CSV, or KML.</p>
+        <p class="tool-copy">This page reads a track, a route, or waypoints. After it loads, the map fills the page. Speed, altitude, distance, and time sit under the map. To change the track, open the <a href="/gpx-editor">GPX editor</a>.</p>
       </div>
 
       <div class="tool-card">
@@ -66,8 +65,8 @@ $faq = $route['faq'];
         </li>
         <li class="tool-step">
           <span class="tool-step-num">3</span>
-          <h3>Edit or export</h3>
-          <p>Trim the ends, thin a dense line, reverse it, or fix a bad elevation spike. The map shows the change before you keep it. Save GPX, a CSV for a spreadsheet, or KML.</p>
+          <h3>Export, or edit</h3>
+          <p>Save GPX, KML, KMZ, or a CSV. To trim, simplify, reverse, merge, or split the track, continue in the <a href="/gpx-editor">GPX editor</a>.</p>
         </li>
       </ol>
     </div>
@@ -75,29 +74,16 @@ $faq = $route['faq'];
 
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
-      <h2>A GPX viewer online, with the editor on the same map</h2>
+      <h2>A GPX viewer online</h2>
       <p>Drop the file and the route fills the map. Start and end are marked. Open Graphs for speed, altitude, distance, and time. If the file has several tracks, each one is listed and the map shows the one you pick.</p>
-      <p>Waypoints stay as points on the map. They are not joined into a line. A route with no track is drawn as the line you can edit.</p>
+      <p>Waypoints stay as points on the map. They are not joined into a line. A route with no track is drawn as the line.</p>
     </div>
   </section>
 
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
-      <h2>What you can edit</h2>
-      <ul>
-        <li>Trim keeps the points between two handles on one bar. The bright line on the map is the part you keep.</li>
-        <li>Simplify drops points that sit close to a straight line. Drag the distance and the map shows the points that would remain.</li>
-        <li>Reverse flips the direction. The timestamps still run forward, so the graphs stay readable.</li>
-        <li>Fix elevation replaces isolated spikes and fills short gaps from nearby points in the file. It does not download new heights.</li>
-      </ul>
-      <p>Undo puts the last edit back. The original file on your device is left as it was until you download a new one.</p>
-    </div>
-  </section>
-
-  <section class="tool-section">
-    <div class="tool-wrap tool-prose">
-      <h2>GPX to CSV, or back to GPX and KML</h2>
-      <p>Export writes a file on this device. GPX is the track you are viewing. If the file already has several tracks, the GPX download keeps every part. CSV is one row per point: time, latitude, longitude, altitude in metres, and speed in metres per second. KML is the line for an earth-style map.</p>
+      <h2>GPX, KML, KMZ, or CSV</h2>
+      <p>Export writes a file on this device. GPX, KML, and KMZ keep every part. CSV is one row per point for the part you are viewing: time, latitude, longitude, altitude in metres, and speed in metres per second.</p>
     </div>
   </section>
 
@@ -125,7 +111,7 @@ $faq = $route['faq'];
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
       <h2>More on GPS Toolset</h2>
-      <p>A video from a GoPro camera that recorded GPS can be read on the <a href="/gopro-gps-extract">GoPro GPS extractor</a>, then opened here if you download the GPX. A KML or KMZ file can be turned into GPX on the <a href="/kml-to-gpx">KML to GPX converter</a>. The other way is the <a href="/gpx-to-kml">GPX to KML converter</a>. A FIT activity file converts on the <a href="/fit-to-gpx">FIT to GPX converter</a>.</p>
+      <p>Edit the track in the <a href="/gpx-editor">GPX editor</a>. Convert it with <a href="/convert/gpx-to-kml">GPX to KML</a> or <a href="/convert/gpx-to-kmz">GPX to KMZ</a>. Open a <a href="/kml-viewer">KML file</a>, a <a href="/kmz-viewer">KMZ file</a>, or a <a href="/fit-viewer">FIT file</a> in the same viewer. A GoPro video that recorded GPS can be read on the <a href="/gopro-gps-extract">GoPro GPS extractor</a>.</p>
     </div>
   </section>
 </main>

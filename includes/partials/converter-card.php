@@ -10,6 +10,14 @@ declare(strict_types=1);
 ?>
 <div class="tool-card convert-card">
   <h2><?= e($convertCardTitle) ?></h2>
+  <div class="convert-fields">
+    <label class="convert-field">From
+      <select id="convert-from" aria-label="Convert from"></select>
+    </label>
+    <label class="convert-field">To
+      <select id="convert-to" aria-label="Convert to"></select>
+    </label>
+  </div>
   <button type="button" class="tool-drop" data-file-pick>
     <span class="tool-drop-title"><?= e($convertDropTitle) ?></span>
     <span class="tool-drop-note"><?= e($convertDropNote) ?></span>

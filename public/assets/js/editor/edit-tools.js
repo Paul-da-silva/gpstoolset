@@ -1,7 +1,7 @@
 /**
- * Edit popover for the GPX viewer (ES module).
+ * Edit popover for the editor (ES module).
  * The markup lives in includes/layout/map-app.php. This wires the controls.
- * The tool app owns the track and passes the result of each edit back in.
+ * The editor owns the track and passes the result of each edit back in.
  */
 
 var actions = null;
@@ -12,7 +12,9 @@ var MODE_PANELS = {
   simplify: 'edit-mode-simplify',
   trim: 'edit-mode-trim',
   reverse: 'edit-mode-reverse',
-  elevation: 'edit-mode-elevation'
+  elevation: 'edit-mode-elevation',
+  merge: 'edit-mode-merge',
+  split: 'edit-mode-split'
 };
 
 function byId(id) {
@@ -116,6 +118,9 @@ function chooseMode(next) {
   if (mode === 'trim' && actions && actions.previewTrim) {
     actions.previewTrim();
   }
+  if (mode === 'split' && actions && actions.previewSplit) {
+    actions.previewSplit();
+  }
 }
 
 function refreshApply() {
@@ -128,6 +133,8 @@ function refreshApply() {
   enable('edit-trim-start', canShape);
   enable('edit-trim-end', canShape);
   enable('edit-trim-apply', canShape && trimming);
+  enable('edit-split', pointCount >= 4);
+  enable('edit-split-apply', pointCount >= 4);
 }
 
 function paintReadouts() {
@@ -145,6 +152,22 @@ function paintReadouts() {
     }
   }
   paintTrimFill();
+  paintSplit();
+}
+
+function paintSplit() {
+  var el = byId('edit-split-label');
+  if (!el) {
+    return;
+  }
+  if (pointCount < 4) {
+    el.textContent = '—';
+    return;
+  }
+  var at = readNumber('edit-split');
+  var left = at + 1;
+  var right = pointCount - left;
+  el.textContent = left + ' points, then ' + right;
 }
 
 export function setSimplifyLabel(text) {
@@ -233,6 +256,12 @@ export function bind(next) {
     var range = trimRange();
     actions.trim(range.start, range.end);
   });
+  onClick('edit-merge', function () {
+    actions.merge();
+  });
+  onClick('edit-split-apply', function () {
+    actions.split(readNumber('edit-split'));
+  });
   var parts = byId('edit-parts');
   if (parts) {
     parts.addEventListener('click', function (event) {
@@ -279,6 +308,15 @@ export function bind(next) {
       }
     });
   });
+  var split = byId('edit-split');
+  if (split) {
+    split.addEventListener('input', function () {
+      paintSplit();
+      if (mode === 'split' && actions && actions.previewSplit) {
+        actions.previewSplit();
+      }
+    });
+  }
   paintReadouts();
 }
 
@@ -300,6 +338,7 @@ export function setState(state) {
     setRange('edit-trim-start', 0, last, 0);
     setRange('edit-trim-end', 0, last, last);
     setRange('edit-simplify', 0, 200, 0);
+    setRange('edit-split', 1, Math.max(1, count - 3), 1);
     setSimplifyLabel('Off');
   }
   var canShape = count >= 3;
@@ -310,6 +349,9 @@ export function setState(state) {
   enableMode('trim', canShape);
   enableMode('reverse', count >= 2);
   enableMode('elevation', !!(next.hasElevation && canShape));
+  enableMode('merge', !!next.canMerge);
+  enableMode('split', count >= 4);
+  enable('edit-merge', !!next.canMerge);
   refreshApply();
   paintMode();
   paintReadouts();

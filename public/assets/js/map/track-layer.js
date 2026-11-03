@@ -7,6 +7,7 @@ import { displayLatLngs } from '../core/track.js';
 
 var layers = { halo: null, line: null, start: null, end: null, scrub: null };
 var preview = { line: null, dots: null };
+var markLayer = null;
 
 function restoreLine() {
   if (layers.line) {
@@ -67,6 +68,7 @@ export function showPreview(keepPoints) {
 
 export function removeLayers() {
   clearPreview();
+  clearMarks();
   var map = mapShell.getMap();
   var keys = ['halo', 'line', 'start', 'end', 'scrub'];
   var i;
@@ -118,8 +120,8 @@ export function showScrub(points, index) {
   }
 }
 
-/** Draw the Track and fit the map to it. */
-export function drawTrack(track) {
+/** Draw the Track and fit the map to it. options.fit === false skips the fit. */
+export function drawTrack(track, options) {
   var points = track && track.points;
   var map = mapShell.getMap();
   if (!map || !window.L || !points || !points.length) {
@@ -154,6 +156,9 @@ export function drawTrack(track) {
       .addTo(map)
       .bindTooltip('End', { direction: 'top' });
   }
+  if (options && options.fit === false) {
+    return;
+  }
   if (layers.line) {
     mapShell.fitBounds(layers.line.getBounds(), {
       paddingTopLeft: [40, 64],
@@ -162,4 +167,77 @@ export function drawTrack(track) {
   } else {
     map.setView([first.lat, first.lon], 16);
   }
+}
+
+function tooltipText(value) {
+  return String(value || 'Waypoint')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+export function clearMarks() {
+  var map = mapShell.getMap();
+  if (markLayer && map) {
+    map.removeLayer(markLayer);
+  }
+  markLayer = null;
+}
+
+/** Waypoints as points. Does not remove the track line. */
+export function drawMarks(waypoints) {
+  clearMarks();
+  var map = mapShell.getMap();
+  if (!map || !window.L || !waypoints || !waypoints.length) {
+    return;
+  }
+  markLayer = window.L.layerGroup();
+  var i;
+  for (i = 0; i < waypoints.length; i++) {
+    var mark = waypoints[i];
+    window.L.circleMarker([mark.lat, mark.lon], {
+      radius: 5,
+      color: '#115e59',
+      weight: 2,
+      fillColor: '#2dd4a0',
+      fillOpacity: 1
+    }).bindTooltip(tooltipText(mark.name), { direction: 'top' }).addTo(markLayer);
+  }
+  markLayer.addTo(map);
+}
+
+/** Fit the map to track points and waypoints together. */
+export function fitPoints(points, waypoints) {
+  if (!window.L) {
+    return;
+  }
+  var bounds = null;
+  function extend(lat, lon) {
+    if (lat == null || lon == null || !isFinite(lat) || !isFinite(lon)) {
+      return;
+    }
+    if (!bounds) {
+      bounds = window.L.latLngBounds([[lat, lon], [lat, lon]]);
+    } else {
+      bounds.extend([lat, lon]);
+    }
+  }
+  var i;
+  if (points) {
+    for (i = 0; i < points.length; i++) {
+      extend(points[i].lat, points[i].lon);
+    }
+  }
+  if (waypoints) {
+    for (i = 0; i < waypoints.length; i++) {
+      extend(waypoints[i].lat, waypoints[i].lon);
+    }
+  }
+  if (!bounds) {
+    return;
+  }
+  mapShell.fitBounds(bounds, {
+    paddingTopLeft: [40, 64],
+    paddingBottomRight: [40, 88]
+  });
 }

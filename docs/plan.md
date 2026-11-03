@@ -33,67 +33,112 @@ Source: [OSMF Tile Usage Policy](https://operations.osmfoundation.org/policies/t
 Tokens/brand still from Design & UX: [Design Page](https://cursor.com/canvas/store-b5fa6ea4-c23f-4f9d-abc1-5e8c72bd3e8d/5dd8a5d1-9dc2-494c-bc31-c702d4042038) · md `/workspace/core/design-ux/gpstoolset/design-direction.md`  
 **Paul override (layout):** their “map + 360px side panel / mobile bottom sheet” is **out** for viewers.
 - Brand teal **`#115e59`** · orange accent **`#c2410c`** · Clear · Private · Practical
-- Home = **big drop zone** auto-routes by file type → tool cards + guides
+- Home = **big drop zone** auto-detects format (extension + magic bytes) → IndexedDB handoff → the matching **format landing** (`/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`) which share one viewer app after drop → tool cards + guides
 - **Viewer/tool pages (maps):** **full-screen map** minus one **slim top bar** (logo + menu only) — Google Maps / adsbexchange-globe style. Track must dominate.
-- Graphs / stats / edit / export: open via **buttons**; panels **dock under the map**, **resizable** (drag handle); open/closed + sizes saved in **localStorage**. **No permanent side panel.**
+- Graphs / stats / export: open via **buttons**; panels **dock under the map**, **resizable** (drag handle); open/closed + sizes saved in **localStorage**. **No permanent side panel.** Edit ops live on **`/gpx-editor`**, not on the view-only format landings.
 - Privacy badge: “Your file never leaves your device” (empty state / pre-upload; **not** in the header after a file is loaded). Privacy/About **nav links only in the footer**.
 - **Hard visual rules (Paul):** normal thin borders OK; **no heavy coloured one-sided borders** (accent stripes / thick coloured `border-left`). Drag-over = background tint (and/or normal border). No contact page; no email/mailto anywhere.
-- **GoPro after load:** two views — Map (current) and **Video** (full-screen object-URL video + toggleable mini-map + metrics, synced to `video.currentTime` via GPMF relative timestamps; wait for GPS fix). Prefs in `gpstoolset.ui.v1`.
+- **GoPro after load:** two views — **Map** = the **generic viewer module** (same as format landings: map shell, track layer, chart dock, controls; not tied to GPX) and **Video** (full-screen object-URL video + toggleable mini-map + metrics, synced to `video.currentTime` via GPMF relative timestamps; wait for GPS fix). Landings only parse (GPMF) then hand a track to the viewer; GoPro-only extras: video view. Prefs in `gpstoolset.ui.v1`.
 - **Ads on viewers:** never eat the map — prefer home/guides/converters, or none on viewers (**open for Monetization**). Elsewhere max 2; never on drop zone; ads partial off at launch.
 
 ---
 
-## 3. Tool pages (rollout order)
-Planner ranges = **CHECKED** (SEO TSVs). GSC = first-pass. Full SEO: `/workspace/core/seo/gpstoolset-guides-keywords-2026-11-01.md` · [SEO Page](https://cursor.com/canvas/store-b5fa6ea4-c23f-4f9d-abc1-5e8c72bd3e8d/f3623ab4-032e-46d7-b33e-879c928bc738).
+## 3. Tool pages (meta tools + landings)
 
-| # | URL | Purpose / launch must | Primary KW (Planner) | Title (≤60) |
-|---|-----|----------------------|----------------------|-------------|
-| 1 | `/gopro-gps-extract` | Map + Video views · GPMF → track + GPX/CSV/KML; under-map graphs; video overlay. Reuse FlySync client JS; **different copy** + rich pre-upload content | `gopro gps extractor` **10–100** | GoPro GPS Extractor — Free, No Upload |
-| 2 | `/gpx-viewer` | Full-screen map · edit tools + graphs in under-map docks · **split/trim/simplify/reverse/elev fix** day one | `gpx viewer` **10K–100K** | Free Online GPX Viewer & Editor |
-| 3 | `/my-coordinates` | Full-screen map · coords/copy in under-map dock (or compact overlay) | `my coordinates` **10K–100K** | My Coordinates — Find Lat & Long on a Map |
-| 4 | `/measure-distance` | Full-screen map · measure tools/readout via under-map dock | `measure distance on map` **10K–100K** | Measure Distance on a Map — Free Tool |
-| 5 | `/coordinate-converter` | Decimal ↔ DMS/DDM · UTM · MGRS | `coordinate converter` **10K–100K** | Coordinate Converter — DMS, UTM & MGRS |
-| 6 | `/kml-to-gpx` | KML + KMZ → GPX | `kml to gpx` **10K–100K** | KML / KMZ to GPX Converter — Free |
-| 7 | `/gpx-to-kml` | GPX → KML | `gpx to kml` **1K–10K** | GPX to KML Converter — Free Online |
-| 8 | `/fit-to-gpx` | Client FIT → GPX | `fit to gpx` **1K–10K** | FIT to GPX Converter — Free, No Upload |
+Planner ranges = **CHECKED** (SEO TSVs). Full SEO: `/workspace/core/seo/gpstoolset-guides-keywords-2026-11-01.md` · [SEO Page](https://cursor.com/canvas/store-b5fa6ea4-c23f-4f9d-abc1-5e8c72bd3e8d/f3623ab4-032e-46d7-b33e-879c928bc738).  
+**Structure decision (2026-11-03):** three shared meta tools + per-format SEO landings. Implemented by **P7** (`docs/cursor-prompts.md`). Guide/converter links use `/convert/<pair>` and format viewers use `/gpx-viewer` etc.
+
+### Menu
+- **Viewers:** GPX · KML · KMZ · FIT (SEO landings → **generic viewer module** after parse)
+- **More:** GoPro (`/gopro-gps-extract` — SEO landing + video view; map via **generic viewer module**)
+- **Tools:** Coordinate converter · Measure distance · Converter (`/convert`)
+
+### A. Format landings + generic viewer / editor / converter modules
+One **SEO landing** per format (own H1, intro, how-to, FAQ) above a drop zone. Landings are **not** the viewer: they run the matching parser, then hand the shared **track model** to **one generic viewer module** (`assets/js/viewer/` — map shell, track layer, chart dock, controls; format-agnostic). Home drop auto-detects and routes via IndexedDB handoff. `/gpx-viewer` landing stays **view-only** (edit tools on `/gpx-editor`). GoPro landing uses the same viewer (P7 §1b); only GPMF + video are extra.
+
+**Generic editor & converter (same split as viewer):** ONE `assets/js/editor/` and ONE `assets/js/converter/`, both track-model only. `/gpx-editor` and every `/convert/...` URL are **SEO landings** (content + drop zone → parse → hand to the module). Editor and viewer **share the same map/chart components**.
+
+
+| URL | Role | Primary KW (Planner) | Title (≤60) |
+|-----|------|----------------------|-------------|
+| `/gpx-viewer` | GPX SEO landing → **generic viewer** | `gpx viewer` **10K–100K** | Free Online GPX Viewer |
+| `/kml-viewer` | KML SEO landing → **generic viewer** | (viewer cluster; see SEO) | Free Online KML Viewer |
+| `/kmz-viewer` | KMZ SEO landing → **generic viewer** | (viewer cluster) | Free Online KMZ Viewer |
+| `/fit-viewer` | FIT SEO landing → **generic viewer** | (viewer cluster) | Free Online FIT Viewer |
+
+### B. Editor meta tool
+| URL | Purpose | Primary KW | Title |
+|-----|---------|------------|-------|
+| `/gpx-editor` | One or more files (any supported format) · live editable map/chart preview · **merge, split, trim, simplify, reverse, elevation fix** · export to any writable format | `gpx editor online` **1K–10K** | Free Online GPX / Track Editor |
+
+### C. Converter meta tool
+| URL | Purpose |
+|-----|---------|
+| `/convert` | Any supported format → any other; from/to selectable; preselect via GET `?from=kml&to=gpx` |
+| `/convert/kml-to-gpx` | SEO pair page (same app, preselected) · `kml to gpx` **10K–100K** |
+| `/convert/gpx-to-kml` | · `gpx to kml` **1K–10K** |
+| `/convert/fit-to-gpx` | · `fit to gpx` **1K–10K** |
+| `/convert/kmz-to-gpx` | · `kmz to gpx` **10K–100K** |
+| `/convert/gpx-to-kmz` | GPX → KMZ |
+| `/convert/kmz-to-kml` | KMZ → KML |
+
+Each pair page: short unique intro + FAQ, **self-canonical**. Keyword traffic also from guides + footer links for the main pairs.  
+**301:** old `/kml-to-gpx`, `/gpx-to-kml`, `/fit-to-gpx` → `/convert/...` equivalents.
+
+### D. Other tools
+| URL | Purpose | Primary KW | Title |
+|-----|---------|------------|-------|
+| `/gopro-gps-extract` | SEO landing → **generic viewer** for map + own Video view · GPMF parser only · rich pre-upload (Menu → More) | `gopro gps extractor` **10–100** | GoPro GPS Extractor — Free, No Upload |
+| `/measure-distance` | Full-screen map measure | `measure distance on map` **10K–100K** | Measure Distance on a Map — Free Tool |
+| `/coordinate-converter` | Decimal ↔ DMS/DDM · UTM · MGRS | `coordinate converter` **10K–100K** | Coordinate Converter — DMS, UTM & MGRS |
+| `/my-coordinates` | Find lat/long on a map *(still planned)* | `my coordinates` **10K–100K** | My Coordinates — Find Lat & Long on a Map |
+
+**Also:** `/privacy` · `/about`. **No `/contact`**.  
+**Architecture rule:** one **format registry** (parser, exporter, detection, landing meta). Adding a format or a converter pair = **config + content only** (no new JS).
 
 **Secondaries (short):**  
-- `/gopro-gps-extract`: `gopro gps data` **100–1K** · `extract gps from gopro video` / `gopro gpx` **10–100** · avoid telemetry-extractor phrasing  
-- `/gpx-viewer`: `gpx viewer online` / `gpx editor online` **1K–10K** · `gpx to csv` **100–1K**  
-- `/my-coordinates`: `gps coordinates` · `lat long finder` **10K–100K**  
-- `/measure-distance`: `distance calculator map` **10K–100K**  
+- `/gopro-gps-extract`: `gopro gps data` **100–1K** · extract / gopro gpx **10–100** · avoid telemetry-extractor phrasing  
+- Viewers: `gpx viewer online` **1K–10K** · `gpx to csv` **100–1K**  
+- `/gpx-editor`: `gpx editor online` **1K–10K**  
 - `/coordinate-converter`: `lat long converter` **10K–100K** · dms/utm/mgrs **1K–10K**  
-- `/kml-to-gpx`: `kmz to gpx` **10K–100K**  
-- `/fit-to-gpx`: `tcx to gpx` · `garmin export gpx` **100–1K**
+- `/measure-distance`: `distance calculator map` **10K–100K**
 
-**Also:** `/privacy` · `/about`. **No `/contact`**, no email/mailto anywhere (Paul).  
 **GSC first-pass (FlySync, still live):** GoPro page ~449 clk / 5.6K · GPX 63/825 · FIT 8/279.
 
-### Later — GPS video overlay (social bait)
-- Overlay speed/alt/map-track on video (or transparent export); free = **gpstoolset.com watermark**
-- Prefer browser-side (WebCodecs/canvas) if feasible
-- Reuses `/gopro-gps-extract` GPMF parsing
-- Premium later: watermark-free  
-**Also later:** geotag-photos · DJI SRT tool. **Skip:** what3words.
+### Later — after the launch set
+### Later — after the launch set
+- **GPS video overlay (social bait):** overlay speed/alt/map-track on video (or transparent export); free = **gpstoolset.com watermark**; prefer browser-side (WebCodecs/canvas) if feasible; reuses `/gopro-gps-extract` GPMF parsing; premium later: watermark-free
+- **Antipodes calculator:** pick a point on the planet → show what's on the other side
+- **DJI telemetry viewer:** SRT and/or DJI's other flight-log format → map track (same privacy rules)
+- **3D view option for all viewers** (map tools that show a track)
+- **Live GNSS satellite globe:** real-scale 3D globe of GPS / GLONASS / Galileo / BeiDou, colour-coded, using free CelesTrak orbit data (TLEs) computed in the browser
+- **Also later:** geotag-photos. **Skip:** what3words.
 
 ---
 
-## 4. Guides (`/guides/` — decided)
-SEO recommends **how-to / compare** over pure “what is” (wiki/gov own definitions). Never name FlySight.
+## 4. Guides (`/guides/`)
+Full brief: **`docs/guides-brief.md`**. Prefer how-to / compare over pure “what is”. Never name FlySight. Distinct angles; cross-link, don’t repeat definitions.  
+**Link targets (2026-11-03):** converters → `/convert/<pair>` (e.g. `/convert/kml-to-gpx`); format open/view → `/gpx-viewer` · `/kml-viewer` · `/kmz-viewer` · `/fit-viewer`; edit ops → `/gpx-editor`.
 
-| Priority | URL | Angle | Primary KW | Links to |
-|---------|-----|-------|------------|----------|
-| 1 | `/guides/gpx` | How to **open** a GPX online/edit | `how to open gpx file` (FIRST-PASS AC) | `/gpx-viewer`, converters |
-| 2 | `/guides/gps-file-formats` | Hub + **GPX vs KML** table | `gpx vs kml` / `gps file formats` (FIRST-PASS) | all tools |
-| 3 | `/guides/kml-kmz` | **KML vs KMZ** + convert | `kml vs kmz` (FIRST-PASS) | `/kml-to-gpx`, `/gpx-to-kml` |
-| 4 | `/guides/fit` | What FIT is → convert | `what is a fit file` (FIRST-PASS); feed `fit to gpx` **1K–10K** | `/fit-to-gpx` |
-| 5 | `/guides/dji-srt` | Explain SRT; tool later | `dji srt file` **100–1K** CHECKED | later DJI · `/gpx-viewer` |
-| 6 | `/guides/gpmf` | Support for `/gopro-gps-extract` (weak AC) | extract cluster; not a traffic play | `/gopro-gps-extract` |
-| 7 | `/guides/what-is-gps` | **Short**; don’t expect to beat wiki | FIRST-PASS `what is gps` | `/my-coordinates`, `/gpx-viewer` |
-| 8 | `/guides/gnss-systems` | Short multi-GNSS; link tools | FIRST-PASS `gnss vs gps` / `what is gnss` | coords / converter |
-| — | `/guides/nmea` · `/guides/gnss-csv` | With converters / later CSV | AC / `csv to gpx` **100–1K** | `/gpx-viewer` |
+**Wave A — practical (write first)**  
+1. `/guides/gps-file-formats` (hub)  
+2. `/guides/gpx-file`  
+3. `/guides/gpx-vs-kml`  
+4. `/guides/kml-file`  
+5. `/guides/kmz-file`  
+6. `/guides/kml-vs-kmz`  
+7. `/guides/fit-file`  
+8. `/guides/coordinate-formats`
 
-**Planner paste for Paul:** `/workspace/core/seo/tmp/gpstoolset-guides-kw-list.txt` → Keyword Planner for real guide ranges; then update SEO md.
+**Wave B — educational (short; after tools exist)**  
+9. `/guides/how-gps-works`  
+10. `/guides/gnss-vs-gps`  
+11. `/guides/gps-accuracy`  
+12. `/guides/gps-history` *(optional last)*
+
+**Backlog (with matching tools):** `/guides/dji-srt` · `/guides/gpmf` · `/guides/nmea` · `/guides/gnss-csv`
+
+**Keyword status:** only `fit to gpx` and `coordinate converter` (plus other tool convert terms already in §3) are Planner-verified on the guide brief; most guide head terms stay **unverified** until Paul pastes `tmp/gpstoolset-guides-kw-list.txt` into Keyword Planner.
 
 ---
 
@@ -108,12 +153,13 @@ SEO recommends **how-to / compare** over pure “what is” (wiki/gov own defini
 
 | Phase | Scope | Done |
 |------:|-------|------|
-| **A** | PHP shell · tokens/design · tile module · ads off · privacy/about (no contact) · OSM rules · no heavy coloured one-sided borders · env-aware base_url · Paul-only git commits | Stub home + chrome |
-| **B** | `/gopro-gps-extract` (map+video views) + `/gpx-viewer` (editor day one); **distinct** copy | Both usable; FlySync stays |
-| **C** | Guides kickoff: formats hub · `/guides/gpx` · `/guides/gpmf` | Linked from tools |
-| **D** | Utility tools + short what-is-GPS / GNSS guides | Usable + linked |
-| **E** | Converters + kml/fit/nmea/gnss-csv guides | Same |
-| **F** | geotag · DJI SRT · video overlay · FlySync link-out | After launch stable |
+| **A** | PHP shell · tokens/design · tile module · ads off · privacy/about · OSM rules · Paul-only commits | Done |
+| **B** | `/gopro-gps-extract` (map+video) + first `/gpx-viewer` draft | Usable drafts |
+| **B2 / P7** | Meta tools: generic `viewer/` · `editor/` · `converter/` modules + SEO landings · 301s · format registry | **Done (2026-11-03, uncommitted)** |
+| **C** | Guides Wave A (format + compare) linked to landings + `/convert/...` | Drafts exist |
+| **D** | `/my-coordinates` + Wave B educational guides | Planned |
+| **E** | More convert pairs / NMEA·CSV when formats land in registry | Planned |
+| **F** | geotag · DJI · antipodes · 3D viewers · satellite globe · video overlay · FlySync link-out | Later |
 
 ---
 
@@ -122,4 +168,4 @@ SEO recommends **how-to / compare** over pure “what is” (wiki/gov own defini
 
 ---
 
-*GPS Toolset Manager · 2026-11-01 Europe/Tallinn · updated 2026-11-02: /gopro-gps-extract · map-only OSM attr · no Report-a-map · video overlay view*
+*GPS Toolset Manager · Europe/Tallinn · updated 2026-11-03: viewers / editor / convert meta tools · P7*

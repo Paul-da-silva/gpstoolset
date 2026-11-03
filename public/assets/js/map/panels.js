@@ -23,8 +23,13 @@ function stat(id, text) {
  * Fill #stats-panel and #export-panel. noun completes the export hint,
  * e.g. 'a video' gives "Open a video to export the track."
  */
-export function mount(noun) {
+export function mount(noun, exports) {
   var thing = noun || 'a file';
+  var buttons = exports && exports.length ? exports : [
+    { id: 'gpx', label: 'GPX' },
+    { id: 'csv', label: 'CSV' },
+    { id: 'kml', label: 'KML' }
+  ];
   idleExportNote = 'Open ' + thing + ' to export the track.';
   var stats = document.getElementById('stats-panel');
   var exp = document.getElementById('export-panel');
@@ -48,12 +53,17 @@ export function mount(noun) {
   if (exp) {
     exp.innerHTML =
       '<p class="popover-kicker">Export</p>' +
-      '<p class="popover-note" id="export-note">' + idleExportNote + '</p>' +
+      '<p class="popover-note" id="export-note"></p>' +
       '<div class="export-actions">' +
-      '<button type="button" class="chip" data-export="gpx" disabled>GPX</button>' +
-      '<button type="button" class="chip" data-export="csv" disabled>CSV</button>' +
-      '<button type="button" class="chip" data-export="kml" disabled>KML</button>' +
+      buttons.map(function (item) {
+        return '<button type="button" class="chip" data-export="' + item.id + '" disabled>' +
+          item.label + '</button>';
+      }).join('') +
       '</div>';
+    var note = document.getElementById('export-note');
+    if (note) {
+      note.textContent = idleExportNote;
+    }
   }
 }
 
@@ -98,7 +108,7 @@ export function paintUnits() {
 }
 
 /** Enable or disable the export buttons and update the hint. */
-export function setExportEnabled(on) {
+export function setExportEnabled(on, noteText) {
   var buttons = document.querySelectorAll('#export-panel [data-export]');
   var i;
   for (i = 0; i < buttons.length; i++) {
@@ -106,9 +116,13 @@ export function setExportEnabled(on) {
   }
   var note = document.getElementById('export-note');
   if (note) {
-    note.textContent = on
-      ? 'Saves a file on this device. Nothing is uploaded.'
-      : idleExportNote;
+    if (!on) {
+      note.textContent = idleExportNote;
+    } else if (noteText) {
+      note.textContent = noteText;
+    } else {
+      note.textContent = 'Saves a file on this device. Nothing is uploaded.';
+    }
   }
 }
 
@@ -133,7 +147,7 @@ export function bindUnits(onChange) {
   }
 }
 
-/** Call onExport('gpx' | 'csv' | 'kml') when an enabled export button is clicked. */
+/** Call onExport(id) when an enabled export button is clicked. */
 export function bindExport(onExport) {
   var exp = document.getElementById('export-panel');
   if (!exp) {

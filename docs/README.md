@@ -10,9 +10,10 @@ Local: http://gpstoolset.lan/ · Prod: https://gpstoolset.com
 
 | File | Purpose |
 |------|---------|
-| [architecture.md](architecture.md) | **Structure on disk** · request flow · how to add a tool · P5 checklist |
+| [architecture.md](architecture.md) | **Structure on disk** · request flow · target structure · format registry · P7 |
 | [plan.md](plan.md) | Site plan, rollout, hard rules |
-| [cursor-prompts.md](cursor-prompts.md) | Cursor prompts (P5 refactor done) |
+| [cursor-prompts.md](cursor-prompts.md) | Cursor prompts (P5–P6 done · P7 sent) |
+| [guides-brief.md](guides-brief.md) | SEO first-guides brief (Wave A/B) |
 | [design-direction.md](design-direction.md) | UX / tokens / `gpstoolset.ui.v1` |
 | [seo-keywords.md](seo-keywords.md) | Tool + guide keywords |
 

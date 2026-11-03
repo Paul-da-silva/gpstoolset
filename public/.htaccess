@@ -25,6 +25,11 @@ Options -Indexes
     # Legacy path from before the tool URL was renamed.
     RewriteRule ^gopro/?$ /gopro-gps-extract [R=301,L]
 
+    # Old one-way converters now live under /convert/.
+    RewriteRule ^kml-to-gpx/?$ /convert/kml-to-gpx [R=301,L]
+    RewriteRule ^gpx-to-kml/?$ /convert/gpx-to-kml [R=301,L]
+    RewriteRule ^fit-to-gpx/?$ /convert/fit-to-gpx [R=301,L]
+
     # One canonical path without a trailing slash.
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.+)/$ /$1 [R=301,L]

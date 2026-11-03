@@ -4,24 +4,18 @@ declare(strict_types=1);
 /**
  * Page and tool registry. includes/router.php reads this file.
  *
- * One entry per public HTML route, keyed by slug. Fields:
- *   slug         string   Same as the array key. "home" is the "/" route.
- *   path         string   Optional. Defaults to "/<slug>" ("/" for home).
- *   title        string   Page title (the site name is added by the SEO helper).
- *   description  string   Meta description.
- *   inSitemap    bool     Listed in /sitemap.xml.
- *   entry        string   PHP file to include, relative to the repo root.
- *   meta         string   Optional. A PHP file that returns an array merged over
- *                         this entry (tools keep title, flags, faq there).
- *   styles       array    Extra stylesheets, each under /assets/css/.
- *   flags        array    map: loads the map stack (Leaflet, map-shell.css)
- *                         video: tool has a video view
- *                         ads: false keeps ad slots off this page
+ * Viewer routes are built from config/formats.php. Converter pair routes
+ * are built from config/convert.php. Adding a format or a pair does not
+ * add a new JS module.
  *
- * Only public/ is the document root. Entry files live above it.
- * Add a tool: see docs/architecture.md ("Add a new tool").
+ * Fields:
+ *   slug, path, title, description, inSitemap, entry, meta, styles, flags,
+ *   module, content, format, from, to, faq, schemaName, pairContent.
  */
-return [
+$formats = formats_registry();
+$pairs = require __DIR__ . '/convert.php';
+
+$tools = [
     'home' => [
         'slug' => 'home',
         'path' => '/',
@@ -53,12 +47,6 @@ return [
         'entry' => 'tools/gopro-gps-extract/page.php',
         'meta' => 'tools/gopro-gps-extract/meta.php',
     ],
-    'gpx-viewer' => [
-        'slug' => 'gpx-viewer',
-        'inSitemap' => true,
-        'entry' => 'tools/gpx-viewer/page.php',
-        'meta' => 'tools/gpx-viewer/meta.php',
-    ],
     'measure-distance' => [
         'slug' => 'measure-distance',
         'inSitemap' => true,
@@ -71,22 +59,122 @@ return [
         'entry' => 'tools/coordinate-converter/page.php',
         'meta' => 'tools/coordinate-converter/meta.php',
     ],
-    'kml-to-gpx' => [
-        'slug' => 'kml-to-gpx',
+];
+
+foreach ($formats as $id => $format) {
+    if (!is_array($format) || empty($format['slug'])) {
+        continue;
+    }
+    $slug = (string) $format['slug'];
+    $tools[$slug] = [
+        'slug' => $slug,
+        'path' => (string) ($format['landing'] ?? '/' . $slug),
+        'title' => (string) ($format['title'] ?? $format['label'] ?? $slug),
+        'description' => (string) ($format['description'] ?? ''),
         'inSitemap' => true,
-        'entry' => 'tools/kml-to-gpx/page.php',
-        'meta' => 'tools/kml-to-gpx/meta.php',
-    ],
-    'gpx-to-kml' => [
-        'slug' => 'gpx-to-kml',
-        'inSitemap' => true,
-        'entry' => 'tools/gpx-to-kml/page.php',
-        'meta' => 'tools/gpx-to-kml/meta.php',
-    ],
-    'fit-to-gpx' => [
-        'slug' => 'fit-to-gpx',
-        'inSitemap' => true,
-        'entry' => 'tools/fit-to-gpx/page.php',
-        'meta' => 'tools/fit-to-gpx/meta.php',
+        'entry' => 'tools/' . $slug . '/page.php',
+        'content' => 'tools/' . $slug . '/content.php',
+        'styles' => ['/assets/css/tool-landing.css'],
+        'flags' => ['map' => true, 'video' => false, 'ads' => false],
+        'module' => '/assets/js/viewer/landing.js',
+        'format' => (string) $id,
+        'schemaName' => (string) ($format['schemaName'] ?? $format['label'] ?? $slug),
+        'faq' => is_array($format['faq'] ?? null) ? $format['faq'] : [],
+    ];
+}
+
+$tools['gpx-editor'] = [
+    'slug' => 'gpx-editor',
+    'title' => 'Free Online GPX / Track Editor',
+    'description' => 'Merge, split, trim, or simplify a GPS track in your browser. Open GPX, KML, KMZ, or FIT, then download GPX, KML, KMZ, or CSV. Nothing is uploaded.',
+    'inSitemap' => true,
+    'entry' => 'tools/gpx-editor/page.php',
+    'content' => 'tools/gpx-editor/content.php',
+    'styles' => ['/assets/css/tool-landing.css'],
+    'flags' => ['map' => true, 'video' => false, 'ads' => false],
+    'module' => '/assets/js/editor/landing.js',
+    'schemaName' => 'GPX Editor',
+    'faq' => [
+        [
+            'q' => 'Does the file get uploaded?',
+            'a' => 'No. The browser reads the file where it already is. GPS Toolset does not receive a copy.',
+        ],
+        [
+            'q' => 'Which files can I open?',
+            'a' => 'GPX, KML, KMZ, and FIT. Drop one file or several. Each file is added as a track you can edit.',
+        ],
+        [
+            'q' => 'What can I change?',
+            'a' => 'Merge tracks into one, split one track into two, trim the ends, simplify a dense line, reverse the direction, and fix elevation spikes using nearby points in the file. Undo puts the last edit back.',
+        ],
+        [
+            'q' => 'What can I download?',
+            'a' => 'GPX, KML, KMZ, or CSV. GPX, KML, and KMZ keep every part and the waypoints. CSV is the part you are viewing. FIT can be opened here but is not written back.',
+        ],
+        [
+            'q' => 'Will this work on a phone?',
+            'a' => 'Yes. Choose a file from your phone. The map fills the screen, and the edit controls are large enough to tap.',
+        ],
     ],
 ];
+
+$tools['convert'] = [
+    'slug' => 'convert',
+    'title' => 'GPS File Converter — Free, No Upload',
+    'description' => 'Convert GPX, KML, KMZ, and FIT in your browser. Pick the formats, then download the file. Nothing is uploaded.',
+    'inSitemap' => true,
+    'entry' => 'tools/convert/page.php',
+    'styles' => ['/assets/css/tool-landing.css'],
+    'flags' => ['map' => false, 'video' => false, 'ads' => true],
+    'module' => '/assets/js/converter/landing.js',
+    'schemaName' => 'GPS File Converter',
+    'from' => '',
+    'to' => '',
+    'faq' => [
+        [
+            'q' => 'Does the file get uploaded?',
+            'a' => 'No. The browser reads the file where it already is. GPS Toolset does not receive a copy.',
+        ],
+        [
+            'q' => 'Which formats can I convert?',
+            'a' => 'Open GPX, KML, KMZ, or FIT. Save GPX, KML, or KMZ. FIT can be read and turned into one of those. It is not written back.',
+        ],
+        [
+            'q' => 'Can I choose the formats in the address?',
+            'a' => 'Yes. A link such as /convert?from=kml&to=gpx opens this page with those formats selected. Named pages such as /convert/kml-to-gpx do the same.',
+        ],
+        [
+            'q' => 'What is kept?',
+            'a' => 'Tracks, routes, waypoints, and time and elevation when the file has them. Photos and other attachments are skipped. The result is the path.',
+        ],
+        [
+            'q' => 'Can I see it on a map?',
+            'a' => 'Yes. View on the map opens the converted file in the matching viewer.',
+        ],
+    ],
+];
+
+foreach (is_array($pairs) ? $pairs : [] as $pair) {
+    if (!is_array($pair) || empty($pair['slug'])) {
+        continue;
+    }
+    $slug = (string) $pair['slug'];
+    $tools['convert-' . $slug] = [
+        'slug' => 'convert-' . $slug,
+        'path' => '/convert/' . $slug,
+        'title' => (string) ($pair['title'] ?? $slug),
+        'description' => (string) ($pair['description'] ?? ''),
+        'inSitemap' => true,
+        'entry' => 'tools/convert/page.php',
+        'pairContent' => 'tools/convert/pairs/' . $slug . '.php',
+        'styles' => ['/assets/css/tool-landing.css'],
+        'flags' => ['map' => false, 'video' => false, 'ads' => true],
+        'module' => '/assets/js/converter/landing.js',
+        'schemaName' => (string) ($pair['schemaName'] ?? $slug),
+        'from' => (string) ($pair['from'] ?? ''),
+        'to' => (string) ($pair['to'] ?? ''),
+        'faq' => is_array($pair['faq'] ?? null) ? $pair['faq'] : [],
+    ];
+}
+
+return $tools;

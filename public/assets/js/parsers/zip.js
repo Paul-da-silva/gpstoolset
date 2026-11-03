@@ -130,6 +130,89 @@ export function unzip(bytes) {
   });
 }
 
+var CRC_TABLE = null;
+
+function crc32(bytes) {
+  if (!CRC_TABLE) {
+    CRC_TABLE = new Uint32Array(256);
+    var n;
+    var c;
+    var k;
+    for (n = 0; n < 256; n++) {
+      c = n;
+      for (k = 0; k < 8; k++) {
+        c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+      }
+      CRC_TABLE[n] = c >>> 0;
+    }
+  }
+  var crc = 0xffffffff;
+  var i;
+  for (i = 0; i < bytes.length; i++) {
+    crc = CRC_TABLE[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+/**
+ * One stored (uncompressed) ZIP entry. KMZ readers accept this.
+ * data is a string or a Uint8Array. Returns the whole archive.
+ */
+export function zipStore(filename, data) {
+  var nameBytes = new TextEncoder().encode(String(filename || 'doc.kml'));
+  var raw = typeof data === 'string' ? new TextEncoder().encode(data) : data;
+  var crc = crc32(raw);
+  var localLen = 30 + nameBytes.length + raw.length;
+  var centralLen = 46 + nameBytes.length;
+  var out = new Uint8Array(localLen + centralLen + 22);
+  var view = new DataView(out.buffer);
+  var o = 0;
+
+  view.setUint32(o, 0x04034b50, true); o += 4;
+  view.setUint16(o, 20, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint32(o, crc, true); o += 4;
+  view.setUint32(o, raw.length, true); o += 4;
+  view.setUint32(o, raw.length, true); o += 4;
+  view.setUint16(o, nameBytes.length, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  out.set(nameBytes, o); o += nameBytes.length;
+  out.set(raw, o); o += raw.length;
+
+  var centralAt = o;
+  view.setUint32(o, 0x02014b50, true); o += 4;
+  view.setUint16(o, 20, true); o += 2;
+  view.setUint16(o, 20, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint32(o, crc, true); o += 4;
+  view.setUint32(o, raw.length, true); o += 4;
+  view.setUint32(o, raw.length, true); o += 4;
+  view.setUint16(o, nameBytes.length, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint32(o, 0, true); o += 4;
+  view.setUint32(o, 0, true); o += 4;
+  out.set(nameBytes, o); o += nameBytes.length;
+
+  view.setUint32(o, 0x06054b50, true); o += 4;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 0, true); o += 2;
+  view.setUint16(o, 1, true); o += 2;
+  view.setUint16(o, 1, true); o += 2;
+  view.setUint32(o, centralLen, true); o += 4;
+  view.setUint32(o, centralAt, true); o += 4;
+  view.setUint16(o, 0, true);
+  return out;
+}
+
 function baseName(name) {
   var slash = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
   return slash >= 0 ? name.slice(slash + 1) : name;

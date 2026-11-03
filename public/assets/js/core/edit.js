@@ -1,18 +1,22 @@
 /**
- * Track edits shared by the GPX viewer (ES module, no DOM).
+ * Track edits for the editor (ES module, no DOM).
  * Each function returns a new point list, or null when there is nothing to do.
  * Points keep lat, lon, ele (metres), speed (m/s) and t (UTC ms).
  */
 import { median } from './track.js';
 
 export function clonePoint(point) {
-  return {
+  var copy = {
     lat: point.lat,
     lon: point.lon,
     ele: point.ele == null || !isFinite(point.ele) ? null : point.ele,
     speed: point.speed == null || !isFinite(point.speed) ? null : point.speed,
     t: point.t == null || !isFinite(point.t) ? null : point.t
   };
+  if (point.name) {
+    copy.name = point.name;
+  }
+  return copy;
 }
 
 function cloneAll(points) {
@@ -91,6 +95,56 @@ export function simplifyPoints(points, toleranceM) {
     return null;
   }
   return out;
+}
+
+/**
+ * Join every part into one point list, in order.
+ * parts: [{ points }]. Null when fewer than two parts have points.
+ */
+export function mergePoints(parts) {
+  var out = [];
+  var used = 0;
+  var i;
+  var j;
+  var list = parts || [];
+  for (i = 0; i < list.length; i++) {
+    var points = list[i] && list[i].points ? list[i].points : [];
+    if (!points.length) {
+      continue;
+    }
+    used += 1;
+    for (j = 0; j < points.length; j++) {
+      out.push(clonePoint(points[j]));
+    }
+  }
+  if (used < 2 || out.length < 2) {
+    return null;
+  }
+  return out;
+}
+
+/**
+ * Split after index. That point stays in the first part.
+ * Both parts need at least two points. Returns [left, right] or null.
+ */
+export function splitPoints(points, index) {
+  var n = points.length;
+  var at = Math.round(Number(index));
+  if (n < 4 || !isFinite(at)) {
+    return null;
+  }
+  if (at < 1) {
+    at = 1;
+  }
+  if (at > n - 3) {
+    at = n - 3;
+  }
+  var left = cloneAll(points.slice(0, at + 1));
+  var right = cloneAll(points.slice(at + 1));
+  if (left.length < 2 || right.length < 2) {
+    return null;
+  }
+  return [left, right];
 }
 
 /**

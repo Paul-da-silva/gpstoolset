@@ -34,11 +34,31 @@ See also `docs/architecture.md` (registry + SEO helper).
 
 ## `/gopro-gps-extract` pre-upload
 
-- Drop zone first; rich original content below (intro, how-it-works, what you get including Video view, supported HERO GPS cameras as compatibility, privacy, FAQ, links to `/gpx-viewer` + guides)
+- Drop zone first; rich original content below (intro, how-it-works, what you get including Video view, supported HERO GPS cameras as compatibility, privacy, FAQ, links to `/gpx-editor` / `/convert/...` + guides; map uses generic viewer module)
 - Hide content block after a video loads
 - Primary KW: `gopro gps extractor` (see `docs/seo-keywords.md`)
 
+## Format landings (SEO pages, not the viewer)
+
+- `/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`, `/gopro-gps-extract` — each is an **SEO landing** (H1, intro, how-to, FAQ + drop zone)
+- Landings run the matching parser, then hand the **track model** to the **generic viewer module** (`assets/js/viewer/`). View-only (GoPro also has a video view). Edit CTAs → `/gpx-editor`
+- Link the matching format guide and `/convert/<pair>` / `/gpx-editor` where useful
+
+## Editor + converter landings (same split)
+
+- `/gpx-editor` and `/convert` + `/convert/<pair>` are **SEO landings** (content + drop zone → parse → hand track to `assets/js/editor/` or `assets/js/converter/`)
+- Editor shares map/chart components with the viewer module
+
+## Converter pages
+
+- Hub: `/convert` · SEO pairs: `/convert/kml-to-gpx`, `/convert/gpx-to-kml`, `/convert/fit-to-gpx`, `/convert/kmz-to-gpx`, `/convert/gpx-to-kmz`, `/convert/kmz-to-kml`
+- Each pair: short **unique** intro + FAQ · **self-canonical**
+- Guides and footer links for important pairs point at `/convert/<pair>` (never the old `/kml-to-gpx` paths)
+
 ## Guides (`/guides/`)
 
-- Prefer how-to / compare over pure definitions
+- **Brief:** `docs/guides-brief.md` — Wave A/B slugs, angles, H2 outlines, internal links, keyword labels
+- Prefer how-to / compare over pure definitions; distinct angle per page; cross-link instead of repeating definitions
+- **Link targets:** converters → `/convert/<pair>` · open/view → format landings (`/gpx-viewer` …) · edit → `/gpx-editor`
 - Link tools ↔ guides both ways
+- Never invent Planner volumes; follow verified vs unverified labels in the brief

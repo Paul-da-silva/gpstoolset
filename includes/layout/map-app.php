@@ -43,7 +43,10 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
         <span class="chip chip-static" id="file-name" hidden></span>
         <button type="button" class="chip" id="chip-stats" aria-pressed="false" aria-expanded="false" aria-controls="stats-panel">Stats</button>
         <button type="button" class="chip" id="chip-graphs" aria-pressed="false" aria-expanded="false" aria-controls="graphs-panel">Graphs</button>
-        <?php if (!empty($mapShellEdit)) : ?>
+        <span id="track-parts" class="track-parts" hidden></span>
+        <?php if (!empty($mapShellEditHref)) : ?>
+        <a class="chip" id="chip-edit" href="<?= e($mapShellEditHref) ?>">Edit</a>
+        <?php elseif (!empty($mapShellEdit)) : ?>
         <button type="button" class="chip" id="chip-edit" aria-pressed="false" aria-expanded="false" aria-controls="edit-panel">Edit</button>
         <?php endif; ?>
         <button type="button" class="chip" id="chip-export" aria-pressed="false" aria-expanded="false" aria-controls="export-panel">Export</button>
@@ -76,6 +79,8 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
           <button type="button" class="chip" data-edit-mode="trim" aria-pressed="false" disabled>Trim</button>
           <button type="button" class="chip" data-edit-mode="reverse" aria-pressed="false" disabled>Reverse</button>
           <button type="button" class="chip" data-edit-mode="elevation" aria-pressed="false" disabled>Fix elevation</button>
+          <button type="button" class="chip" data-edit-mode="merge" aria-pressed="false" disabled>Merge</button>
+          <button type="button" class="chip" data-edit-mode="split" aria-pressed="false" disabled>Split</button>
         </div>
         <div id="edit-mode-simplify" class="edit-block" hidden>
           <div class="edit-field">
@@ -115,6 +120,23 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
             <button type="button" class="chip" id="edit-elev" disabled>Fix elevation</button>
           </div>
         </div>
+        <div id="edit-mode-merge" class="edit-block" hidden>
+          <p class="popover-note">Joins every part into one track, in the order listed.</p>
+          <div class="edit-actions">
+            <button type="button" class="chip" id="edit-merge" disabled>Merge tracks</button>
+          </div>
+        </div>
+        <div id="edit-mode-split" class="edit-block" hidden>
+          <div class="edit-field">
+            <label for="edit-split">Split after</label>
+            <span class="edit-readout" id="edit-split-label">—</span>
+          </div>
+          <input id="edit-split" type="range" min="1" max="1" value="1" step="1" disabled>
+          <p class="popover-note">The bright line is the first of the two tracks.</p>
+          <div class="edit-actions">
+            <button type="button" class="chip" id="edit-split-apply" disabled>Split</button>
+          </div>
+        </div>
       </div>
       <?php endif; ?>
       <div id="export-panel" class="map-popover" hidden>
@@ -145,7 +167,7 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
     </div>
 
     <?php if ($mapAppFileInput) : ?>
-    <input id="file-input" class="file-input" type="file" tabindex="-1" aria-hidden="true"<?php if ($mapShellAccept !== '') : ?> accept="<?= e($mapShellAccept) ?>"<?php endif; ?>>
+    <input id="file-input" class="file-input" type="file" tabindex="-1" aria-hidden="true"<?php if (!empty($mapShellMultiple)) : ?> multiple<?php endif; ?><?php if ($mapShellAccept !== '') : ?> accept="<?= e($mapShellAccept) ?>"<?php endif; ?>>
     <?php endif; ?>
   </div>
 

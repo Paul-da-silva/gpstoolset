@@ -1,27 +1,19 @@
 /**
- * GoPro GPS Extractor: the tool app (ES module). Glue only.
- *
- *   pick a file → parsers/gpmf.js → Track → map shell, graphs, stats,
- *   export, and (optionally) the video overlay.
- *
+ * GoPro GPS Extractor (ES module).
+ * Parses GPMF from a video, then hands one document to the shared viewer.
+ * Video sync stays here. The map, charts, and export do not.
  * The file is read in the browser. It is not uploaded.
- * Page markup: tools/gopro-gps-extract/ (content.php, page.php) and
- * includes/layout/map-app.php.
  */
 import * as fileDrop from '../core/file-drop.js';
-import { buildTrack } from '../core/track.js';
-import { exportTrack, stem } from '../core/exporters.js';
-import * as mapShell from '../map/map-shell.js';
-import * as trackLayer from '../map/track-layer.js?v=3';
-import * as charts from '../map/track-charts.js';
-import * as panels from '../map/panels.js';
+import { exportChoices } from '../core/formats.js';
+import { buildExport } from '../core/exporters.js';
+import { stash, take } from '../core/file-handoff.js';
 import * as gpmf from '../parsers/gpmf.js';
 import * as overlay from '../video/overlay.js';
-import { take } from '../core/file-handoff.js';
+import * as viewer from '../viewer/app.js';
 
 var job = 0;
 var token = { cancelled: false };
-var track = null;
 
 function acceptedFile(file) {
   if (!file) {
@@ -34,23 +26,6 @@ function acceptedFile(file) {
     return true;
   }
   return String(file.type || '').slice(0, 6) === 'video/';
-}
-
-function showName(name) {
-  var openBtn = document.getElementById('chip-open');
-  var nameEl = document.getElementById('file-name');
-  var landingName = document.getElementById('landing-file');
-  if (openBtn) {
-    openBtn.textContent = 'Replace file';
-  }
-  if (nameEl) {
-    nameEl.hidden = false;
-    nameEl.textContent = name;
-  }
-  if (landingName) {
-    landingName.hidden = false;
-    landingName.textContent = name;
-  }
 }
 
 function showError(message) {
@@ -109,41 +84,6 @@ function hideProgress() {
   }
 }
 
-/** Swap the landing page for the full-screen map. */
-function enterTool() {
-  var landing = document.getElementById('tool-landing');
-  if (!landing) {
-    return;
-  }
-  var first = !document.body.classList.contains('is-map');
-  document.body.classList.add('is-map');
-  landing.hidden = true;
-  var footer = document.querySelector('.site-footer');
-  if (footer) {
-    footer.hidden = true;
-  }
-  var app = document.getElementById('map-app');
-  if (app) {
-    app.hidden = false;
-  }
-  if (!mapShell.getMap()) {
-    mapShell.init();
-  }
-  if (!first) {
-    return;
-  }
-  window.scrollTo(0, 0);
-  window.requestAnimationFrame(function () {
-    mapShell.invalidate();
-    window.requestAnimationFrame(function () {
-      mapShell.invalidate();
-      if (track) {
-        trackLayer.drawTrack(track);
-      }
-    });
-  });
-}
-
 function nextJob() {
   job += 1;
   token.cancelled = true;
@@ -158,46 +98,6 @@ function onCancel() {
   hideProgress();
   clearError();
   overlay.detach();
-  if (!track) {
-    mapShell.setEmpty(true);
-  }
-}
-
-function clearTrack() {
-  track = null;
-  trackLayer.removeLayers();
-  overlay.clearTrack();
-  charts.clear();
-  panels.setExportEnabled(false);
-  panels.renderStats(null);
-}
-
-function showTrack(id, points, name, acc) {
-  if (id !== job) {
-    return;
-  }
-  hideProgress();
-  if (!points || !points.length) {
-    clearTrack();
-    overlay.detach();
-    showError('No GPS track in this file. GPS has to be on in the camera while it records.');
-    mapShell.setEmpty(true);
-    return;
-  }
-  track = buildTrack(points, { name: name, acc: acc });
-  clearError();
-  enterTool();
-  trackLayer.drawTrack(track);
-  panels.renderStats(track);
-  try {
-    charts.renderTrack(track);
-  } catch (err) {
-    charts.markFailed();
-  }
-  panels.setExportEnabled(true);
-  mapShell.setEmpty(false);
-  charts.paintSeriesAvailability();
-  overlay.setTrack(track);
 }
 
 function readFile(file, id, active) {
@@ -212,7 +112,25 @@ function readFile(file, id, active) {
       return;
     }
     setProgress(99, 'Drawing the track…');
-    showTrack(id, series.points, stem(file.name), series.acc);
+    hideProgress();
+    if (!series || !series.points || !series.points.length) {
+      viewer.clear();
+      overlay.detach();
+      showError('No GPS track in this file. GPS has to be on in the camera while it records.');
+      return;
+    }
+    var name = file.name || 'video';
+    viewer.open({
+      name: name,
+      segments: [{
+        name: name,
+        points: series.points,
+        acc: series.acc || []
+      }],
+      waypoints: []
+    }, name);
+    overlay.setTrack(viewer.getTrack());
+    clearError();
   }).catch(function (err) {
     if (id !== job) {
       return;
@@ -220,15 +138,11 @@ function readFile(file, id, active) {
     hideProgress();
     var message = gpmf.errorMessage(err);
     if (!message) {
-      if (!track) {
-        mapShell.setEmpty(true);
-      }
       return;
     }
-    clearTrack();
+    viewer.clear();
     overlay.detach();
     showError(message);
-    mapShell.setEmpty(true);
   });
 }
 
@@ -237,14 +151,11 @@ function onPickedFile(file) {
   clearError();
   overlay.detach();
   if (!acceptedFile(file)) {
-    clearTrack();
+    viewer.clear();
     showError('Choose a GoPro video (.mp4 or .lrv).');
-    mapShell.setEmpty(true);
     return;
   }
   overlay.attach(file);
-  clearTrack();
-  mapShell.setEmpty(false);
   var active = token;
   var label = file.size > 200 * 1024 * 1024
     ? 'Reading GPS from a large video…'
@@ -274,17 +185,32 @@ function mountProgress() {
   document.getElementById('progress-cancel').addEventListener('click', onCancel);
 }
 
-function bindUi() {
-  panels.bindUnits(function () {
-    panels.renderStats(track);
-    if (track) {
-      charts.renderTrack(track);
+function bindEdit() {
+  var link = document.getElementById('chip-edit');
+  if (!link) {
+    return;
+  }
+  link.addEventListener('click', function (event) {
+    var doc = viewer.getDocument();
+    var current = viewer.getTrack();
+    if (!doc || !current || !current.points || !current.points.length) {
+      return;
     }
-    overlay.refresh();
+    event.preventDefault();
+    var built = buildExport('gpx', doc, current.meta && current.meta.name);
+    if (!built) {
+      return;
+    }
+    var file = new File([built.text], built.filename, { type: built.mime });
+    stash(file, 'gpx-editor').then(function () {
+      window.location.assign('/gpx-editor');
+    }).catch(function (err) {
+      showError((err && err.message) || 'Couldn’t open the editor. Download the GPX and open it there.');
+    });
   });
-  panels.bindExport(function (kind) {
-    exportTrack(kind, track);
-  });
+}
+
+function bindUi() {
   document.addEventListener('keydown', function (event) {
     if (event.key !== 'Escape') {
       return;
@@ -306,15 +232,6 @@ function bindUi() {
   if (landingCancel) {
     landingCancel.addEventListener('click', onCancel);
   }
-  document.addEventListener('gpstoolset:dock', function () {
-    window.requestAnimationFrame(charts.resize);
-  });
-  ['speed', 'altitude', 'distance', 'time', 'verticalSpeed', 'gForce'].forEach(function (name) {
-    var pane = document.getElementById('pane-' + name);
-    if (pane) {
-      pane.addEventListener('mouseleave', trackLayer.hideScrub);
-    }
-  });
 }
 
 function bindLandingDrop() {
@@ -333,13 +250,18 @@ function bindLandingDrop() {
 }
 
 function init() {
-  charts.mountCharts('a video');
-  panels.mount('a video');
+  viewer.mount({
+    noun: 'a video',
+    exports: exportChoices(),
+    onUnits: function () {
+      overlay.refresh();
+    }
+  });
   mountProgress();
   overlay.init();
   bindLandingDrop();
   bindUi();
-  panels.paintUnits();
+  bindEdit();
   var input = document.getElementById('file-input');
   if (input && !input.getAttribute('accept')) {
     input.setAttribute('accept', '.mp4,.lrv,video/*');

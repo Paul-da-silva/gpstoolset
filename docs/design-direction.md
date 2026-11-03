@@ -145,8 +145,9 @@ Weight: 400 body · 600 headings/buttons. Support `[data-text-size="large"]` →
 |------|----------|
 | `.mp4` / `.lrv` (GoPro) | `/gopro-gps-extract` |
 | `.gpx` | `/gpx-viewer` |
-| `.kml` / `.kmz` | `/kml-to-gpx` |
-| `.fit` | `/fit-to-gpx` |
+| `.kml` | `/kml-viewer` |
+| `.kmz` | `/kmz-viewer` |
+| `.fit` | `/fit-viewer` |
 | Ambiguous / multi | Modal: “Open with…” tool list |
 | Unknown | Inline error + link to `/guides/gps-file-formats` |
 
@@ -345,7 +346,7 @@ Pre-upload: drop zone first; **rich SEO content below** (intro, how-it-works, wh
 | `ad-home-mid` | Home, after tool grid | 728×90 or fluid 970×90 | 320×100 / 300×250 | `/` |
 | `ad-footer` | Above footer links | ≤728×90 fluid | 320×100 | Home, guides, converters, static |
 | `ad-guides-in` | Guides, after 2nd section | 728×90 | 300×250 | `/guides/*` |
-| `ad-converter-mid` | Converter pages, below result | 728×90 | 320×100 | `/kml-to-gpx`, `/gpx-to-kml`, `/fit-to-gpx`, `/coordinate-converter` |
+| `ad-converter-mid` | Converter pages, below result | 728×90 | 320×100 | `/convert`, `/convert/kml-to-gpx`, `/convert/gpx-to-kml`, `/convert/fit-to-gpx`, `/coordinate-converter` |
 | `ad-graph-dock` | **Optional**, inside graph dock chrome when dock open | slim ≤728×90 | 320×50 | Map tools only — **off by default**; never if dock closed |
 | `ad-menu` | **Optional**, bottom of ☰ drawer | fluid | fluid | Map tools only — **off by default** |
 

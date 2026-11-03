@@ -20,6 +20,7 @@ $assetPath = static function (mixed $src): string {
 };
 
 require __DIR__ . '/tile-config.php';
+require __DIR__ . '/format-config.php';
 ?>
 <script src="/assets/vendor/leaflet/leaflet.js"></script>
 <script src="/assets/vendor/chartjs/chart.umd.min.js"></script>

@@ -19,6 +19,8 @@ Run **one prompt at a time**. Leave changes **uncommitted**; Paul commits.
 ## Done
 - P1 Foundation · P1b Cleanup · P2 Map shell · P3 GoPro port · P4 chrome + `/gopro-gps-extract` + video view
 - P5a–P5i Structure refactor (registry/router, SEO + sitemap, tools/ split, ES modules, video overlay, CSS split, scripts partial, docs)
+- **P6** Small fixes (tools/ denied · isMapPage from registry · tiles.js path · stylesheet whitelist) — verified 2026-11-02
+- **P7** Meta tools (generic viewer/editor/converter modules · SEO landings · format registry) — landed 2026-11-03 (left uncommitted)
 
 ---
 
@@ -176,4 +178,35 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ```
 
 
-*GPS Toolset Manager · Cursor prompts · updated 2026-11-02 Europe/Tallinn · P5 done · next: first new tool or home page*
+---
+
+## P6 — Small fixes (done · verified 2026-11-02)
+
+```
+Small fixes in /var/www/gpstoolset (leave changes uncommitted; Paul commits): 1. Add "Require all denied" protection for tools/ like config/ and includes/. 2. Set isMapPage from the tool registry (true for map tools) and make the ads partial respect it; keep flags.ads working. 3. Fix config/tiles.php comment path to map/tiles.js. 4. includes/layout/head.php: reject stylesheet paths containing ".." or not starting with /assets/. Check: / and /gopro-gps-extract work; /tools/... returns 403.
+```
+
+**Verified:** `tools/.htaccess` Require all denied + public RewriteRule F · `route_page()` sets `isMapPage` from `flags.map` · ads partial no-ops on map / `allowAds` false · tiles comment → `map/tiles.js` · head.php requires `/assets/` and rejects `..` · curl `/` and `/gopro-gps-extract` 200 · `/tools/...` 403.
+
+
+---
+
+## P7 — Meta tools restructure (**landed** · 2026-11-03)
+
+Status: **landed 2026-11-03** (working tree; leave uncommitted; Paul commits). Spec: `docs/architecture.md` + `docs/plan.md`.
+
+```
+Restructure /var/www/gpstoolset around 3 shared meta tools (leave all changes uncommitted; Paul commits). Keep every existing hard rule (no email/contact, no "Report a map issue", no OSM credit in footer, no FlySight, no heavy coloured one-sided borders, OSM tiles via central config).
+1. ONE shared viewer: format landing pages, each with its own SEO content (H1, intro, how-to, FAQ) above a drop zone: /gpx-viewer, /kml-viewer, /kmz-viewer, /fit-viewer. After a file is dropped, all of them open the SAME viewer app (same JS module, same full-screen map shell, same chart dock); nothing is format-specific past parsing. Home drop zone auto-detects the format (by extension + magic bytes) and routes to the right landing/viewer via the existing IndexedDB file handoff. Menu: "Viewers" lists GPX, KML, KMZ, FIT; then a "More" section with GoPro (/gopro-gps-extract keeps its own page + video view).
+1b. Separate the viewer from the landing pages. Build ONE generic viewer module (e.g. assets/js/viewer/), not tied to any format: map shell, track layer, chart dock, controls. It only accepts the shared track model. Landing pages (/gpx-viewer, /kml-viewer, /kmz-viewer, /fit-viewer, /gopro-gps-extract) are SEO pages: they hold the content + drop zone, run the matching parser, then hand the track model to the viewer. Refactor the current gpx-viewer code into that generic viewer (rename, strip GPX specifics into the GPX parser). GoPro uses the same viewer and only adds its GPMF parser and the video view on top. No duplicated map/chart code anywhere.
+2. ONE editor at /gpx-editor (meta tool): input one or more files of any supported format (GPX, KML, KMZ, FIT); map + chart preview that is edited live; merge, split, trim, simplify, reverse, elevation fix; export to any supported writable format. Move the existing GPX edit tools here; /gpx-viewer stays view-only and links to the editor.
+2b. Same split for the editor and converter: ONE generic editor module (assets/js/editor/) and ONE generic converter module (assets/js/converter/), both working only on the shared track model. /gpx-editor and every /convert/... URL are SEO landing pages (content + drop zone) that parse the file and hand it to the module. Editor and viewer share the same map/chart components.
+3. ONE converter at /convert (meta tool): input any supported file, output any other supported format. From/to selectable; preselect via GET: /convert?from=kml&to=gpx. Clean SEO URLs for the main pairs that load the same converter preselected, each with a short unique intro + FAQ: /convert/kml-to-gpx, /convert/gpx-to-kml, /convert/fit-to-gpx, /convert/kmz-to-gpx, /convert/gpx-to-kmz, /convert/kmz-to-kml. Self-canonical each. 301 the old /kml-to-gpx, /gpx-to-kml, /fit-to-gpx to their /convert/... equivalents.
+4. Architecture: parsers and exporters stay in one shared registry (one place to add a format: parser, exporter, extension/magic detection, landing meta). Tool registry (config/tools.php) gains the new pages; adding a format or a converter pair must be config + content only, no new JS. Update the sitemap generator for all new URLs.
+5. Menu "Tools": Coordinate converter, Measure distance, Converter.
+Check: http://gpstoolset.lan/ drop routes GPX/KML/KMZ/FIT correctly; every new URL returns 200; old converter URLs 301; editor exports to every format; /gopro-gps-extract still works.
+```
+
+
+
+*GPS Toolset Manager · Cursor prompts · updated 2026-11-03 Europe/Tallinn · P5–P7 done*
