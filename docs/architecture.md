@@ -20,7 +20,7 @@ Three **generic modules** (viewer / editor / converter) + SEO landings that pars
 | **Converter module** | `assets/js/converter/` (not a URL) | Generic: any → any on the track model. `/convert` + `/convert/<pair>` are SEO landings (parse then hand off). Old `/kml-to-gpx` etc. **301** here. |
 | **Landings** | `/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`, `/gopro-gps-extract` | SEO pages: content + drop zone → matching parser → hand track to **viewer module**. View-only (except GoPro adds **video view**). Edit → `/gpx-editor`. |
 
-**Menu:** Viewers (GPX, KML, KMZ, FIT, then a More section for GoPro) · Tools (Coordinate converter, Measure distance, Converter).
+**Menu:** Viewers (GPX, KML, KMZ, FIT, then a More section for GoPro) · Tools (Coordinate converter, Measure distance, Antipodes, Converter).
 
 **Format registry (one place):** parser · exporter · extension/magic detection · landing meta. Adding a format or a convert pair = **config + content only** (no new JS).
 
@@ -48,6 +48,7 @@ gpstoolset/
     convert/             ← converter meta + optional pair content partials
     measure-distance/
     coordinate-converter/
+    antipodes/
   public/
     index.php  .htaccess  robots.txt  favicon.ico
     assets/
@@ -60,7 +61,7 @@ gpstoolset/
         viewer/   app.js (track model only) · landing.js (format pages parse, then hand off)
         editor/   app.js · edit-tools.js · landing.js
         converter/ app.js · landing.js
-        tools/    gopro-gps-extract.js · measure-distance.js · coordinate-converter.js
+        tools/    gopro-gps-extract.js · measure-distance.js · coordinate-converter.js · antipodes.js
         dropzone.js   home drop → detect → handoff
       vendor/     leaflet · chartjs · gopro/
   docs/
@@ -135,7 +136,7 @@ Same as before: register → `tools/<slug>/` → optional parser → thin `tools
 - [x] P5a–P5i structure refactor
 - [x] P6 small fixes
 - [x] **P7** meta tools (generic `viewer/` · `editor/` · `converter/` modules · SEO landings · format registry · 301s)
-- Landed: home handoff · format viewers · `/gpx-editor` · `/convert` + pairs · measure · coordinate-converter · GoPro on the shared viewer
+- Landed: home handoff · format viewers · `/gpx-editor` · `/convert` + pairs · measure · coordinate-converter · antipodes · GoPro on the shared viewer
 - Guides Wave A published: `/guides/` + `config/guides.php` + static `includes/guides/<slug>.php`
 - Still open after P7: `/my-coordinates` · later roadmap in `docs/plan.md`
 

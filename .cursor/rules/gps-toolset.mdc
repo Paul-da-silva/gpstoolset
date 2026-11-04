@@ -34,7 +34,7 @@ includes/router.php seo.php bootstrap.php
 includes/layout/ pages/ partials/
 tools/<slug>/{content,page}.php
   format landings: gpx|kml|kmz|fit-viewer + gopro → parse then viewer/
-  gpx-editor/  convert/  gopro-gps-extract/  measure-distance/  coordinate-converter/
+  gpx-editor/  convert/  gopro-gps-extract/  measure-distance/  coordinate-converter/  antipodes/
 public/index.php          ← front controller + /sitemap.xml
 public/assets/js/core|map|parsers|video|viewer|editor|converter|tools/
 public/assets/css/{tokens,base,components,tool-landing,map-shell}.css
@@ -44,7 +44,7 @@ guides/ · config/guides.php · includes/guides/<slug>.php · includes/pages/gui
 - Shared **Track** model; edits in `core/edit.js` (used by `/gpx-editor`)
 - **One generic viewer module** (`assets/js/viewer/`): format-agnostic; landings (incl. GoPro) parse then hand a track in. Refactor current gpx-viewer JS into it. GoPro adds GPMF + video only
 - **One generic editor** (`assets/js/editor/`) and **one converter** (`assets/js/converter/`): same split — `/gpx-editor` and `/convert/...` are SEO landings that parse then hand off. Editor shares map/chart components with the viewer. **No duplicated map/chart code anywhere**
-- **Menu:** Viewers (GPX, KML, KMZ, FIT, then a More section for GoPro) · Tools (Coordinate converter, Measure distance, Converter `/convert`)
+- **Menu:** Viewers (GPX, KML, KMZ, FIT, then a More section for GoPro) · Tools (Coordinate converter, Measure distance, Antipodes `/antipodes`, Converter `/convert`)
 - Converter SEO pairs under `/convert/<pair>`; old `/kml-to-gpx` etc. 301 → `/convert/...`
 - Adding a **format** or convert pair = config + content only (no new JS). Full steps: `docs/architecture.md`
 - Native ES modules; tiles only via `config/tiles.php` + `map/tiles.js`

@@ -17,7 +17,7 @@ function blankOverlay() {
   };
 }
 
-var GRAPH_NAMES = ['speed', 'altitude', 'distance', 'time', 'gForce', 'verticalSpeed'];
+var GRAPH_NAMES = ['speed', 'altitude', 'distance', 'time', 'heartRate', 'gForce', 'verticalSpeed'];
 
 function blankGraphs() {
   var graphs = {};
@@ -35,12 +35,17 @@ function blankMeasure() {
   return { height: 300 };
 }
 
+function blankAntipodes() {
+  return { height: 280 };
+}
+
 function blank() {
   return {
     units: 'metric',
     graphs: blankGraphs(),
     dock: { height: 180, tab: 'speed', open: false },
     measure: blankMeasure(),
+    antipodes: blankAntipodes(),
     chips: { statsOpen: false, toolsOpen: false },
     view: 'map',
     metricsLayout: 'row',
@@ -108,6 +113,10 @@ function sanitize(raw) {
   var measure = data.measure && typeof data.measure === 'object' ? data.measure : {};
   var measureHeight = measure.height == null ? 300 : measure.height;
   next.measure.height = cleanHeight(measureHeight);
+
+  var antipodes = data.antipodes && typeof data.antipodes === 'object' ? data.antipodes : {};
+  var antipodesHeight = antipodes.height == null ? 280 : antipodes.height;
+  next.antipodes.height = cleanHeight(antipodesHeight);
 
   var chips = data.chips && typeof data.chips === 'object' ? data.chips : {};
   next.chips.statsOpen = !!chips.statsOpen;

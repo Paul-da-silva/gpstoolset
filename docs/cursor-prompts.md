@@ -203,7 +203,7 @@ Restructure /var/www/gpstoolset around 3 shared meta tools (leave all changes un
 2b. Same split for the editor and converter: ONE generic editor module (assets/js/editor/) and ONE generic converter module (assets/js/converter/), both working only on the shared track model. /gpx-editor and every /convert/... URL are SEO landing pages (content + drop zone) that parse the file and hand it to the module. Editor and viewer share the same map/chart components.
 3. ONE converter at /convert (meta tool): input any supported file, output any other supported format. From/to selectable; preselect via GET: /convert?from=kml&to=gpx. Clean SEO URLs for the main pairs that load the same converter preselected, each with a short unique intro + FAQ: /convert/kml-to-gpx, /convert/gpx-to-kml, /convert/fit-to-gpx, /convert/kmz-to-gpx, /convert/gpx-to-kmz, /convert/kmz-to-kml. Self-canonical each. 301 the old /kml-to-gpx, /gpx-to-kml, /fit-to-gpx to their /convert/... equivalents.
 4. Architecture: parsers and exporters stay in one shared registry (one place to add a format: parser, exporter, extension/magic detection, landing meta). Tool registry (config/tools.php) gains the new pages; adding a format or a converter pair must be config + content only, no new JS. Update the sitemap generator for all new URLs.
-5. Menu "Tools": Coordinate converter, Measure distance, Converter.
+5. Menu "Tools": Coordinate converter, Measure distance, Antipodes (`/antipodes`), Converter.
 Check: http://gpstoolset.lan/ drop routes GPX/KML/KMZ/FIT correctly; every new URL returns 200; old converter URLs 301; editor exports to every format; /gopro-gps-extract still works.
 ```
 

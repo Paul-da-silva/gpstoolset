@@ -3,14 +3,15 @@
  *
  * A Track is what every parser hands to the map shell:
  *   {
- *     points: [{ lat, lon, ele?, speed?, t?, cts?, dist?, vspeed? }],
+ *     points: [{ lat, lon, ele?, speed?, hr?, t?, cts?, dist?, vspeed? }],
  *     acc:    [{ cts, g }],            // optional extra series (may be empty)
  *     smooth: [speed m/s, median-5],   // one per point
  *     idx:    [point indexes for charts],
  *     meta:   { name, timed, hasVspeed, hasG }
  *   }
- * Point fields: lat/lon degrees, ele metres, speed m/s, t UTC ms (GPS clock),
- * cts ms from video start, dist metres from the first point, vspeed m/s.
+ * Point fields: lat/lon degrees, ele metres, speed m/s, hr beats/min,
+ * t UTC ms (GPS clock), cts ms from video start, dist metres from the
+ * first point, vspeed m/s.
  * Parsers return raw points (lat, lon and whatever else they know);
  * buildTrack() fills in dist, vspeed, smooth, idx and meta.
  */
@@ -178,6 +179,20 @@ export function anyNumber(values) {
   return false;
 }
 
+export function averageOf(values) {
+  var sum = 0;
+  var count = 0;
+  var i;
+  for (i = 0; i < values.length; i++) {
+    if (values[i] == null || !isFinite(values[i])) {
+      continue;
+    }
+    sum += values[i];
+    count += 1;
+  }
+  return count ? sum / count : null;
+}
+
 export function maxOf(values) {
   var max = null;
   var i;
@@ -301,6 +316,9 @@ export function buildTrack(points, options) {
       name: opts.name || 'track',
       timed: hasTimes(points),
       hasVspeed: hasVspeed,
+      hasHr: anyNumber(points.map(function (point) {
+        return point.hr;
+      })),
       hasG: acc.length > 0
     }
   };

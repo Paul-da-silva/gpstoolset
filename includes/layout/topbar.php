@@ -37,16 +37,20 @@ declare(strict_types=1);
           </a>
         </div>
       </div>
-      <div class="nav-group<?= nav_active('/coordinate-converter') ?><?= nav_active('/measure-distance') ?><?= nav_active('/convert') ?><?= str_starts_with(current_path(), '/convert/') ? ' is-active' : '' ?>">
+      <div class="nav-group<?= nav_active('/coordinate-converter') ?><?= nav_active('/measure-distance') ?><?= nav_active('/antipodes') ?><?= nav_active('/convert') ?><?= str_starts_with(current_path(), '/convert/') ? ' is-active' : '' ?>">
         <span class="nav-link">Tools</span>
         <div class="nav-sub" role="group" aria-label="Tools">
           <a class="nav-sublink<?= nav_active('/coordinate-converter') ?>" href="/coordinate-converter">
             <span class="nav-sublink-title">Coordinate converter</span>
             <span class="nav-sublink-note">Decimal, DMS, UTM, and MGRS</span>
           </a>
-          <a class="nav-sublink nav-sublink<?= nav_active('/measure-distance') ?>" href="/measure-distance">
+          <a class="nav-sublink<?= nav_active('/measure-distance') ?>" href="/measure-distance">
             <span class="nav-sublink-title">Measure distance</span>
             <span class="nav-sublink-note">Distance between points on the map</span>
+          </a>
+          <a class="nav-sublink<?= nav_active('/antipodes') ?>" href="/antipodes">
+            <span class="nav-sublink-title">Antipodes</span>
+            <span class="nav-sublink-note">The point on the other side of Earth</span>
           </a>
           <a class="nav-sublink<?= nav_active('/convert') ?>" href="/convert">
             <span class="nav-sublink-title">Converter</span>

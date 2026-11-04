@@ -25,6 +25,7 @@ Titles ≤60 chars; no brand names in URL or title brand-stuffing beyond necessa
 | `/my-coordinates` | `my coordinates` **10K–100K** | `gps coordinates` **10K–100K** · `lat long finder` **10K–100K** · `find coordinates on map` **1K–10K** | My Coordinates — Find Lat & Long on a Map |
 | `/measure-distance` | `measure distance on map` **10K–100K** | `distance calculator map` **10K–100K** · `route distance calculator` **1K–10K** | Measure Distance on a Map — Free Tool |
 | `/coordinate-converter` | `coordinate converter` **10K–100K** | `lat long converter` **10K–100K** · `dms to decimal` / `decimal to dms` **1K–10K** · `utm converter` / `utm to lat long` **1K–10K** · `mgrs converter` **1K–10K** | Coordinate Converter — DMS, UTM & MGRS |
+| `/antipodes` | `antipodes calculator` *(unverified — not in the Planner paste)* | `antipodes map` · `opposite side of the earth` *(unverified)* | Antipodes Calculator — Other Side of Earth |
 | `/convert/kml-to-gpx` | `kml to gpx` **10K–100K** | | KML to GPX Converter — Free |
 | `/convert/gpx-to-kml` | `gpx to kml` **1K–10K** | (pair with kml↔gpx hub copy) | GPX to KML Converter — Free Online |
 | `/convert/fit-to-gpx` | `fit to gpx` **1K–10K** | `tcx to gpx` **100–1K** · `garmin export gpx` **100–1K** (how-to lean) | FIT to GPX Converter — Free, No Upload |

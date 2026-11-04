@@ -90,7 +90,7 @@ $faq = $route['faq'];
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
       <h2>More on GPS Toolset</h2>
-      <p>If the track is already in a GoPro video, the <a href="/gopro-gps-extract">GoPro GPS extractor</a> reads it in the browser and can save GPX, CSV, or KML.</p>
+      <p>If the track is already in a GoPro video, the <a href="/gopro-gps-extract">GoPro GPS extractor</a> reads it in the browser and can save GPX, CSV, or KML. The <a href="/antipodes">antipodes calculator</a> shows the point on the other side of the Earth.</p>
     </div>
   </section>
 </main>

@@ -479,7 +479,7 @@ export function mount(options) {
   document.addEventListener('gpstoolset:dock', function () {
     window.requestAnimationFrame(charts.resize);
   });
-  ['speed', 'altitude', 'distance', 'time', 'verticalSpeed', 'gForce'].forEach(function (name) {
+  ['speed', 'altitude', 'distance', 'time', 'heartRate', 'verticalSpeed', 'gForce'].forEach(function (name) {
     var pane = document.getElementById('pane-' + name);
     if (pane) {
       pane.addEventListener('mouseleave', trackLayer.hideScrub);

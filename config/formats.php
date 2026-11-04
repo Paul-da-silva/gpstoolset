@@ -166,7 +166,7 @@ return [
             ],
             [
                 'q' => 'Where are heart rate, cadence, and power?',
-                'a' => 'Those stay in the FIT file. This page shows the path, time, elevation, and speed when the file recorded them.',
+                'a' => 'Heart rate is a graph under the map when the file recorded it. Cadence and power stay in the FIT file. The map also shows the path, time, elevation, and speed when those were recorded.',
             ],
             [
                 'q' => 'The activity has no GPS. What happens?',

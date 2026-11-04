@@ -255,6 +255,7 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
       <button type="button" class="chip" role="tab" data-dock-tab="altitude" aria-controls="pane-altitude" aria-pressed="false">Altitude</button>
       <button type="button" class="chip" role="tab" data-dock-tab="distance" aria-controls="pane-distance" aria-pressed="false">Distance</button>
       <button type="button" class="chip" role="tab" data-dock-tab="time" aria-controls="pane-time" aria-pressed="false">Time</button>
+      <button type="button" class="chip" role="tab" data-dock-tab="heartRate" data-available="false" aria-controls="pane-heartRate" aria-pressed="false">Heart rate</button>
       <button type="button" class="chip" role="tab" data-dock-tab="verticalSpeed" data-available="false" aria-controls="pane-verticalSpeed" aria-pressed="false">Vertical speed</button>
       <button type="button" class="chip" role="tab" data-dock-tab="gForce" data-available="false" aria-controls="pane-gForce" aria-pressed="false">G-force</button>
     </div>
@@ -270,6 +271,9 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
       </div>
       <div id="pane-time" class="dock-pane" data-pane="time" role="tabpanel" hidden>
         <p class="dock-placeholder">Time graph will appear here.</p>
+      </div>
+      <div id="pane-heartRate" class="dock-pane" data-pane="heartRate" role="tabpanel" hidden>
+        <p class="dock-placeholder">Heart rate graph will appear here.</p>
       </div>
       <div id="pane-verticalSpeed" class="dock-pane" data-pane="verticalSpeed" role="tabpanel" hidden>
         <p class="dock-placeholder">Vertical speed graph will appear here.</p>

@@ -36,8 +36,8 @@
 > Landings (`/gpx-viewer`, `/gpx-editor`, `/convert/...`) are SEO pages that parse then hand a track to generic modules (`assets/js/viewer|editor|converter/`).
 | Status | URL |
 |---|---|
-| Planned launch | `/gopro-gps-extract`, `/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`, `/gpx-editor`, `/convert` (+ `/convert/<pair>`), `/measure-distance`, `/coordinate-converter`, `/my-coordinates` |
-| Not in plan yet (future) | Satellite globe, antipodes, DJI SRT→GPX, CSV→GPX, NMEA→GPX, geotag photos — link as “coming” or skip until live |
+| Planned launch | `/gopro-gps-extract`, `/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`, `/gpx-editor`, `/convert` (+ `/convert/<pair>`), `/measure-distance`, `/coordinate-converter`, `/antipodes`, `/my-coordinates` |
+| Not in plan yet (future) | Satellite globe, DJI SRT→GPX, CSV→GPX, NMEA→GPX, geotag photos — link as “coming” or skip until live |
 
 ### Hub + cross-link pattern
 - `/guides/` hub lists every guide + the format table.

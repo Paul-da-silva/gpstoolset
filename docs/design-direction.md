@@ -336,7 +336,7 @@ Pre-upload: drop zone first; **rich SEO content below** (intro, how-it-works, wh
 ## 6. Ad slots (centralized partial; **off** until monetization)
 
 **Rules:**  
-- **Full-screen map viewer/tool pages** (`/gopro-gps-extract`, `/gpx-viewer`, `/my-coordinates`, `/measure-distance`, and later map overlays): **no ads on the map**. Prefer **zero ads** on these pages. If monetizing later, only a **slim** unit that never covers tiles — e.g. inside the **graph dock** when open, or a discreet row inside the **☰ menu** drawer. Never sticky over controls or the track.  
+- **Full-screen map viewer/tool pages** (`/gopro-gps-extract`, `/gpx-viewer`, `/my-coordinates`, `/measure-distance`, `/antipodes`, and later map overlays): **no ads on the map**. Prefer **zero ads** on these pages. If monetizing later, only a **slim** unit that never covers tiles — e.g. inside the **graph dock** when open, or a discreet row inside the **☰ menu** drawer. Never sticky over controls or the track.  
 - **Home, guides, converters, about/privacy:** normal document ads OK.  
 - Label visually: “Advertisement” 11–12px muted.  
 - `ads.enabled=false` → render nothing (collapse; no CLS boxes at launch).

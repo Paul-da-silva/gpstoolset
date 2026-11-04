@@ -14,7 +14,7 @@
 - **Cursor — ads:** ONE shared partial/config. **Off now**; on later with monetization. **Viewer/map pages:** ads must **never** eat the map (home/guides/converters only, or none on viewers — open for Monetization). Elsewhere: never on drop zone; max 2/page when on.
 - **Hard site rules (Paul):** no email / `mailto:` · no contact page · Privacy/About **footer only** · **no heavy coloured one-sided borders** (thin borders OK) · OSM attribution **on the map only** (no © OSM in footer; no “Report a map issue” anywhere) · **never git commit/push/amend** (Paul alone commits; leave changes uncommitted).
 - **URL / brand rules:** no brand names in URLs **except `/gopro-gps-extract`**. GoPro/DJI = **compatibility wording in copy only**. Never “Telemetry Extractor”. **Never name FlySight** → say **GNSS logger CSV exports**.
-- **FlySync:** keeps its viewers; **no 301s**. May link to gpstoolset for non-skydive users later. Some keyword overlap is fine.
+- **FlySync:** keeps its viewers; **no 301s**. Links to gpstoolset from its GPX and FIT viewers (guide + viewer, done 2026-11-04). Some keyword overlap is fine.
 - **`/gopro-gps-extract` copy:** must be **clearly different** from FlySync’s page (angle + wording) — not a copy. Rich pre-upload content below the drop zone; hides after load. SEO note.
 
 ### OSM tile rules (for Cursor)
@@ -91,6 +91,7 @@ Each pair page: short unique intro + FAQ, **self-canonical**. Keyword traffic al
 | `/gopro-gps-extract` | SEO landing → **generic viewer** for map + own Video view · GPMF parser only · rich pre-upload (Menu → More) | `gopro gps extractor` **10–100** | GoPro GPS Extractor — Free, No Upload |
 | `/measure-distance` | Full-screen map measure | `measure distance on map` **10K–100K** | Measure Distance on a Map — Free Tool |
 | `/coordinate-converter` | Decimal ↔ DMS/DDM · UTM · MGRS | `coordinate converter` **10K–100K** | Coordinate Converter — DMS, UTM & MGRS |
+| `/antipodes` | Split map. Pick a point, see the other side | `antipodes calculator` *(unverified — not in the Planner paste)* | Antipodes Calculator — Other Side of Earth |
 | `/my-coordinates` | Find lat/long on a map *(still planned)* | `my coordinates` **10K–100K** | My Coordinates — Find Lat & Long on a Map |
 
 **Also:** `/privacy` · `/about`. **No `/contact`**.  
@@ -106,12 +107,11 @@ Each pair page: short unique intro + FAQ, **self-canonical**. Keyword traffic al
 **GSC first-pass (FlySync, still live):** GoPro page ~449 clk / 5.6K · GPX 63/825 · FIT 8/279.
 
 ### Later — after the launch set
-### Later — after the launch set
 - **GPS video overlay (social bait):** overlay speed/alt/map-track on video (or transparent export); free = **gpstoolset.com watermark**; prefer browser-side (WebCodecs/canvas) if feasible; reuses `/gopro-gps-extract` GPMF parsing; premium later: watermark-free
-- **Antipodes calculator:** pick a point on the planet → show what's on the other side
 - **DJI telemetry viewer:** SRT and/or DJI's other flight-log format → map track (same privacy rules)
 - **3D view option for all viewers** (map tools that show a track)
 - **Live GNSS satellite globe:** real-scale 3D globe of GPS / GLONASS / Galileo / BeiDou, colour-coded, using free CelesTrak orbit data (TLEs) computed in the browser
+- **Time zone tools:** time zone converter (one zone to another, with DST), world clock / live day-night map of the planet (current time anywhere, click a point to get its zone and local time), time zone from coordinates, and UTC/GPS-time helpers for track timestamps (GPS time vs UTC leap seconds). All browser-side with the built-in Intl API; zone lookup from boundary data loaded on demand
 - **Also later:** geotag-photos. **Skip:** what3words.
 
 ---
@@ -159,7 +159,7 @@ Full brief: **`docs/guides-brief.md`**. Prefer how-to / compare over pure “wha
 | **C** | Guides Wave A (format + compare) linked to landings + `/convert/...` | Drafts exist |
 | **D** | `/my-coordinates` + Wave B educational guides | Planned |
 | **E** | More convert pairs / NMEA·CSV when formats land in registry | Planned |
-| **F** | geotag · DJI · antipodes · 3D viewers · satellite globe · video overlay · FlySync link-out | Later |
+| **F** | geotag · DJI · 3D viewers · satellite globe · time zone tools · video overlay · antipodes landed at `/antipodes` | Later |
 
 ---
 
@@ -168,4 +168,4 @@ Full brief: **`docs/guides-brief.md`**. Prefer how-to / compare over pure “wha
 
 ---
 
-*GPS Toolset Manager · Europe/Tallinn · updated 2026-11-03: viewers / editor / convert meta tools · P7*
+*GPS Toolset Manager · Europe/Tallinn · updated 2026-11-04: time zone tools on roadmap · FlySync links done*

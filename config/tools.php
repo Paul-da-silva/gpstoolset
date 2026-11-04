@@ -59,6 +59,12 @@ $tools = [
         'entry' => 'tools/coordinate-converter/page.php',
         'meta' => 'tools/coordinate-converter/meta.php',
     ],
+    'antipodes' => [
+        'slug' => 'antipodes',
+        'inSitemap' => true,
+        'entry' => 'tools/antipodes/page.php',
+        'meta' => 'tools/antipodes/meta.php',
+    ],
 ];
 
 foreach ($formats as $id => $format) {

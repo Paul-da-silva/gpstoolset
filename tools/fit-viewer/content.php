@@ -20,7 +20,7 @@ $faq = $route['faq'];
           <li>Watch and bike computer</li>
           <li>Nothing uploaded</li>
         </ul>
-        <p class="tool-copy">FIT is the activity file saved by many watches and bike computers. Drop the .fit file. This page reads the GPS positions and draws the path, with time, elevation, and speed when the file recorded them.</p>
+        <p class="tool-copy">FIT is the activity file saved by many watches and bike computers. Drop the .fit file. This page reads the GPS positions and draws the path, with time, elevation, speed, and heart rate when the file recorded them.</p>
       </div>
 
       <div class="tool-card">
@@ -75,7 +75,7 @@ $faq = $route['faq'];
       <ul>
         <li>The GPS path, with time, elevation, and speed when the file recorded them.</li>
         <li>Each sport, when the file marks them separately, is its own part.</li>
-        <li>Heart rate, cadence, and power stay in the FIT file. They are not drawn here.</li>
+        <li>Heart rate is a graph when the file recorded it. Cadence and power stay in the FIT file.</li>
         <li>An indoor activity with no GPS positions cannot be drawn. The page will say so.</li>
       </ul>
     </div>

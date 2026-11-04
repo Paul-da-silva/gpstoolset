@@ -1,12 +1,12 @@
 /**
  * Graphs in the dock under the map (ES module, Chart.js 4 from the vendored
  * classic script, global Chart). Speed, altitude, distance, time, vertical
- * speed and G-force for one Track. Hovering a graph moves a dot on the map.
+ * speed, heart rate and G-force for one Track. Hovering a graph moves a dot on the map.
  */
 import * as graphDock from './graph-dock.js';
 import { hideScrub, showScrub } from './track-layer.js';
 import {
-  anyNumber, durationMs, elapsedSec, maxOf, minOf, nearestPointIndex, totalDistance
+  anyNumber, averageOf, durationMs, elapsedSec, maxOf, minOf, nearestPointIndex, totalDistance
 } from '../core/track.js';
 import {
   formatAlt, formatClock, formatDistance, formatDuration, formatSpeed, unitScale
@@ -454,6 +454,32 @@ export function renderTrack(track) {
     setSummary('time-summary', 'No time in this track.');
   }
 
+  var rates = current.points.map(function (point) {
+    return point.hr;
+  });
+  if (current.meta.hasHr && anyNumber(rates)) {
+    var averageHr = averageOf(rates);
+    var highestHr = maxOf(rates);
+    setSummary(
+      'heartRate-summary',
+      'Highest ' + Math.round(highestHr) + ' bpm · average ' + Math.round(averageHr) + ' bpm'
+    );
+    charts.heartRate = makeChart(
+      'chart-heartRate',
+      'Heart rate',
+      '#b91c1c',
+      'rgba(185, 28, 28, 0.16)',
+      chartRows(function (point) {
+        return point.hr;
+      }),
+      0,
+      'bpm',
+      false
+    );
+  } else {
+    setSummary('heartRate-summary', 'No heart rate in this track.');
+  }
+
   if (current.meta.hasVspeed && anyNumber(vspeeds)) {
     setSummary('verticalSpeed-summary', 'Lowest ' + formatSpeed(minOf(vspeeds)) + ' · highest ' + formatSpeed(maxOf(vspeeds)));
     charts.verticalSpeed = makeChart(
@@ -508,6 +534,7 @@ export function paintSeriesAvailability() {
   setSeriesAvailable('altitude', ready);
   setSeriesAvailable('distance', ready);
   setSeriesAvailable('time', ready);
+  setSeriesAvailable('heartRate', !!(ready && current.meta.hasHr));
   setSeriesAvailable('verticalSpeed', !!(ready && current.meta.hasVspeed));
   setSeriesAvailable('gForce', !!(ready && current.meta.hasG));
   graphDock.setTrackReady(ready);
@@ -561,6 +588,7 @@ export function mountCharts(noun) {
   mount('pane-altitude', 'chart-altitude', 'altitude-summary', 'Altitude over time', idleText('Altitude'));
   mount('pane-distance', 'chart-distance', 'distance-summary', 'Distance over time', idleText('Distance'));
   mount('pane-time', 'chart-time', 'time-summary', 'Time along the track', idleText('Time'));
+  mount('pane-heartRate', 'chart-heartRate', 'heartRate-summary', 'Heart rate over time', idleText('Heart rate'));
   mount('pane-verticalSpeed', 'chart-verticalSpeed', 'verticalSpeed-summary', 'Vertical speed over time', idleText('Vertical speed'));
   mount('pane-gForce', 'chart-gForce', 'gForce-summary', 'G-force over time', idleText('G-force'));
   if (!mountCharts.bound) {
@@ -580,6 +608,7 @@ export function clear() {
   setSummary('altitude-summary', idleText('Altitude'));
   setSummary('distance-summary', idleText('Distance'));
   setSummary('time-summary', idleText('Time'));
+  setSummary('heartRate-summary', idleText('Heart rate'));
   setSummary('verticalSpeed-summary', idleText('Vertical speed'));
   setSummary('gForce-summary', idleText('G-force'));
   paintSeriesAvailability();

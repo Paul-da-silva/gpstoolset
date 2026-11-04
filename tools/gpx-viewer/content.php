@@ -23,7 +23,7 @@ $faq = $route['faq'];
           <li>Speed and altitude</li>
           <li>Nothing uploaded</li>
         </ul>
-        <p class="tool-copy">This page reads a track, a route, or waypoints. After it loads, the map fills the page. Speed, altitude, distance, and time sit under the map. To change the track, open the <a href="/gpx-editor">GPX editor</a>.</p>
+        <p class="tool-copy">This page reads a track, a route, or waypoints. After it loads, the map fills the page. Speed, altitude, distance, and time sit under the map. Heart rate appears there when the file recorded it. To change the track, open the <a href="/gpx-editor">GPX editor</a>.</p>
       </div>
 
       <div class="tool-card">
@@ -75,7 +75,7 @@ $faq = $route['faq'];
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
       <h2>A GPX viewer online</h2>
-      <p>Drop the file and the route fills the map. Start and end are marked. Open Graphs for speed, altitude, distance, and time. If the file has several tracks, each one is listed and the map shows the one you pick.</p>
+      <p>Drop the file and the route fills the map. Start and end are marked. Open Graphs for speed, altitude, distance, and time. Heart rate is listed when the file includes it. If the file has several tracks, each one is listed and the map shows the one you pick.</p>
       <p>Waypoints stay as points on the map. They are not joined into a line. A route with no track is drawn as the line.</p>
     </div>
   </section>

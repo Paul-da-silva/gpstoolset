@@ -1,7 +1,7 @@
 /**
  * Track edits for the editor (ES module, no DOM).
  * Each function returns a new point list, or null when there is nothing to do.
- * Points keep lat, lon, ele (metres), speed (m/s) and t (UTC ms).
+ * Points keep lat, lon, ele (metres), speed (m/s), hr (beats/min) and t (UTC ms).
  */
 import { median } from './track.js';
 
@@ -11,6 +11,7 @@ export function clonePoint(point) {
     lon: point.lon,
     ele: point.ele == null || !isFinite(point.ele) ? null : point.ele,
     speed: point.speed == null || !isFinite(point.speed) ? null : point.speed,
+    hr: point.hr == null || !isFinite(point.hr) ? null : point.hr,
     t: point.t == null || !isFinite(point.t) ? null : point.t
   };
   if (point.name) {
@@ -189,13 +190,15 @@ export function trimPoints(points, start, end) {
 
 /**
  * Reverse the path. Times stay in the original order so the clock still
- * runs forward. Speed is cleared; the caller fills it from the new order.
+ * runs forward. Heart rate stays with that clock. Speed is cleared; the
+ * caller fills it from the new order.
  */
 export function reversePoints(points) {
   if (points.length < 2) {
     return null;
   }
   var times = [];
+  var rates = [];
   var timed = true;
   var i;
   for (i = 0; i < points.length; i++) {
@@ -204,6 +207,7 @@ export function reversePoints(points) {
       break;
     }
     times.push(points[i].t);
+    rates.push(points[i].hr == null || !isFinite(points[i].hr) ? null : points[i].hr);
   }
   var out = cloneAll(points);
   out.reverse();
@@ -211,6 +215,7 @@ export function reversePoints(points) {
     out[i].speed = null;
     if (timed) {
       out[i].t = times[i];
+      out[i].hr = rates[i];
     }
   }
   return out;

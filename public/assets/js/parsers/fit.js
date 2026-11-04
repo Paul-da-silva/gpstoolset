@@ -3,8 +3,9 @@
  * Nothing is uploaded.
  *
  * parse(file) → { name, segments: [{ name, points }], waypoints }
- * A point is { lat, lon, ele?, speed?, t? }. Only GPS record messages
- * are kept. Heart rate, cadence, and power are left out.
+ * A point is { lat, lon, ele?, speed?, hr?, t? }. Only GPS record messages
+ * are kept. Heart rate (beats per minute) is kept when the record has it.
+ * Cadence and power are left out.
  *
  * FIT timestamps are seconds since 1989-12-31 UTC.
  * Lat/lon are semicircles: degrees = semicircles × 180 / 2^31.
@@ -186,6 +187,14 @@ function readDef(view, offset, header, dataEnd) {
   };
 }
 
+/** Beats per minute from a FIT heart_rate field, or null. */
+function heartRate(raw) {
+  if (raw == null || !isFinite(raw) || raw < 1 || raw > 250) {
+    return null;
+  }
+  return Math.round(raw);
+}
+
 function degrees(raw, type) {
   if (type === 8 || type === 9) {
     return raw;
@@ -225,6 +234,7 @@ function pushRecord(state, raw, types, timeMs) {
     lon: lon,
     ele: ele,
     speed: speed,
+    hr: heartRate(raw[3]),
     t: timeMs
   });
 }

@@ -2,7 +2,9 @@
  * GPX parser (ES module). Reads the file in the browser. Nothing is uploaded.
  *
  * parse(file) → { name, segments: [{ name, points }], waypoints }
- * A point is { lat, lon, ele?, speed?, t? }. Routes are returned as segments
+ * A point is { lat, lon, ele?, speed?, hr?, t? }. Heart rate is read from
+ * a track-point extension (hr, in beats per minute) when the file has one.
+ * Routes are returned as segments
  * when the file has no track. Waypoints stay separate so they are not joined
  * into a line.
  */
@@ -46,6 +48,25 @@ function firstDescendantText(el, local) {
   return '';
 }
 
+var HR_NAMES = { hr: true, heartrate: true, heart_rate: true };
+
+/** Beats per minute from a track-point extension, or null. */
+function readHeartRate(node) {
+  var nodes = node.getElementsByTagName('*');
+  var i;
+  for (i = 0; i < nodes.length; i++) {
+    var local = String(nodes[i].localName || '').toLowerCase();
+    if (!HR_NAMES[local]) {
+      continue;
+    }
+    var value = parseFloat((nodes[i].textContent || '').trim());
+    if (isFinite(value) && value >= 1 && value <= 250) {
+      return Math.round(value);
+    }
+  }
+  return null;
+}
+
 function readPoints(parent, tag) {
   var nodes = childElements(parent, tag);
   var points = [];
@@ -74,6 +95,7 @@ function readPoints(parent, tag) {
       lon: lon,
       ele: ele,
       speed: speed,
+      hr: readHeartRate(node),
       t: isFinite(t) ? t : null
     });
   }

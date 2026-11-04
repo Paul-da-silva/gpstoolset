@@ -767,7 +767,7 @@ body.is-map .map-controls .map-popover {
 }
 
 .dock-handle {
-  flex: 0 0 2rem;
+  flex: 0 0 1rem;
   height: 2rem;
   min-height: 24px;
   display: flex;

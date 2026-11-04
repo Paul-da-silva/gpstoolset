@@ -92,6 +92,6 @@ $faq = $route['faq'];
 <section class="tool-section">
   <div class="tool-wrap tool-prose">
     <h2>More on GPS Toolset</h2>
-    <p><a href="/measure-distance">Measure distance on a map</a> if you want the length between points. <a href="/gpx-viewer">Open a GPX file</a> when the coordinates are already a track.</p>
+    <p><a href="/measure-distance">Measure distance on a map</a> if you want the length between points. The <a href="/antipodes">antipodes calculator</a> shows the place on the opposite side of the Earth. <a href="/gpx-viewer">Open a GPX file</a> when the coordinates are already a track.</p>
   </div>
 </section>
