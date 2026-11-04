@@ -272,8 +272,29 @@ a.nav-link:hover {
   margin-bottom: 0.85rem;
 }
 
-.page p + p {
-  margin-top: 0.75rem;
+.page h2 {
+  margin: 1.75rem 0 0.55rem;
+  font-size: 1.25rem;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+.page p {
+  margin: 0 0 0.75rem;
+}
+
+.page-updated {
+  color: color-mix(in srgb, var(--text) 62%, transparent);
+  font-size: 0.95rem;
+}
+
+.page ul {
+  margin: 0 0 0.95rem;
+  padding-left: 1.25rem;
+}
+
+.page li + li {
+  margin-top: 0.35rem;
 }
 
 .privacy-line {

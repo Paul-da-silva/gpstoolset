@@ -28,7 +28,7 @@ $tools = [
     'privacy' => [
         'slug' => 'privacy',
         'title' => 'Privacy',
-        'description' => 'GPS Toolset handles files in your browser. They are not uploaded.',
+        'description' => 'Privacy policy for GPS Toolset. Files stay in your browser. Local storage, analytics, and map tiles.',
         'inSitemap' => true,
         'entry' => 'includes/pages/privacy.php',
         'flags' => ['map' => false, 'video' => false, 'ads' => true],
