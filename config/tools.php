@@ -36,7 +36,7 @@ $tools = [
     'about' => [
         'slug' => 'about',
         'title' => 'About',
-        'description' => 'GPS Toolset is a set of browser tools for GPS files and maps.',
+        'description' => 'About GPS Toolset. Free browser tools for GPX, KML, KMZ, and FIT. Your file stays on your device.',
         'inSitemap' => true,
         'entry' => 'includes/pages/about.php',
         'flags' => ['map' => false, 'video' => false, 'ads' => true],
