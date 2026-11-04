@@ -363,6 +363,25 @@ function selectPoint(here, animate) {
   setStatus('');
 }
 
+function switchSides() {
+  if (!mapPick || !mapAnti) {
+    return;
+  }
+  var pickCenter = mapPick.getCenter();
+  var antiCenter = mapAnti.getCenter();
+  var pickZoom = mapPick.getZoom();
+  var antiZoom = mapAnti.getZoom();
+  if (point) {
+    point = antipodeOf(point);
+    placeMarkers(point, antipodeOf(point));
+  }
+  showOn(mapPick, { lat: antiCenter.lat, lon: antiCenter.lng }, antiZoom, true);
+  showOn(mapAnti, { lat: pickCenter.lat, lon: pickCenter.lng }, pickZoom, true);
+  paintReadout();
+  persist();
+  setStatus('');
+}
+
 function clearPoint() {
   point = null;
   if (pickMarker && mapPick) {
@@ -586,6 +605,7 @@ function boot() {
   mapAnti.on('moveend', persist);
 
   $('antipodes-clear').addEventListener('click', clearPoint);
+  $('antipodes-swap').addEventListener('click', switchSides);
   $('antipodes-locate').addEventListener('click', locate);
   $('antipodes-copy').addEventListener('click', function () {
     if (!point) {

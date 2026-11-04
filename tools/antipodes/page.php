@@ -19,6 +19,14 @@ require APP_ROOT . '/includes/layout/topbar.php';
       <div id="map-pick" class="antipodes-map" role="region" aria-label="Map. Click to pick a point."></div>
       <p class="antipodes-label">Your point</p>
     </div>
+    <button type="button" class="antipodes-swap" id="antipodes-swap" aria-label="Switch sides" title="Switch sides">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M4 8h13"/>
+        <path d="M13 4.5 17.5 8 13 11.5"/>
+        <path d="M20 16H7"/>
+        <path d="M11 12.5 6.5 16 11 19.5"/>
+      </svg>
+    </button>
     <div class="antipodes-pane">
       <div id="map-anti" class="antipodes-map" role="region" aria-label="Map of the point on the other side of the Earth."></div>
       <p class="antipodes-label">Other side</p>
