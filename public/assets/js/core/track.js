@@ -7,7 +7,7 @@
  *     acc:    [{ cts, g }],            // optional extra series (may be empty)
  *     smooth: [speed m/s, median-5],   // one per point
  *     idx:    [point indexes for charts],
- *     meta:   { name, timed, hasVspeed, hasG }
+ *     meta:   { name, timed, hasVspeed, hasG, videoDuration? }
  *   }
  * Point fields: lat/lon degrees, ele metres, speed m/s, hr beats/min,
  * t UTC ms (GPS clock), cts ms from video start, dist metres from the
@@ -299,12 +299,26 @@ export function annotatePoints(points) {
 
 /**
  * Turn parser output into a Track (see the file header).
- * options: { name: string, acc: [{ cts, g }] }
+ * options: { name: string, acc: [{ cts, g }], videoDuration?: seconds }
+ * videoDuration is the clip length from GPMF timing, when the file has one.
  */
 export function buildTrack(points, options) {
   var opts = options || {};
   var acc = opts.acc || [];
   var hasVspeed = annotatePoints(points);
+  var meta = {
+    name: opts.name || 'track',
+    timed: hasTimes(points),
+    hasVspeed: hasVspeed,
+    hasHr: anyNumber(points.map(function (point) {
+      return point.hr;
+    })),
+    hasG: acc.length > 0
+  };
+  var duration = opts.videoDuration;
+  if (typeof duration === 'number' && isFinite(duration) && duration > 0) {
+    meta.videoDuration = duration;
+  }
   return {
     points: points,
     acc: acc,
@@ -312,14 +326,6 @@ export function buildTrack(points, options) {
       return point.speed;
     }), 5),
     idx: thinIndices(points.length, CHART_POINTS),
-    meta: {
-      name: opts.name || 'track',
-      timed: hasTimes(points),
-      hasVspeed: hasVspeed,
-      hasHr: anyNumber(points.map(function (point) {
-        return point.hr;
-      })),
-      hasG: acc.length > 0
-    }
+    meta: meta
   };
 }

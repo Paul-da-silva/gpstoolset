@@ -13,7 +13,7 @@
 - **Cursor — tiles:** ONE shared config/module (see § OSM tile rules). No hardcoded tile URLs in pages.
 - **Cursor — ads:** ONE shared partial/config. **Off now**; on later with monetization. **Viewer/map pages:** ads must **never** eat the map (home/guides/converters only, or none on viewers — open for Monetization). Elsewhere: never on drop zone; max 2/page when on.
 - **Hard site rules (Paul):** no email / `mailto:` · no contact page · Privacy/About **footer only** · **no heavy coloured one-sided borders** (thin borders OK) · OSM attribution **on the map only** (no © OSM in footer; no “Report a map issue” anywhere) · **never git commit/push/amend** (Paul alone commits; leave changes uncommitted).
-- **URL / brand rules:** no brand names in URLs **except `/gopro-gps-extract`**. GoPro/DJI = **compatibility wording in copy only**. Never “Telemetry Extractor”. **Never name FlySight** → say **GNSS logger CSV exports**.
+- **URL / brand rules:** no brand names in URLs **except `/gopro-gps-extract`**. GoPro/DJI = **compatibility wording in copy only**. “Telemetry extractor” / “GoPro telemetry” are allowed keywords. **Never name FlySight** → say **GNSS logger CSV exports**.
 - **FlySync:** keeps its viewers; **no 301s**. Links to gpstoolset from its GPX and FIT viewers (guide + viewer, done 2026-11-04). Some keyword overlap is fine.
 - **`/gopro-gps-extract` copy:** must be **clearly different** from FlySync’s page (angle + wording) — not a copy. Rich pre-upload content below the drop zone; hides after load. SEO note.
 
@@ -98,7 +98,7 @@ Each pair page: short unique intro + FAQ, **self-canonical**. Keyword traffic al
 **Architecture rule:** one **format registry** (parser, exporter, detection, landing meta). Adding a format or a converter pair = **config + content only** (no new JS).
 
 **Secondaries (short):**  
-- `/gopro-gps-extract`: `gopro gps data` **100–1K** · extract / gopro gpx **10–100** · avoid telemetry-extractor phrasing  
+- `/gopro-gps-extract`: `gopro gps data` **100–1K** · extract / gopro gpx **10–100** · telemetry extractor / gopro telemetry are target keywords  
 - Viewers: `gpx viewer online` **1K–10K** · `gpx to csv` **100–1K**  
 - `/gpx-editor`: `gpx editor online` **1K–10K**  
 - `/coordinate-converter`: `lat long converter` **10K–100K** · dms/utm/mgrs **1K–10K**  

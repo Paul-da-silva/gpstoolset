@@ -75,7 +75,7 @@ guides/ · config/guides.php · includes/guides/<slug>.php · includes/pages/gui
 
 ## Content
 
-- Never “Telemetry Extractor”. Never FlySight → “GNSS logger CSV exports”
+- “Telemetry extractor” / “GoPro telemetry” are fine as keywords (we want to rank on them). Never FlySight → “GNSS logger CSV exports”
 - GoPro/DJI = compatibility wording; brand URL exception `/gopro-gps-extract` only
 - May COPY from `/var/www/skylog`; **never edit** FlySync. No Highcharts.
 

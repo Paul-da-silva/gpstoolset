@@ -8,8 +8,9 @@
  *   window.GPMFExtract      public/assets/vendor/gopro/gopro-telemetry-bundle.min.js
  *   window.GoProTelemetry   public/assets/vendor/gopro/gopro-telemetry-bundle.min.js
  *
- * parse() resolves to { points, acc }. Pass the points to buildTrack()
- * (core/track.js) to get a Track.
+ * parse() resolves to { points, acc, videoDuration }. videoDuration is
+ * seconds from GPMF timing, or null when the file has no clip length.
+ * Pass the points to buildTrack() (core/track.js) to get a Track.
  */
 import { MAX_SPEED, validCoord, fillMissingSpeed } from '../core/track.js';
 
@@ -281,7 +282,9 @@ function extract(file, token, live, report) {
  *               token.cancelled = true to stop it
  *   isCurrent   () => bool, false when a newer file replaced this job
  *   onProgress  (percent 0..100, label) => void
- * Resolves { points, acc }. Rejects with an Error; use errorMessage().
+ * Resolves { points, acc, videoDuration }. videoDuration is seconds from
+ * extracted.timing, or null when that length is missing. Rejects with an
+ * Error; use errorMessage().
  */
 export function parse(file, options) {
   var opts = options || {};
@@ -290,6 +293,7 @@ export function parse(file, options) {
     return true;
   };
   var onProgress = typeof opts.onProgress === 'function' ? opts.onProgress : function () {};
+  var videoDuration = null;
 
   function live() {
     return isCurrent() && !token.cancelled;
@@ -298,6 +302,11 @@ export function parse(file, options) {
   return extract(file, token, live, function (ratio, label) {
     onProgress(Math.max(0, Math.min(1, ratio)) * 78, label);
   }).then(function (extracted) {
+    var timing = extracted && extracted.timing;
+    var seconds = timing && timing.videoDuration;
+    if (typeof seconds === 'number' && isFinite(seconds) && seconds > 0) {
+      videoDuration = seconds;
+    }
     if (!live()) {
       throw new Error('Canceled by user');
     }
@@ -333,6 +342,8 @@ export function parse(file, options) {
     if (!live()) {
       throw new Error('Canceled by user');
     }
-    return seriesFromTelemetry(telemetry);
+    var series = seriesFromTelemetry(telemetry);
+    series.videoDuration = videoDuration;
+    return series;
   });
 }

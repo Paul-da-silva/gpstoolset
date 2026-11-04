@@ -431,7 +431,7 @@ Pre-upload: drop zone first; **rich SEO content below** (intro, how-it-works, wh
 | Client-side parse only; say so in UI | Upload to server “for convenience” |
 | One tile config, one ads config | Hardcode tile URLs or ad markup per page |
 | 44px taps; visible focus (tint + underline); safe-area insets | Pulse/blink targets; autoplaying motion |
-| GoPro/DJI as compatibility words | Brand names in logo, URLs, or “Telemetry Extractor” |
+| GoPro/DJI as compatibility words | Brand names in logo or URLs |
 | “GNSS logger CSV exports” | Any mention of FlySight |
 | No ads on map tools at launch | Ads over map, drop overlay, or sticky on controls |
 

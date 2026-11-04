@@ -113,7 +113,8 @@ function paintMap(refit) {
     fillMissingSpeed(points);
     track = buildTrack(points, {
       name: (seg && seg.name) || fileLabel || 'track',
-      acc: seg && seg.acc ? seg.acc : []
+      acc: seg && seg.acc ? seg.acc : [],
+      videoDuration: seg && seg.videoDuration
     });
     trackLayer.drawTrack(track, { fit: false });
     panels.renderStats(track);

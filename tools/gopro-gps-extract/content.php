@@ -96,7 +96,7 @@ $faq = $route['faq'];
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
       <h2>Cameras this can read</h2>
-      <p>It works with GoPro HERO models that embed GPS in the video (often called GPMF). Many HERO5 and newer cameras do that when GPS was switched on for the recording. This is not a GoPro product, and it does not sign in to a camera account or a cloud library.</p>
+      <p>It works with GoPro HERO models that embed GPS in the video (often called GPMF). HERO5 and newer cameras that record GPS do that, including MAX. HERO12 has no GPS, and Session cameras do not. GPS has to be on while the camera records. This is not a GoPro product, and it does not sign in to a camera account or a cloud library.</p>
     </div>
   </section>
 

@@ -25,7 +25,7 @@ return [
         ],
         [
             'q' => 'Which cameras does this read?',
-            'a' => 'GoPro HERO models that store GPS in the video file. Many HERO5 and newer cameras do that when GPS was on while the clip was recorded. A video shot with GPS off has no track to read.',
+            'a' => 'HERO5 and newer cameras that store GPS in the video, including MAX. HERO12 has no GPS, and Session cameras do not record GPS. GPS must be on while recording. A clip shot with GPS off has no track to read.',
         ],
         [
             'q' => 'Why is there no GPS data in my video?',

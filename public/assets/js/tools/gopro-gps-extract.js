@@ -125,7 +125,8 @@ function readFile(file, id, active) {
       segments: [{
         name: name,
         points: series.points,
-        acc: series.acc || []
+        acc: series.acc || [],
+        videoDuration: series.videoDuration
       }],
       waypoints: []
     }, name);

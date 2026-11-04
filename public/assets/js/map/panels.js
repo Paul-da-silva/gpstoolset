@@ -42,9 +42,11 @@ export function mount(noun, exports) {
       '<div><dt>Distance</dt><dd id="stat-distance">—</dd></div>' +
       '<div><dt>Average speed</dt><dd id="stat-avg">—</dd></div>' +
       '<div><dt>Max speed</dt><dd id="stat-max">—</dd></div>' +
+      '<div><dt>Max vertical speed</dt><dd id="stat-vmax">—</dd></div>' +
       '<div><dt>Lowest altitude</dt><dd id="stat-low">—</dd></div>' +
       '<div><dt>Highest altitude</dt><dd id="stat-high">—</dd></div>' +
-      '</dl>';
+      '</dl>' +
+      '<p class="popover-note" id="stat-coverage" hidden></p>';
   }
   if (exp) {
     exp.innerHTML =
@@ -63,6 +65,32 @@ export function mount(noun, exports) {
   }
 }
 
+/**
+ * One-line GPS coverage for a GoPro clip whose length is known.
+ * Expected slots are duration × 5 Hz, the same spacing parsers/gpmf.js
+ * keeps (GROUP_MS = 200). Other tracks leave this blank.
+ */
+function renderCoverage(track) {
+  var el = document.getElementById('stat-coverage');
+  if (!el) {
+    return;
+  }
+  var duration = track && track.meta ? track.meta.videoDuration : null;
+  var kept = track && track.points ? track.points.length : 0;
+  var expected = typeof duration === 'number' && isFinite(duration) && duration > 0
+    ? Math.round(duration * 5)
+    : 0;
+  if (!kept || expected < 1) {
+    el.hidden = true;
+    el.textContent = '';
+    return;
+  }
+  var pct = Math.min(100, Math.round((kept / expected) * 100));
+  el.hidden = false;
+  el.textContent = 'GPS coverage: ' + pct + '% (' +
+    kept.toLocaleString() + ' of about ' + expected.toLocaleString() + ' at 5 Hz).';
+}
+
 /** Fill the stat list from a Track, or reset it when track is null. */
 export function renderStats(track) {
   var points = track ? track.points : [];
@@ -72,8 +100,10 @@ export function renderStats(track) {
     stat('stat-distance', '—');
     stat('stat-avg', '—');
     stat('stat-max', '—');
+    stat('stat-vmax', '—');
     stat('stat-low', '—');
     stat('stat-high', '—');
+    renderCoverage(null);
     return;
   }
   var meters = totalDistance(points);
@@ -82,13 +112,18 @@ export function renderStats(track) {
   var eles = points.map(function (point) {
     return point.ele;
   });
+  var vAbs = points.map(function (point) {
+    return point.vspeed == null || !isFinite(point.vspeed) ? null : Math.abs(point.vspeed);
+  });
   stat('stat-points', points.length.toLocaleString());
   stat('stat-duration', formatDuration(elapsed));
   stat('stat-distance', formatDistance(meters));
   stat('stat-avg', formatSpeed(average));
   stat('stat-max', formatSpeed(maxOf(track.smooth)));
+  stat('stat-vmax', formatSpeed(maxOf(vAbs)));
   stat('stat-low', formatAlt(minOf(eles)));
   stat('stat-high', formatAlt(maxOf(eles)));
+  renderCoverage(track);
 }
 
 /** Show which unit button is on. */
