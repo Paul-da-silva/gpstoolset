@@ -2,13 +2,34 @@
 declare(strict_types=1);
 
 /**
- * Map application markup (stage, chips, optional video, graph dock).
+ * Map application markup (stage, controls, optional video, graph dock).
  * The caller includes the document chrome (head, topbar). Print
  * includes/partials/scripts-map.php once, after this file, for the scripts.
  *
  * $mapAppHidden: render the app hidden until a track is ready.
  * $mapAppFileInput: set false when the page already has #file-input.
  */
+
+if (!function_exists('map_shell_icon')) {
+    function map_shell_icon(string $id): string
+    {
+        $paths = [
+            'open' => '<path d="M7 3.5h6.2L19 9.2V20a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M13 3.5V9h6"/>',
+            'replace' => '<path d="M20 12a8 8 0 0 1-13.6 5.7L4 16"/><path d="M4 20v-4h4"/><path d="M4 12A8 8 0 0 1 17.6 6.3L20 8"/><path d="M20 4v4h-4"/>',
+            'add' => '<path d="M12 6v12"/><path d="M6 12h12"/>',
+            'stats' => '<path d="M5 19V10"/><path d="M12 19V5"/><path d="M19 19v-7"/>',
+            'graphs' => '<path d="M4 16.5 9 11l4 3.5L20 6"/>',
+            'edit' => '<path d="M4.5 19.5 8 18.6 18.8 7.8a1.6 1.6 0 0 0-2.3-2.3L5.7 16.3 4.5 19.5z"/><path d="M14.8 6.2l3 3"/>',
+            'export' => '<path d="M12 4v11"/><path d="M7.5 11.5 12 16l4.5-4.5"/><path d="M5 20h14"/>',
+        ];
+        $class = 'map-svg';
+        if ($id === 'open' || $id === 'replace' || $id === 'add') {
+            $class = 'icon-' . $id;
+        }
+        $body = $paths[$id] ?? '';
+        return '<svg class="' . $class . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $body . '</svg>';
+    }
+}
 
 $showEmpty = !isset($mapShellEmpty) || (bool) $mapShellEmpty;
 
@@ -37,37 +58,30 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
   <div class="map-stage" id="map-stage">
     <div id="map" role="region" aria-label="Map"></div>
 
-    <div class="map-chips" id="map-chips">
-      <div class="chip-bar">
-        <button type="button" class="chip" id="chip-open" data-file-pick>Open file</button>
-        <span class="chip chip-static" id="file-name" hidden></span>
-        <button type="button" class="chip" id="chip-stats" aria-pressed="false" aria-expanded="false" aria-controls="stats-panel">Stats</button>
-        <button type="button" class="chip" id="chip-graphs" aria-pressed="false" aria-expanded="false" aria-controls="graphs-panel">Graphs</button>
-        <span id="track-parts" class="track-parts" hidden></span>
-        <?php if (!empty($mapShellEditHref)) : ?>
-        <a class="chip" id="chip-edit" href="<?= e($mapShellEditHref) ?>">Edit</a>
-        <?php elseif (!empty($mapShellEdit)) : ?>
-        <button type="button" class="chip" id="chip-edit" aria-pressed="false" aria-expanded="false" aria-controls="edit-panel">Edit</button>
-        <?php endif; ?>
-        <button type="button" class="chip" id="chip-export" aria-pressed="false" aria-expanded="false" aria-controls="export-panel">Export</button>
+    <div class="map-controls" id="map-controls">
+      <div class="map-file">
+        <span class="file-pill" id="file-name" hidden></span>
+        <button type="button" class="map-icon" id="chip-open" data-file-pick aria-label="Open file" title="Open file">
+          <?= map_shell_icon('open') ?>
+          <?= map_shell_icon('replace') ?>
+          <?= map_shell_icon('add') ?>
+        </button>
       </div>
-      <div id="graphs-panel" class="map-popover" hidden>
-        <p class="popover-kicker">Graphs</p>
-        <div class="graph-menu" role="group" aria-label="Graphs">
-          <button type="button" class="chip" data-graph="speed" aria-pressed="false">Speed</button>
-          <button type="button" class="chip" data-graph="altitude" aria-pressed="false">Altitude</button>
-          <button type="button" class="chip" data-graph="distance" aria-pressed="false">Distance</button>
-          <button type="button" class="chip" data-graph="time" aria-pressed="false">Time</button>
-          <button type="button" class="chip" data-graph="verticalSpeed" data-available="false" aria-pressed="false" hidden>Vertical speed</button>
-          <button type="button" class="chip" data-graph="gForce" data-available="false" aria-pressed="false" hidden>G-force</button>
+      <div class="map-actions">
+        <div class="map-slot">
+          <div id="stats-panel" class="map-popover" hidden>
+            <p class="popover-kicker">Stats</p>
+            <p>Stats will appear here.</p>
+          </div>
+          <button type="button" class="map-icon" id="chip-stats" aria-pressed="false" aria-expanded="false" aria-controls="stats-panel" aria-label="Stats" title="Stats"><?= map_shell_icon('stats') ?></button>
         </div>
-      </div>
-      <div id="stats-panel" class="map-popover" hidden>
-        <p class="popover-kicker">Stats</p>
-        <p>Stats will appear here.</p>
-      </div>
-      <?php if (!empty($mapShellEdit)) : ?>
-      <div id="edit-panel" class="map-popover" hidden>
+        <div class="map-slot">
+          <button type="button" class="map-icon" id="chip-graphs" aria-pressed="false" aria-expanded="false" aria-controls="graph-dock" aria-label="Graphs" title="Graphs"><?= map_shell_icon('graphs') ?></button>
+        </div>
+        <?php if (!empty($mapShellEditHref) || !empty($mapShellEdit)) : ?>
+        <div class="map-slot">
+          <?php if (!empty($mapShellEdit)) : ?>
+          <div id="edit-panel" class="map-popover" hidden>
         <p class="popover-kicker">Edit</p>
         <p class="popover-note" id="edit-note">Choose one edit. The track stays as it is until you apply it.</p>
         <div class="edit-actions">
@@ -137,12 +151,24 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
             <button type="button" class="chip" id="edit-split-apply" disabled>Split</button>
           </div>
         </div>
+          </div>
+          <?php endif; ?>
+          <?php if (!empty($mapShellEditHref)) : ?>
+          <a class="map-icon" id="chip-edit" href="<?= e($mapShellEditHref) ?>" aria-label="Edit" title="Edit"><?= map_shell_icon('edit') ?></a>
+          <?php else : ?>
+          <button type="button" class="map-icon" id="chip-edit" aria-pressed="false" aria-expanded="false" aria-controls="edit-panel" aria-label="Edit" title="Edit"><?= map_shell_icon('edit') ?></button>
+          <?php endif; ?>
+        </div>
+        <?php endif; ?>
+        <div class="map-slot">
+          <div id="export-panel" class="map-popover" hidden>
+            <p class="popover-kicker">Export</p>
+            <p>Export will be available here.</p>
+          </div>
+          <button type="button" class="map-icon" id="chip-export" aria-pressed="false" aria-expanded="false" aria-controls="export-panel" aria-label="Export" title="Export"><?= map_shell_icon('export') ?></button>
+        </div>
       </div>
-      <?php endif; ?>
-      <div id="export-panel" class="map-popover" hidden>
-        <p class="popover-kicker">Export</p>
-        <p>Export will be available here.</p>
-      </div>
+      <div id="track-parts" class="track-parts" hidden></div>
     </div>
 
     <div id="empty-state" class="empty-state"<?php if (!$showEmpty) : ?> hidden<?php endif; ?>>
@@ -169,6 +195,12 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
     <?php if ($mapAppFileInput) : ?>
     <input id="file-input" class="file-input" type="file" tabindex="-1" aria-hidden="true"<?php if (!empty($mapShellMultiple)) : ?> multiple<?php endif; ?><?php if ($mapShellAccept !== '') : ?> accept="<?= e($mapShellAccept) ?>"<?php endif; ?>>
     <?php endif; ?>
+
+    <div class="map-units" role="group" aria-label="Units">
+      <button type="button" data-units="metric" aria-pressed="true">Metric</button>
+      <button type="button" data-units="imperial" aria-pressed="false">Imperial</button>
+    </div>
+    <div id="track-tip" class="track-tip" aria-live="polite" hidden></div>
   </div>
 
 <?php if ($mapShellVideo) : ?>
@@ -223,8 +255,8 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
       <button type="button" class="chip" role="tab" data-dock-tab="altitude" aria-controls="pane-altitude" aria-pressed="false">Altitude</button>
       <button type="button" class="chip" role="tab" data-dock-tab="distance" aria-controls="pane-distance" aria-pressed="false">Distance</button>
       <button type="button" class="chip" role="tab" data-dock-tab="time" aria-controls="pane-time" aria-pressed="false">Time</button>
-      <button type="button" class="chip" role="tab" data-dock-tab="verticalSpeed" aria-controls="pane-verticalSpeed" aria-pressed="false">Vertical speed</button>
-      <button type="button" class="chip" role="tab" data-dock-tab="gForce" aria-controls="pane-gForce" aria-pressed="false">G-force</button>
+      <button type="button" class="chip" role="tab" data-dock-tab="verticalSpeed" data-available="false" aria-controls="pane-verticalSpeed" aria-pressed="false">Vertical speed</button>
+      <button type="button" class="chip" role="tab" data-dock-tab="gForce" data-available="false" aria-controls="pane-gForce" aria-pressed="false">G-force</button>
     </div>
     <div class="dock-panes">
       <div id="pane-speed" class="dock-pane" data-pane="speed" role="tabpanel" hidden>

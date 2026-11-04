@@ -18,25 +18,42 @@ export function setEmpty(show) {
   }
 }
 
-function setFileLabel(file) {
+/**
+ * File name in the control column.
+ * mode is "open" (no file), "replace", or "add".
+ */
+export function setFileName(name, mode) {
   var openBtn = document.getElementById('chip-open');
   var nameEl = document.getElementById('file-name');
+  var kind = mode === 'add' || mode === 'replace' ? mode : 'open';
   if (openBtn) {
-    openBtn.textContent = 'Replace file';
+    var label = kind === 'add' ? 'Add file' : (kind === 'replace' ? 'Replace file' : 'Open file');
+    openBtn.setAttribute('aria-label', label);
+    openBtn.title = label;
+    openBtn.classList.toggle('is-replace', kind === 'replace');
+    openBtn.classList.toggle('is-add', kind === 'add');
   }
-  if (nameEl && file) {
-    nameEl.hidden = false;
-    nameEl.textContent = file.name;
+  if (nameEl) {
+    var text = name ? String(name) : '';
+    nameEl.hidden = text === '';
+    nameEl.textContent = text;
+    if (text) {
+      nameEl.title = text;
+    } else {
+      nameEl.removeAttribute('title');
+    }
   }
 }
 
 function onFile(file) {
-  setFileLabel(file);
+  setFileName(file && file.name, file ? 'replace' : 'open');
   setEmpty(false);
   document.dispatchEvent(new CustomEvent('gpstoolset:file', {
     detail: { file: file }
   }));
 }
+
+var popovers = [];
 
 function bindPopover(buttonId, panelId, persistKey) {
   var button = document.getElementById(buttonId);
@@ -45,6 +62,8 @@ function bindPopover(buttonId, panelId, persistKey) {
     return;
   }
 
+  var entry = { button: button, panel: panel, persistKey: persistKey };
+
   function paint(open) {
     panel.hidden = !open;
     button.classList.toggle('is-active', open);
@@ -52,18 +71,53 @@ function bindPopover(buttonId, panelId, persistKey) {
     button.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
+  entry.paint = paint;
+  popovers.push(entry);
+
   if (persistKey) {
     paint(!!uiState.load().chips[persistKey]);
   }
 
   button.addEventListener('click', function () {
     var open = panel.hidden;
+    var i;
+    if (open) {
+      for (i = 0; i < popovers.length; i++) {
+        var other = popovers[i];
+        if (other === entry || other.panel.hidden) {
+          continue;
+        }
+        other.paint(false);
+        if (other.persistKey) {
+          uiState.update(function (current) {
+            current.chips[other.persistKey] = false;
+          });
+        }
+      }
+    }
     paint(open);
     if (persistKey) {
       uiState.update(function (current) {
         current.chips[persistKey] = open;
       });
     }
+  });
+}
+
+function bindGraphs() {
+  var button = document.getElementById('chip-graphs');
+  if (!button) {
+    return;
+  }
+  function paint() {
+    var open = graphDock.isOpen();
+    button.classList.toggle('is-active', open);
+    button.setAttribute('aria-pressed', open ? 'true' : 'false');
+    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  document.addEventListener('gpstoolset:dock', paint);
+  button.addEventListener('click', function () {
+    graphDock.toggleOpen();
   });
 }
 
@@ -170,10 +224,10 @@ export function init(options) {
   }
   var opts = options || {};
   if (opts.files !== false) {
-  bindPopover('chip-stats', 'stats-panel', 'statsOpen');
-  bindPopover('chip-graphs', 'graphs-panel', 'graphsOpen');
-  bindPopover('chip-edit', 'edit-panel', 'toolsOpen');
-  bindPopover('chip-export', 'export-panel', null);
+    bindPopover('chip-stats', 'stats-panel', 'statsOpen');
+    bindPopover('chip-edit', 'edit-panel', 'toolsOpen');
+    bindPopover('chip-export', 'export-panel', null);
+    bindGraphs();
     graphDock.init();
     if (fileDrop.isBound()) {
       fileDrop.addStage('#map-stage', '#file-overlay');

@@ -50,16 +50,8 @@ function displayLabel() {
 }
 
 function showName(name) {
-  var openBtn = document.getElementById('chip-open');
-  var nameEl = document.getElementById('file-name');
+  mapShell.setFileName(name, parts.length ? 'add' : 'open');
   var landingName = document.getElementById('landing-file');
-  if (openBtn) {
-    openBtn.textContent = parts.length ? 'Add file' : 'Open file';
-  }
-  if (nameEl) {
-    nameEl.hidden = !name;
-    nameEl.textContent = name || '';
-  }
   if (landingName) {
     landingName.hidden = !name;
     landingName.textContent = name || '';
@@ -466,6 +458,7 @@ export function mount(options) {
     if (track) {
       charts.renderTrack(track);
     }
+    trackLayer.refreshTip();
   });
   panels.bindExport(onExport);
   editTools.bind({

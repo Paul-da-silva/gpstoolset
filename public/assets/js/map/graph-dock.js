@@ -10,6 +10,7 @@ var handle = null;
 var dragging = false;
 var startY = 0;
 var startH = 0;
+var trackReady = false;
 
 function isMobile() {
   return window.matchMedia('(max-width: 720px)').matches;
@@ -44,11 +45,14 @@ function clamp(height) {
 }
 
 function isAvailable(name) {
-  var chip = document.querySelector('[data-graph="' + name + '"]');
-  if (chip && chip.getAttribute('data-available') === 'false') {
+  if (!state.graphs[name]) {
     return false;
   }
-  return !!(state.graphs[name]);
+  var tab = document.querySelector('[data-dock-tab="' + name + '"]');
+  if (tab && tab.getAttribute('data-available') === 'false') {
+    return false;
+  }
+  return true;
 }
 
 function graphNames() {
@@ -56,10 +60,13 @@ function graphNames() {
 }
 
 function anyOpen() {
+  if (!trackReady || !state.dock.open) {
+    return false;
+  }
   var names = graphNames();
   var i;
   for (i = 0; i < names.length; i++) {
-    if (state.graphs[names[i]].open && isAvailable(names[i])) {
+    if (isAvailable(names[i])) {
       return true;
     }
   }
@@ -70,7 +77,7 @@ function firstOpen() {
   var names = graphNames();
   var i;
   for (i = 0; i < names.length; i++) {
-    if (state.graphs[names[i]].open && isAvailable(names[i])) {
+    if (isAvailable(names[i])) {
       return names[i];
     }
   }
@@ -97,7 +104,7 @@ function apply() {
   if (!state.graphs[state.dock.tab]) {
     state.dock.tab = 'speed';
   }
-  if (open && (!state.graphs[state.dock.tab].open || !isAvailable(state.dock.tab))) {
+  if (open && !isAvailable(state.dock.tab)) {
     state.dock.tab = firstOpen();
   }
 
@@ -111,8 +118,7 @@ function apply() {
   var tabs = dock.querySelectorAll('[data-dock-tab]');
   for (var i = 0; i < tabs.length; i++) {
     var name = tabs[i].getAttribute('data-dock-tab');
-    var graph = state.graphs[name];
-    var shown = !!(open && graph && graph.open && isAvailable(name));
+    var shown = !!(open && isAvailable(name));
     var active = shown && state.dock.tab === name;
     tabs[i].hidden = !shown;
     tabs[i].classList.toggle('is-active', active);
@@ -123,16 +129,7 @@ function apply() {
   var panes = dock.querySelectorAll('[data-pane]');
   for (var p = 0; p < panes.length; p++) {
     var paneName = panes[p].getAttribute('data-pane');
-    var paneGraph = state.graphs[paneName];
-    panes[p].hidden = !(open && paneGraph && paneGraph.open && isAvailable(paneName) && state.dock.tab === paneName);
-  }
-
-  var chips = document.querySelectorAll('[data-graph]');
-  for (var c = 0; c < chips.length; c++) {
-    var graph = chips[c].getAttribute('data-graph');
-    var pressed = !!(state.graphs[graph] && state.graphs[graph].open);
-    chips[c].classList.toggle('is-active', pressed);
-    chips[c].setAttribute('aria-pressed', pressed ? 'true' : 'false');
+    panes[p].hidden = !(open && isAvailable(paneName) && state.dock.tab === paneName);
   }
 
   if (handle) {
@@ -148,13 +145,35 @@ function persist() {
   uiState.save();
 }
 
-export function toggle(name) {
-  if (!state.graphs[name] || !isAvailable(name)) {
+/** Saved dock.open stays put until a track is on the map. */
+export function setTrackReady(on) {
+  trackReady = !!on;
+}
+
+export function toggleOpen() {
+  if (!state || !trackReady) {
     return;
   }
-  var graph = state.graphs[name];
-  graph.open = !graph.open;
-  if (graph.open) {
+  state.dock.open = !state.dock.open;
+  if (state.dock.open && !isAvailable(state.dock.tab)) {
+    state.dock.tab = firstOpen();
+  }
+  apply();
+  persist();
+}
+
+export function isOpen() {
+  return !!(dock && !dock.hidden);
+}
+
+export function toggle(name) {
+  if (!state || !isAvailable(name)) {
+    return;
+  }
+  if (state.dock.open && state.dock.tab === name) {
+    state.dock.open = false;
+  } else {
+    state.dock.open = true;
     state.dock.tab = name;
   }
   apply();
@@ -162,13 +181,17 @@ export function toggle(name) {
 }
 
 export function setTab(name) {
-  if (!state.graphs[name] || !isAvailable(name)) {
+  if (!state || !isAvailable(name)) {
     return;
   }
-  state.graphs[name].open = true;
+  state.dock.open = true;
   state.dock.tab = name;
   apply();
   persist();
+  var pane = document.getElementById('pane-' + name);
+  if (pane && pane.scrollIntoView) {
+    pane.scrollIntoView({ block: 'nearest' });
+  }
 }
 
 function onPointerDown(event) {
@@ -234,13 +257,6 @@ export function init() {
     return;
   }
   state = uiState.load();
-
-  var chips = document.querySelectorAll('[data-graph]');
-  for (var i = 0; i < chips.length; i++) {
-    chips[i].addEventListener('click', function (event) {
-      toggle(event.currentTarget.getAttribute('data-graph'));
-    });
-  }
 
   var tabs = dock.querySelectorAll('[data-dock-tab]');
   for (var t = 0; t < tabs.length; t++) {

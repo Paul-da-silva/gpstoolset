@@ -25,3 +25,4 @@ Local: http://gpstoolset.lan/ · Prod: https://gpstoolset.com
 - Brand URL: `/gopro-gps-extract`
 - **Git:** never commit/push/amend — leave uncommitted; Paul commits
 - Cursor rules: `.cursor/rules/`
+- `keyword-planner-data.md`: every Keyword Planner run and term (raw data from SEO, updated after each new run). Strategy and targets stay in `seo-keywords.md`.

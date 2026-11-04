@@ -1,6 +1,6 @@
 /**
  * Stats and Export popovers, and the Metric / Imperial switch (ES module).
- * The map shell opens and closes the popovers; this fills them.
+ * The map shell opens and closes the popovers. Units live on the map.
  */
 import * as uiState from '../core/ui-state.js';
 import {
@@ -36,10 +36,6 @@ export function mount(noun, exports) {
   if (stats) {
     stats.innerHTML =
       '<p class="popover-kicker">Track</p>' +
-      '<div class="unit-switch" role="group" aria-label="Units">' +
-      '<button type="button" class="chip" data-units="metric" aria-pressed="true">Metric</button>' +
-      '<button type="button" class="chip" data-units="imperial" aria-pressed="false">Imperial</button>' +
-      '</div>' +
       '<dl class="stat-list">' +
       '<div><dt>Points</dt><dd id="stat-points">—</dd></div>' +
       '<div><dt>Duration</dt><dd id="stat-duration">—</dd></div>' +

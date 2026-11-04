@@ -1,5 +1,5 @@
-/* Full-screen map shell: map, chips' placement, popovers, graph dock, video view.
-   Separation is spacing and tint, never a border or shadow.
+/* Full-screen map shell: map, control column, popovers, graph dock, video view.
+   Controls use a thin neutral border. No coloured one-sided accent.
    Shared pieces live in components.css (chips, progress bar, FAQ). */
 
 body.is-map {
@@ -171,45 +171,152 @@ body.is-map .leaflet-control-attribution a {
   color: var(--link);
 }
 
-.map-chips {
+.map-controls {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   top: 0.75rem;
-  right: 0.75rem;
-  left: auto;
+  right: calc(0.75rem + env(safe-area-inset-right, 0px));
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.5rem;
-  max-width: calc(100% - 4.75rem);
+  gap: 0.45rem;
+  max-width: calc(100% - 1.5rem);
   pointer-events: none;
 }
 
-.chip-bar {
+.map-file,
+.map-actions {
   display: flex;
-  flex-wrap: wrap;
+  align-items: flex-end;
   justify-content: flex-end;
   gap: 0.4rem;
-  pointer-events: none;
+  max-width: 100%;
+  min-width: 0;
 }
 
-.map-chips .chip,
-.map-chips .map-popover,
-.chip-bar .chip {
+.map-actions {
+  flex-direction: column;
+}
+
+.map-slot {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  max-width: 100%;
+}
+
+.map-icon,
+.file-pill,
+.map-controls .map-popover,
+.map-controls .track-parts,
+.map-controls .track-parts .chip,
+.map-units {
   pointer-events: auto;
 }
 
-#file-name {
-  max-width: 14rem;
+.map-icon {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 40px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: none;
+  flex: 0 0 auto;
+}
+
+a.map-icon:hover {
+  text-decoration: none;
+}
+
+.map-icon svg {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+#chip-open .icon-replace,
+#chip-open .icon-add {
+  display: none;
+}
+
+#chip-open.is-replace .icon-open,
+#chip-open.is-add .icon-open,
+#chip-open.is-add .icon-replace {
+  display: none;
+}
+
+#chip-open.is-replace .icon-replace,
+#chip-open.is-add .icon-add {
+  display: block;
+}
+
+.map-icon:hover,
+.map-icon[aria-pressed="true"],
+.map-icon.is-active {
+  background: var(--tint-strong);
+}
+
+.map-icon:focus-visible,
+.map-units button:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.file-pill {
+  display: block;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: min(14rem, calc(100vw - 6.5rem));
+  height: 2.5rem;
+  margin: 0;
+  padding: 0 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 2.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.file-pill[hidden] {
+  display: none;
+}
+
+.map-app:has(#view-switch:not([hidden])) .file-pill {
+  max-width: min(12rem, calc(100vw - 14rem));
+}
+
 .track-parts {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  max-width: min(16rem, calc(100vw - 5rem));
+}
+
+.track-parts .chip {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .track-parts[hidden] {
@@ -279,21 +386,28 @@ body.is-map .leaflet-control-attribution a {
 }
 
 .map-popover {
-  width: min(16rem, 100%);
+  width: min(16rem, calc(100vw - 6.5rem));
+  max-height: min(70dvh, calc(100dvh - var(--header-h) - 5.5rem));
   padding: 0.85rem 1rem;
   border-radius: 12px;
   background: var(--tint);
+  overflow: auto;
   pointer-events: auto;
+}
+
+body.is-map .map-controls .map-popover {
+  border: 1px solid var(--line);
+  box-shadow: none;
 }
 
 #stats-panel,
 #export-panel {
-  width: min(20rem, 100%);
+  width: min(20rem, calc(100vw - 6.5rem));
 }
 
 #edit-panel {
-  width: min(22rem, calc(100vw - 1.5rem));
-  max-height: min(70vh, 36rem);
+  width: min(22rem, calc(100vw - 6.5rem));
+  max-height: min(70dvh, calc(100dvh - var(--header-h) - 5.5rem));
   overflow: auto;
 }
 
@@ -415,7 +529,6 @@ body.is-map .leaflet-control-attribution a {
   margin-top: 0.35rem;
 }
 
-.graph-menu,
 .video-toggles {
   display: flex;
   flex-direction: column;
@@ -423,17 +536,11 @@ body.is-map .leaflet-control-attribution a {
   gap: 0.35rem;
 }
 
-.graph-menu {
-  margin-top: 0.7rem;
-}
-
-.graph-menu .chip,
 .video-toggles .chip {
   width: 100%;
   text-align: left;
 }
 
-#graphs-panel,
 .video-menu {
   width: min(16rem, calc(100vw - 1.5rem));
   max-height: min(70vh, 28rem);
@@ -555,6 +662,99 @@ body.is-map .leaflet-control-attribution a {
   border: 0;
 }
 
+.map-units {
+  position: absolute;
+  z-index: 3;
+  left: calc(0.75rem + env(safe-area-inset-left, 0px));
+  bottom: calc(2.25rem + env(safe-area-inset-bottom, 0px));
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.map-units button {
+  appearance: none;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  min-height: 2rem;
+  padding: 0.2rem 0.7rem;
+  cursor: pointer;
+}
+
+.map-units button[aria-pressed="true"],
+.map-units button.is-active {
+  background: var(--brand);
+  color: #fff;
+}
+
+@media (pointer: coarse) {
+  .map-units button {
+    min-height: 2.5rem;
+  }
+}
+
+[data-theme="dark"] .map-units button[aria-pressed="true"],
+[data-theme="dark"] .map-units button.is-active {
+  color: #042f2e;
+}
+
+.track-tip {
+  position: absolute;
+  z-index: 6;
+  margin: 0;
+  width: max-content;
+  max-width: min(16rem, calc(100vw - 1.25rem));
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+.track-tip[hidden] {
+  display: none;
+}
+
+.track-tip dl {
+  margin: 0;
+}
+
+.track-tip div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.track-tip dt,
+.track-tip dd {
+  white-space: nowrap;
+}
+
+.track-tip dt {
+  font-weight: 650;
+}
+
+.track-tip dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
 .graph-dock {
   display: flex;
   flex-direction: column;
@@ -601,9 +801,14 @@ body.is-resizing #map {
 
 .dock-tabs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.4rem;
   padding: 0.55rem 0.75rem 0.35rem;
+  overflow-x: auto;
+}
+
+.dock-tabs .chip {
+  flex: 0 0 auto;
 }
 
 .dock-panes {
@@ -752,36 +957,29 @@ body.is-resizing #map {
 }
 
 @media (max-width: 720px) {
-
-  .map-chips {
-    top: auto;
-    right: 0.6rem;
-    left: 0.6rem;
-    bottom: calc(0.65rem + env(safe-area-inset-bottom, 0px));
-    max-width: none;
-    align-items: stretch;
+  .map-controls {
+    top: 0.5rem;
+    right: calc(0.5rem + env(safe-area-inset-right, 0px));
   }
 
-  .map-app:has(.graph-dock:not([hidden])) .map-chips {
-    bottom: 0.65rem;
+  .file-pill {
+    max-width: min(11rem, calc(100vw - 8.5rem));
   }
 
-  .chip-bar {
-    justify-content: flex-start;
+  .map-controls .map-popover,
+  #stats-panel,
+  #export-panel,
+  #edit-panel {
+    width: min(18rem, calc(100vw - 5.25rem));
+  }
+
+  .map-units {
+    left: calc(0.5rem + env(safe-area-inset-left, 0px));
+    bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .graph-dock {
     max-height: 40vh;
-  }
-
-  body.is-map .leaflet-bottom.leaflet-right {
-    top: 0;
-    bottom: auto;
-  }
-
-  .video-minimap .leaflet-bottom.leaflet-right {
-    top: auto;
-    bottom: 0;
   }
 }
 

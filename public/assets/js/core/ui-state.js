@@ -39,9 +39,9 @@ function blank() {
   return {
     units: 'metric',
     graphs: blankGraphs(),
-    dock: { height: 180, tab: 'speed' },
+    dock: { height: 180, tab: 'speed', open: false },
     measure: blankMeasure(),
-    chips: { statsOpen: false, toolsOpen: false, graphsOpen: false },
+    chips: { statsOpen: false, toolsOpen: false },
     view: 'map',
     metricsLayout: 'row',
     videoOverlay: blankOverlay(),
@@ -95,6 +95,15 @@ function sanitize(raw) {
   var dock = data.dock && typeof data.dock === 'object' ? data.dock : {};
   next.dock.height = cleanHeight(dock.height);
   next.dock.tab = GRAPH_NAMES.indexOf(dock.tab) === -1 ? 'speed' : dock.tab;
+  if (typeof dock.open === 'boolean') {
+    next.dock.open = dock.open;
+  } else {
+    GRAPH_NAMES.forEach(function (name) {
+      if (next.graphs[name].open) {
+        next.dock.open = true;
+      }
+    });
+  }
 
   var measure = data.measure && typeof data.measure === 'object' ? data.measure : {};
   var measureHeight = measure.height == null ? 300 : measure.height;
@@ -103,7 +112,6 @@ function sanitize(raw) {
   var chips = data.chips && typeof data.chips === 'object' ? data.chips : {};
   next.chips.statsOpen = !!chips.statsOpen;
   next.chips.toolsOpen = !!chips.toolsOpen;
-  next.chips.graphsOpen = !!chips.graphsOpen;
 
   var box = data.videoMiniMap && typeof data.videoMiniMap === 'object' ? data.videoMiniMap : {};
   var mx = cleanFraction(box.x);

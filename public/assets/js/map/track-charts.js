@@ -4,7 +4,7 @@
  * speed and G-force for one Track. Hovering a graph moves a dot on the map.
  */
 import * as graphDock from './graph-dock.js';
-import { hideScrub, showScrub } from './track-layer.js?v=3';
+import { hideScrub, showScrub } from './track-layer.js';
 import {
   anyNumber, durationMs, elapsedSec, maxOf, minOf, nearestPointIndex, totalDistance
 } from '../core/track.js';
@@ -15,6 +15,36 @@ import {
 var charts = {};
 var current = null;
 var idleNoun = 'a file';
+var lastScrub = -1;
+var applying = false;
+
+var scrubPlugin = {
+  id: 'gpsScrubLine',
+  afterDatasetsDraw: function (chart) {
+    var at = chart.$scrub;
+    if (at == null || at < 0) {
+      return;
+    }
+    var meta = chart.getDatasetMeta(0);
+    var el = meta && meta.data ? meta.data[at] : null;
+    if (!el || el.skip) {
+      return;
+    }
+    var area = chart.chartArea;
+    if (!area) {
+      return;
+    }
+    var ctx = chart.ctx;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(el.x, area.top);
+    ctx.lineTo(el.x, area.bottom);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = accentColor();
+    ctx.stroke();
+    ctx.restore();
+  }
+};
 
 function idleText(label) {
   return label + ' appears here after ' + idleNoun + ' is opened.';
@@ -34,6 +64,12 @@ function setSummary(id, text) {
   if (el) {
     el.textContent = text;
   }
+}
+
+function accentColor() {
+  var color = window.getComputedStyle(document.documentElement).getPropertyValue('--accent');
+  color = color ? color.trim() : '';
+  return color || '#c2410c';
 }
 
 function themeInk() {
@@ -113,6 +149,7 @@ function makeChart(canvasId, legend, color, fill, rows, digits, suffix, fromZero
   var yExtent = yScaleExtent(rows, fromZero);
   return new window.Chart(canvas, {
     type: 'line',
+    plugins: [scrubPlugin],
     data: {
       datasets: [{
         label: legend,
@@ -196,6 +233,9 @@ function makeChart(canvasId, legend, color, fill, rows, digits, suffix, fromZero
         }
       },
       onHover: function (evt, els, chart) {
+        if (applying) {
+          return;
+        }
         if (!els || !els.length) {
           hideScrub();
           return;
@@ -209,6 +249,79 @@ function makeChart(canvasId, legend, color, fill, rows, digits, suffix, fromZero
   });
 }
 
+function rowFor(chart, pointIndex) {
+  var data = chart.data.datasets[0].data;
+  var best = 0;
+  var bestDist = Infinity;
+  var i;
+  for (i = 0; i < data.length; i++) {
+    var row = data[i];
+    if (!row) {
+      continue;
+    }
+    var at = row.i == null ? i : row.i;
+    var dist = Math.abs(at - pointIndex);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = i;
+    }
+  }
+  return best;
+}
+
+function paintChartScrub(chart, pointIndex) {
+  if (!chart || !chart.data || !chart.data.datasets || !chart.data.datasets[0]) {
+    return;
+  }
+  applying = true;
+  try {
+    var rows = chart.data.datasets[0].data || [];
+    if (pointIndex == null || pointIndex < 0 || !rows.length) {
+      chart.$scrub = -1;
+      chart.setActiveElements([]);
+      if (chart.tooltip && chart.tooltip.setActiveElements) {
+        chart.tooltip.setActiveElements([], { x: 0, y: 0 });
+      }
+    } else {
+      var best = rowFor(chart, pointIndex);
+      var active = [{ datasetIndex: 0, index: best }];
+      chart.$scrub = best;
+      chart.setActiveElements(active);
+      var meta = chart.getDatasetMeta(0);
+      var el = meta && meta.data ? meta.data[best] : null;
+      var pos = el ? { x: el.x, y: el.y } : { x: 0, y: 0 };
+      if (chart.tooltip && chart.tooltip.setActiveElements) {
+        chart.tooltip.setActiveElements(active, pos);
+      }
+    }
+    chart.update('none');
+  } catch (err) {
+    /* The canvas may not have a size until the dock is open. */
+  }
+  applying = false;
+}
+
+function applyScrub() {
+  var dock = document.getElementById('graph-dock');
+  var open = !!(dock && !dock.hidden);
+  var names = Object.keys(charts);
+  var i;
+  for (i = 0; i < names.length; i++) {
+    var chart = charts[names[i]];
+    var pane = document.getElementById('pane-' + names[i]);
+    if (!chart || !open || !pane || pane.hidden) {
+      continue;
+    }
+    paintChartScrub(chart, lastScrub);
+  }
+}
+
+/** Move the open graph's crosshair and tooltip to a track point, or clear them. */
+export function syncHover(index) {
+  lastScrub = index == null ? -1 : index;
+  applyScrub();
+}
+
 export function resize() {
   Object.keys(charts).forEach(function (name) {
     var pane = document.getElementById('pane-' + name);
@@ -216,6 +329,9 @@ export function resize() {
       charts[name].resize();
     }
   });
+  if (lastScrub >= 0) {
+    applyScrub();
+  }
 }
 
 function accChartRows() {
@@ -378,25 +494,23 @@ export function renderTrack(track) {
 }
 
 function setSeriesAvailable(name, on) {
-  var chips = document.querySelectorAll('[data-graph="' + name + '"]');
-  var i;
-  for (i = 0; i < chips.length; i++) {
-    chips[i].setAttribute('data-available', on ? 'true' : 'false');
-    chips[i].hidden = !on;
-  }
   var tab = document.querySelector('[data-dock-tab="' + name + '"]');
-  if (tab) {
-    tab.setAttribute('data-available', on ? 'true' : 'false');
+  if (!tab) {
+    return;
   }
+  tab.setAttribute('data-available', on ? 'true' : 'false');
+  tab.hidden = !on;
 }
 
 export function paintSeriesAvailability() {
-  setSeriesAvailable('speed', true);
-  setSeriesAvailable('altitude', true);
-  setSeriesAvailable('distance', true);
-  setSeriesAvailable('time', true);
-  setSeriesAvailable('verticalSpeed', !!(current && current.meta.hasVspeed));
-  setSeriesAvailable('gForce', !!(current && current.meta.hasG));
+  var ready = !!(current && current.points && current.points.length);
+  setSeriesAvailable('speed', ready);
+  setSeriesAvailable('altitude', ready);
+  setSeriesAvailable('distance', ready);
+  setSeriesAvailable('time', ready);
+  setSeriesAvailable('verticalSpeed', !!(ready && current.meta.hasVspeed));
+  setSeriesAvailable('gForce', !!(ready && current.meta.hasG));
+  graphDock.setTrackReady(ready);
   graphDock.refresh();
 }
 
@@ -428,10 +542,17 @@ export function mountCharts(noun) {
     pane.appendChild(wrap);
     if (typeof window.ResizeObserver === 'function') {
       var chartName = canvasId.replace(/^chart-/, '');
+      var pending = 0;
       var observer = new window.ResizeObserver(function () {
-        if (charts[chartName]) {
-          charts[chartName].resize();
+        if (pending) {
+          return;
         }
+        pending = window.requestAnimationFrame(function () {
+          pending = 0;
+          if (charts[chartName]) {
+            charts[chartName].resize();
+          }
+        });
       });
       observer.observe(wrap);
     }
@@ -442,6 +563,13 @@ export function mountCharts(noun) {
   mount('pane-time', 'chart-time', 'time-summary', 'Time along the track', idleText('Time'));
   mount('pane-verticalSpeed', 'chart-verticalSpeed', 'verticalSpeed-summary', 'Vertical speed over time', idleText('Vertical speed'));
   mount('pane-gForce', 'chart-gForce', 'gForce-summary', 'G-force over time', idleText('G-force'));
+  if (!mountCharts.bound) {
+    mountCharts.bound = true;
+    document.addEventListener('gpstoolset:scrub', function (event) {
+      var index = event.detail ? event.detail.index : -1;
+      syncHover(index);
+    });
+  }
 }
 
 /** Forget the Track: destroy graphs, reset summaries, hide graphs that need data. */
