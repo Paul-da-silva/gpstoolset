@@ -26,6 +26,21 @@ Browser-side GPS file tools (no uploads). Three **generic modules** plus SEO lan
 
 Adding a **format** or convert pair = **config + content only** (no new viewer/editor/converter JS). Details and non-negotiables: `10-gpstoolset.mdc`.
 
+## Shared PHP shell (core-ref 1.1.3-draft)
+
+| Piece | Role |
+|---|---|
+| `core/` | Shared Router, Controller, App, Env, ErrorHandler (copy-in) |
+| `composer.json` | PSR-4 autoload for `core/` and `controllers/` (see file) |
+| `config/routes.php` | Built from `tools_registry()`; `auto_route=false`; `404_override=errors/index` |
+| `config/env.php` | Gitignored secrets / `BASE_URL` / `APP_ENV` (see `env.example.php`) |
+| `controllers/` | Thin wrappers → existing `includes/pages/*` and `tools/*/page.php` |
+| `docs/migration/` | Local baseline + rechecks; Phase 6 prod checklist |
+
+`public/index.php` boots Env → ErrorHandler → App → `Router::plan()`; listed routes dispatch to controllers; unknown paths still fall through to legacy helpers where needed.
+
+**Phase 6 (prod):** set `BASE_URL=https://gpstoolset.com` and `APP_ENV=prod` on the host before deploy; curl suite against production; rollback = previous tag / revert. Details: `docs/migration/README.md`.
+
 ## Pointers
 
 | Need | Where |
@@ -37,6 +52,7 @@ Adding a **format** or convert pair = **config + content only** (no new viewer/e
 | SEO / sitemap | `05-seo.mdc` |
 | Ads hold | `06-ads-consent.mdc` |
 | Product + map shell + brand | `10-gpstoolset.mdc` |
+| Migration baselines / Phase 6 | `docs/migration/README.md` |
 | Roadmap | `docs/roadmap.md` |
 | Keywords | `docs/seo-keywords.md` |
 | Guides brief | `docs/guides-brief.md` |
@@ -44,8 +60,8 @@ Adding a **format** or convert pair = **config + content only** (no new viewer/e
 
 ## Request sketch
 
-`public/` files served as files → else `public/index.php` → bootstrap → `includes/router.php` matches registries → layout/partials. Legacy convert URLs and `/gopro` 301 in `.htaccess`.
+`public/` files served as files → else `public/index.php` → shared Router (registry routes) → thin controller → existing page/tool entry under `includes/` or `tools/`. Legacy convert URLs and `/gopro` 301 in `.htaccess`. Generated `/sitemap.xml` via `seo_sitemap_xml()`.
 
 ---
 
-*Trimmed 2026-11-05 · former long layout dump removed; see git history if needed*
+*Trimmed 2026-11-05 · shell rows added after core migration · former long layout dump in git history*

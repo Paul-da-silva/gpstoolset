@@ -27,7 +27,7 @@ Run **one prompt at a time**. Leave changes **uncommitted**; Paul commits.
 ## P5 — Structure refactor (keep GoPro working)
 
 Goal: clean foundation for the other 7 tools + `/guides/`. Spec: `docs/architecture.md`.  
-**Every step:** behaviour of http://gpstoolset.lan/gopro-gps-extract stays the same (landing → parse → map/video/export). **Leave changes uncommitted; Paul commits.** Do not edit `/var/www/skylog`. Keep all hard rules in `.cursor/rules`.
+**Every step:** behaviour of http://gpstoolset.lan/gopro-gps-extract stays the same (landing → parse → map/video/export). **Leave changes uncommitted; Paul commits.** Keep all hard rules in `.cursor/rules` (`00`–`07` + `10-gpstoolset.mdc`).
 
 ---
 

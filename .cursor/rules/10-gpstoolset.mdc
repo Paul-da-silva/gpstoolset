@@ -13,17 +13,18 @@ Shared rules in this folder (`00-*.mdc` … `07-*.mdc`) cover git, tree, PHP, de
 
 - **Dev:** http://gpstoolset.lan/ → this repo’s `public/` on the host
 - **Prod:** https://gpstoolset.com
-- `base_url` env-aware (moving toward `config/env.php` + `Env::get` per `04-tree.mdc`). Never hardcode prod for local.
+- `BASE_URL` via `config/env.php` + `Env::get` (see `04-tree.mdc`). Never hardcode prod for local. Prod checklist: `docs/migration/README.md` Phase 6.
 
 ## Docs
 
-- `docs/architecture.md` — thin product map (modules + registries)
+- `docs/architecture.md` — thin product map (modules + registries + shared `core/` shell)
+- `docs/migration/README.md` — local baselines + Phase 6 prod verify
 - `docs/roadmap.md` · `docs/cursor-prompts.md` · `docs/guides-brief.md` · `docs/design-direction.md` · `docs/seo-keywords.md`
 
 ## Stack
 
-- PHP 8.4 · Apache · `.htaccess` / front controller · **no framework · no build step**
-- Only `public/` is docroot; `config/`, `includes/`, `tools/`, `guides/`, `docs/` stay above it
+- PHP 8.4 · Apache · `.htaccess` / front controller · shared `core/` + Composer PSR-4 · **no framework · no build step**
+- Only `public/` is docroot; `config/` (incl. `routes.php`, `env.php`), `core/`, `controllers/`, `includes/`, `tools/`, `docs/` stay above it
 - Vendored libs under `public/assets/vendor/` (Leaflet 1.9.4, Chart.js 4.4.7, GoPro GPMF bundles)
 - Vanilla ES modules or plain scripts; no React/Vue. Leaflet only via vendored 1.9.4 + central `tiles.js`. Prefer Chart.js (MIT) or canvas for graphs — **not** Highcharts.
 

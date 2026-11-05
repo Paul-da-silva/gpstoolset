@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * Baseline / recheck crawler for the Kuiper migration pilot.
+ * Baseline / recheck crawler for the shared-core migration pilot.
  *
  * Usage:
  *   php docs/migration/crawl-baseline.php [outfile.tsv]
@@ -354,11 +354,17 @@ foreach ($redirectChecks as $from => $expectSuffix) {
 }
 file_put_contents($redirectsFile, implode("\n", $redirRows) . "\n");
 
+$relOut = str_starts_with($outFile, $root . '/')
+    ? substr($outFile, strlen($root) + 1)
+    : $outFile;
+$relRedirects = str_starts_with($redirectsFile, $root . '/')
+    ? substr($redirectsFile, strlen($root) + 1)
+    : $redirectsFile;
 $extraMeta[] = 'base=' . $base;
 $extraMeta[] = 'pages=' . count($paths);
 $extraMeta[] = 'generated_at_utc=' . gmdate('c');
-$extraMeta[] = 'outfile=' . $outFile;
-$extraMeta[] = 'redirects_file=' . $redirectsFile;
+$extraMeta[] = 'outfile=' . $relOut;
+$extraMeta[] = 'redirects_file=' . $relRedirects;
 $extraMeta[] = 'body_norm=strip HTML comments; CRLF→LF; trim trailing spaces per line; no CSRF expected';
 file_put_contents($metaFile, implode("\n", $extraMeta) . "\n");
 

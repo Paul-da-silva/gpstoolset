@@ -10,7 +10,8 @@ Local: http://gpstoolset.lan/ · Prod: https://gpstoolset.com
 
 | File | Purpose |
 |------|---------|
-| [architecture.md](architecture.md) | Thin product map (modules + registries) |
+| [architecture.md](architecture.md) | Thin product map (modules + registries + shared `core/` shell) |
+| [migration/README.md](migration/README.md) | Core migration baselines, env/`BASE_URL`, Phase 6 prod checklist |
 | [roadmap.md](roadmap.md) | The plan / to do / done / not doing / ideas / open questions |
 | [cursor-prompts.md](cursor-prompts.md) | Cursor prompts (P5–P6 done · P7 landed) |
 | [guides-brief.md](guides-brief.md) | SEO first-guides brief (Wave A/B) |
