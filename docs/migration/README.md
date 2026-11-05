@@ -36,6 +36,15 @@ Applied before hashing HTML/XML/txt bodies:
 
 No CSRF tokens or per-request timestamps expected in this app today. If a later change injects dynamic bits, extend normalisation here **and** document it before re-baselining.
 
+## Phase status
+
+| Phase | Local baseline vs Phase 0 |
+|---|---|
+| 0 | Golden artefacts committed |
+| 1 | `recheck-phase1.tsv` — **MATCH** (core + Composer + `plan()` fallthrough) |
+| 2–5 | pending |
+| 6 | prod only — after Phase 5 |
+
 ## Phase 0 snapshot (2026-11-05)
 
 - **27** registry HTML paths, all HTTP 200; canonical host `http://gpstoolset.lan`.

@@ -18,6 +18,10 @@ config/*.local.php
 # Secrets and env files, if a later tool adds them
 .env
 .env.*
+config/env.php
+
+# Composer (PSR-4 only; public/index.php has a fallback autoloader)
+/vendor/
 
 # Logs
 *.log

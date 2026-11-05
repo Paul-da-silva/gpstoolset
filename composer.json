@@ -1,0 +1,18 @@
+{
+  "name": "gpstoolset/site",
+  "description": "GPS Toolset — browser-side GPS file tools",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kuiper\\Core\\": "core/",
+      "App\\Controllers\\": "controllers/"
+    },
+    "files": [
+      "core/helpers.php"
+    ]
+  }
+}
