@@ -42,7 +42,8 @@ No CSRF tokens or per-request timestamps expected in this app today. If a later 
 |---|---|
 | 0 | Golden artefacts committed |
 | 1 | `recheck-phase1.tsv` — **MATCH** (core + Composer + `plan()` fallthrough) |
-| 2–5 | pending |
+| 2 | `recheck-phase2.tsv` — **MATCH** (registry routes + thin controllers) |
+| 3–5 | pending |
 | 6 | prod only — after Phase 5 |
 
 ## Phase 0 snapshot (2026-11-05)

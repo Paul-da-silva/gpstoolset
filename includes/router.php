@@ -169,23 +169,12 @@ function route_not_found(): array
 }
 
 /**
- * Resolve the request and include the page. Does not return a value.
+ * Render a resolved registry route (sets $page / $route for the entry include).
+ *
+ * @param array<string, mixed> $route
  */
-function route_dispatch(): void
+function route_render(array $route): void
 {
-    $path = current_path();
-
-    if ($path === '/sitemap.xml') {
-        header('Content-Type: application/xml; charset=UTF-8');
-        echo seo_sitemap_xml();
-        return;
-    }
-
-    $route = route_match($path);
-    if ($route === null) {
-        $route = route_not_found();
-    }
-
     $page = route_page($route);
     if (!empty($route['noindex'])) {
         $page['noindex'] = true;
@@ -200,5 +189,49 @@ function route_dispatch(): void
     }
 
     $GLOBALS['route'] = $route;
+    $GLOBALS['page'] = $page;
     require $file;
+}
+
+/**
+ * Render a tools-registry slug, or the legacy 404 page if unknown.
+ */
+function route_render_slug(string $slug): void
+{
+    $registry = tools_registry();
+    if (!isset($registry[$slug]) || !is_array($registry[$slug])) {
+        route_render(route_not_found());
+        return;
+    }
+    route_render(route_with_meta($registry[$slug]));
+}
+
+/**
+ * Emit the generated sitemap (same body as legacy /sitemap.xml).
+ */
+function route_render_sitemap(): void
+{
+    header('Content-Type: application/xml; charset=UTF-8');
+    echo seo_sitemap_xml();
+}
+
+/**
+ * Resolve the request and include the page. Does not return a value.
+ * Kept for Phase 1 legacy fallthrough and any remaining not_found paths.
+ */
+function route_dispatch(): void
+{
+    $path = current_path();
+
+    if ($path === '/sitemap.xml') {
+        route_render_sitemap();
+        return;
+    }
+
+    $route = route_match($path);
+    if ($route === null) {
+        $route = route_not_found();
+    }
+
+    route_render($route);
 }

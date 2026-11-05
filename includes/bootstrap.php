@@ -21,10 +21,10 @@ $GLOBALS['SITE'] = $SITE;
 $GLOBALS['ADS'] = $ADS;
 $GLOBALS['TILES'] = $TILES;
 
-require APP_ROOT . '/includes/partials/ads.php';
-require APP_ROOT . '/includes/seo.php';
-require APP_ROOT . '/includes/router.php';
-require APP_ROOT . '/includes/guides-lib.php';
+require_once APP_ROOT . '/includes/partials/ads.php';
+require_once APP_ROOT . '/includes/seo.php';
+require_once APP_ROOT . '/includes/router.php';
+require_once APP_ROOT . '/includes/guides-lib.php';
 
 /**
  * Read one site setting as a string.
