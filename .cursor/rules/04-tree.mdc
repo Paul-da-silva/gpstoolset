@@ -1,0 +1,72 @@
+---
+description: Shared standards for this project
+alwaysApply: true
+---
+
+<!-- rules-version: 1.1.3-draft · 2026-11-05 -->
+<!-- Installed copy — edit the standards source, then re-run install-rules.sh -->
+
+# Tree
+
+One tree for this project. Same folder names everywhere; a folder can be thin or empty, but don't invent new top-level ones.
+
+```
+<project>/
+  public/          docroot ONLY: index.php (front controller), .htaccess, assets/, robots.txt, ads.txt, sitemap
+  config/          routes.php, site.php, SEO/ads registries, env.php (secrets, gitignored), env.example.php
+  core/            shared Router, Controller, App — copied from shared-core-ref
+  controllers/     thin request handlers
+  services/        logic / use cases
+  models/          only when there's a DB
+  views/           layouts/, partials/, <page>/ templates
+  migrations/      only when there's a DB
+  bin/             CLI scripts
+  tests/
+  docs/
+  .cursor/rules/   00–07 shared (reinstall via install-rules.sh) + 10-<project>.mdc
+  composer.json    PSR-4 autoload
+```
+
+## Where things live
+
+- DocumentRoot is always `<repo>/public/`.
+- Local dev: `http://gpstoolset.lan/`. Use that URL to test, never `localhost/<path>`.
+- Production: `https://gpstoolset.com/` behind Cloudflare when live.
+- Never hard-code `/var/www/...` or a domain in code: use `__DIR__`-based paths and `site.php` / `Env` base URL.
+
+## This project
+
+| | |
+|---|---|
+| Name | GPS Toolset |
+| Repo | this repo on the host (see `10-gpstoolset.mdc`) |
+| Local | `http://gpstoolset.lan/` |
+| Production | `https://gpstoolset.com/` |
+| Secrets | `config/env.php` (+ `env.example.php`); access only via `Core\Env` |
+| Env key prefix | `GPS_` for project-specific keys |
+
+## Env and secrets (decided 2026-11-05)
+
+- Location: `config/env.php` in every repo. It returns a PHP array, is gitignored, and is never inside `public/`.
+- `config/env.example.php` is committed with the same keys and fake values. Add a key there whenever you add one to env.php.
+- Access: only through `Core\Env` (`core/Env.php`): `Env::get('KEY', $default)` or `Env::require('KEY')`. No direct `getenv()`, `$_ENV`, or `require 'env.php'` anywhere else.
+- Order: server env (`$_SERVER`, e.g. Apache `SetEnv`) > `getenv()` > `config/env.php` > default.
+- Standard keys: `APP_ENV` (dev|prod), `BASE_URL`, and `DB_HOST`/`DB_NAME`/`DB_USER`/`DB_PASS` when there's a DB. Project keys get a prefix (e.g. `GPS_`, `PS_`).
+- `.gitignore` in every repo: `config/env.php`, `config/*.local.php`, `*.env`, `.env*` (keep examples).
+- Never print, log or commit a secret value. Never expose env values to JS unless they're public (e.g. GA4 ID).
+- Migrate any legacy secrets into `config/env.php` and read them only through `Core\Env`.
+
+## Router and views (CI3-style) — core-ref 1.1.3-draft
+
+- All requests go through `public/index.php`; `.htaccess` rewrites anything that isn't a real file.
+- `config/routes.php` returns `['route' => $route, 'redirect' => $redirect]`:
+  - `$route['default_controller']`, `$route['404_override']`, `$route['auto_route'] = false` (default)
+  - Explicit: `$route['privacy'] = 'pages/privacy'` (any method) or `$route['api/x']['post'] = 'api/x'` (verb; HEAD≡GET; else 405)
+  - Placeholders `(:any)` / `(:num)` → `$1`, `$2`
+  - `$redirect['old.php'] = 'new'` — 301 before routes; supports `(:any)`/`$1` and absolute URLs; keeps query string
+- Trailing slash: `/x/` → 301 `/x` (not `/`); query string kept.
+- `auto_route` false → only listed routes + `/`. True → `controller/method/args`, never `_…` or base `Controller` methods.
+- 404: missing class/method/route or `$this->notFound()` → `404_override` with HTTP 404; if that fails → plain 404.
+- Controllers: `$this->view('page/name', $data)`, `$this->input` (`Input`: get/post/server/method/isPost/isAjax/json/ip/uri/segment — strings raw; views use `e()`), `$this->notFound()`.
+- Shared partials: head, seo, analytics, consent, ads, header, footer.
+- Core copy-in from `shared-core-ref` 1.1.3-draft (`Core\`, `App\Controllers\` PSR-4).

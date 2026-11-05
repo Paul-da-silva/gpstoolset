@@ -1,0 +1,33 @@
+---
+description: Shared standards for this project
+globs: "**/*.php"
+alwaysApply: false
+---
+
+<!-- rules-version: 1.0.0-draft · 2026-11-04 -->
+
+# PHP
+
+## Language
+- PHP **8.4+**. `declare(strict_types=1);` on every PHP file you add or touch.
+- Typed properties and return types where practical.
+- Short PHPDoc on public classes/methods (`@param` / `@return` when types need words).
+- Prefer readable over clever. No Laravel/Symfony/CI packages — hand-rolled shared `core/` only.
+
+## Composer
+- Light `composer.json` for **PSR-4 autoload only** (and PHPUnit later if wanted). Ask Paul before adding any dependency.
+
+## Front controller & App
+- `public/index.php` boots Composer autoload, builds `core\App`, loads routes, dispatches.
+- `App` is the DI hub (constructor DI): constructor wiring, public readonly services — **no** container, **no** service locator.
+
+## Controllers & views
+- Controllers extend `core\Controller`.
+- Use `$this->view('folder/name', $data)` for full pages (wraps `views/layouts/…`).
+- Use return-string view for fragments.
+- Controllers stay thin: validate → one service call → view or redirect. No raw SQL in controllers.
+- Escape output in views. Server-rendered **first paint**: do not leave chrome empty until JS fills it.
+
+## Services
+- Namespace `…\Services`, class `XService`. Constructor injection via `App`.
+- Return domain data, not HTTP responses.

@@ -1,0 +1,28 @@
+---
+description: Shared standards for this project
+alwaysApply: true
+---
+
+<!-- rules-version: 1.0.0-draft · 2026-11-04 -->
+
+# Core
+
+Applies to this project.
+
+## Git
+- Never `git commit`, `git push`, amend, or stage-and-commit.
+- Leave changes uncommitted; **Paul commits**.
+- Bots and Cursor agents do not commit or push.
+
+## Contact & chrome
+- No contact page. No “Contact” in nav or footer.
+- No email addresses or `mailto:` links in the product.
+- Privacy (and About, when it exists) live in the **footer** only.
+
+## Docs
+- Read `docs/` and relevant `.cursor` briefs/plans before building.
+- Do not invent product or design decisions; flag open questions.
+
+## Language
+- Public chrome and SEO copy: **English only**.
+- No i18n / hreflang unless Paul asks.

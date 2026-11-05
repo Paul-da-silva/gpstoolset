@@ -2,7 +2,7 @@
 
 **Site:** gpstoolset.com · `/guides/`  
 **Audience:** GPS Toolset Manager (drafts) · Paul (priority / approval)  
-**Plan (read-only):** `/workspace/gpstoolset/manager/plan.md`  
+**Roadmap:** `docs/roadmap.md`  
 **Prior keyword plan:** `gpstoolset-guides-keywords-2026-11-01.md` · Page [guides + tool keywords](https://cursor.com/canvas/store-b5fa6ea4-c23f-4f9d-abc1-5e8c72bd3e8d/f3623ab4-032e-46d7-b33e-879c928bc738)
 
 ### Labels (read every volume)

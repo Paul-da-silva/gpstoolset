@@ -1,0 +1,13 @@
+---
+description: Shared standards for this project
+alwaysApply: true
+---
+
+<!-- rules-version: 1.0.0-draft · 2026-11-04 -->
+
+# Review
+
+- Every code change is reviewed by **Code Reviewer** before Paul merges.
+- Agents leave a clean diff; they do **not** commit, push, amend, or deploy.
+- Paul commits and deploys (or runs the agreed pull on prod).
+- No silent production changes.

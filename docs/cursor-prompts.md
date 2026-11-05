@@ -1,7 +1,7 @@
-<!-- Source of truth: this file in /var/www/gpstoolset/docs/ (repo). Older /workspace copies may lag. -->
+<!-- Source of truth: this file in-repo under docs/. -->
 
 # GPS Toolset · Cursor prompts
-**Repo:** `/var/www/gpstoolset` · **Local:** http://gpstoolset.lan/ → `public/`  
+**Repo:** this repo · **Local:** http://gpstoolset.lan/ → `public/`  
 **Server:** Apache 2.4 · PHP 8.4 · Spec: `docs/architecture.md`
 
 Run **one prompt at a time**. Leave changes **uncommitted**; Paul commits.
@@ -34,7 +34,7 @@ Goal: clean foundation for the other 7 tools + `/guides/`. Spec: `docs/architect
 ### P5a — Registry + front controller (no JS move yet)
 
 ```
-Continue in /var/www/gpstoolset. Read docs/architecture.md. Leave changes uncommitted; Paul commits.
+Continue in this repo. Read docs/architecture.md. Leave changes uncommitted; Paul commits.
 
 P5a only: introduce a page/tool registry and front controller WITHOUT moving gopro-app.js or changing GoPro UX.
 
@@ -55,7 +55,7 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ### P5b — SEO helper + sitemap from registry
 
 ```
-Continue in /var/www/gpstoolset after P5a. Leave changes uncommitted; Paul commits.
+Continue in this repo after P5a. Leave changes uncommitted; Paul commits.
 
 P5b only: includes/seo.php (title, description, canonical via env-aware base_url, optional JSON-LD helper). Generate /sitemap.xml from config/tools.php (and guides later) instead of the hand-edited public/sitemap.xml. Wire head.php to use the helper. GoPro FAQ JSON-LD can call the helper. No JS behaviour changes.
 
@@ -71,7 +71,7 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ### P5c — Split GoPro into tools/gopro-gps-extract/
 
 ```
-Continue in /var/www/gpstoolset after P5b. Leave changes uncommitted; Paul commits.
+Continue in this repo after P5b. Leave changes uncommitted; Paul commits.
 
 P5c only: move GoPro PHP/content into tools/gopro-gps-extract/:
 - meta.php (title, description, flags, faq array)
@@ -90,7 +90,7 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ### P5d — Shared ES modules: track, format, exporters
 
 ```
-Continue in /var/www/gpstoolset after P5c. Leave changes uncommitted; Paul commits.
+Continue in this repo after P5c. Leave changes uncommitted; Paul commits.
 
 P5d only: introduce public/assets/js/core/ as native ES modules:
 - track.js — Point/Track helpers (validCoord, haversine, distance, thinIndices, fillMissingSpeed…) extracted from gopro-app.js
@@ -109,9 +109,9 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ### P5e — parsers/gpmf.js + thin tools/gopro-gps-extract.js
 
 ```
-Continue in /var/www/gpstoolset after P5d. Leave changes uncommitted; Paul commits.
+Continue in this repo after P5d. Leave changes uncommitted; Paul commits.
 
-P5e only: move GPMF extract + telemetry → Track into public/assets/js/parsers/gpmf.js (wraps vendored gpmf-fast + gopro-telemetry-bundle; never edit FlySync sources). Shrink tool entry to public/assets/js/tools/gopro-gps-extract.js (file pick → gpmf.parse → showTrack / charts wiring). Delete or gut the old monolithic gopro-app.js once imports work. Keep map-shell / file-drop / ui-state / graph-dock as shared (convert to modules if needed for imports).
+P5e only: move GPMF extract + telemetry → Track into public/assets/js/parsers/gpmf.js (wraps vendored gpmf-fast + gopro-telemetry-bundle; never edit sibling reference sources). Shrink tool entry to public/assets/js/tools/gopro-gps-extract.js (file pick → gpmf.parse → showTrack / charts wiring). Delete or gut the old monolithic gopro-app.js once imports work. Keep map-shell / file-drop / ui-state / graph-dock as shared (convert to modules if needed for imports).
 
 When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 - Fast and slow extract paths still work; cancel works; errors still clear
@@ -124,7 +124,7 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ### P5f — video/overlay.js
 
 ```
-Continue in /var/www/gpstoolset after P5e. Leave changes uncommitted; Paul commits.
+Continue in this repo after P5e. Leave changes uncommitted; Paul commits.
 
 P5f only: extract Video view into public/assets/js/video/overlay.js (mini Leaflet map via tiles.js, metric toggles, gpstoolset.ui.v1, sync on video.currentTime with GPMF-relative timestamps, waiting-for-GPS-fix, seek/pause/rate, fullscreen). Tool app only calls overlay.attach(file, track) / detach. Behaviour unchanged.
 
@@ -138,7 +138,7 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ### P5g — CSS split
 
 ```
-Continue in /var/www/gpstoolset after P5f. Leave changes uncommitted; Paul commits.
+Continue in this repo after P5f. Leave changes uncommitted; Paul commits.
 
 P5g only: split CSS per docs/architecture.md — tokens.css, base.css, components.css (chips/cards/faq/buttons/footer), map-shell.css (map/dock/video only), tool-landing.css. Update head.php / page meta styles arrays. No visual redesign; no heavy coloured one-sided borders. Thin borders OK.
 
@@ -152,7 +152,7 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ### P5h — Script loading cleanup + retire map-demo if unused
 
 ```
-Continue in /var/www/gpstoolset after P5g. Leave changes uncommitted; Paul commits.
+Continue in this repo after P5g. Leave changes uncommitted; Paul commits.
 
 P5h only: one shared partial for map stack scripts (leaflet + core map modules + tile-config). Remove duplicated script lists between map-shell.php and GoPro page. Retire or clearly mark public/map-demo (and registry) if Paul does not need it — if kept, load via registry like other tools. Ensure home still works.
 
@@ -167,9 +167,9 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ### P5i — Rules + docs pass (structure conventions live)
 
 ```
-Continue in /var/www/gpstoolset after P5h. Leave changes uncommitted; Paul commits.
+Continue in this repo after P5h. Leave changes uncommitted; Paul commits.
 
-P5i only: update docs/architecture.md checklist (mark done steps), docs/README.md index, and confirm .cursor/rules/gps-toolset.mdc "Target structure" matches the tree on disk. Add a one-page "add a tool" snip already in architecture — ensure rules point to it. No product behaviour changes.
+P5i only: update docs/architecture.md checklist (mark done steps), docs/README.md index, and confirm .cursor/rules/10-gpstoolset.mdc "Target structure" matches the tree on disk. Add a one-page "add a tool" snip already in architecture — ensure rules point to it. No product behaviour changes.
 
 When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 - Still works (smoke)
@@ -183,7 +183,7 @@ When done, tell me what to check at http://gpstoolset.lan/gopro-gps-extract :
 ## P6 — Small fixes (done · verified 2026-11-02)
 
 ```
-Small fixes in /var/www/gpstoolset (leave changes uncommitted; Paul commits): 1. Add "Require all denied" protection for tools/ like config/ and includes/. 2. Set isMapPage from the tool registry (true for map tools) and make the ads partial respect it; keep flags.ads working. 3. Fix config/tiles.php comment path to map/tiles.js. 4. includes/layout/head.php: reject stylesheet paths containing ".." or not starting with /assets/. Check: / and /gopro-gps-extract work; /tools/... returns 403.
+Small fixes in this repo (leave changes uncommitted; Paul commits): 1. Add "Require all denied" protection for tools/ like config/ and includes/. 2. Set isMapPage from the tool registry (true for map tools) and make the ads partial respect it; keep flags.ads working. 3. Fix config/tiles.php comment path to map/tiles.js. 4. includes/layout/head.php: reject stylesheet paths containing ".." or not starting with /assets/. Check: / and /gopro-gps-extract work; /tools/... returns 403.
 ```
 
 **Verified:** `tools/.htaccess` Require all denied + public RewriteRule F · `route_page()` sets `isMapPage` from `flags.map` · ads partial no-ops on map / `allowAds` false · tiles comment → `map/tiles.js` · head.php requires `/assets/` and rejects `..` · curl `/` and `/gopro-gps-extract` 200 · `/tools/...` 403.
@@ -193,10 +193,10 @@ Small fixes in /var/www/gpstoolset (leave changes uncommitted; Paul commits): 1.
 
 ## P7 — Meta tools restructure (**landed** · 2026-11-03)
 
-Status: **landed 2026-11-03** (working tree; leave uncommitted; Paul commits). Spec: `docs/architecture.md` + `docs/plan.md`.
+Status: **landed 2026-11-03** (working tree; leave uncommitted; Paul commits). Spec: `docs/architecture.md` + `docs/roadmap.md`.
 
 ```
-Restructure /var/www/gpstoolset around 3 shared meta tools (leave all changes uncommitted; Paul commits). Keep every existing hard rule (no email/contact, no "Report a map issue", no OSM credit in footer, no FlySight, no heavy coloured one-sided borders, OSM tiles via central config).
+Restructure this repo around 3 shared meta tools (leave all changes uncommitted; Paul commits). Keep every existing hard rule (no email/contact, no "Report a map issue", no OSM credit in footer, no FlySight, no heavy coloured one-sided borders, OSM tiles via central config).
 1. ONE shared viewer: format landing pages, each with its own SEO content (H1, intro, how-to, FAQ) above a drop zone: /gpx-viewer, /kml-viewer, /kmz-viewer, /fit-viewer. After a file is dropped, all of them open the SAME viewer app (same JS module, same full-screen map shell, same chart dock); nothing is format-specific past parsing. Home drop zone auto-detects the format (by extension + magic bytes) and routes to the right landing/viewer via the existing IndexedDB file handoff. Menu: "Viewers" lists GPX, KML, KMZ, FIT; then a "More" section with GoPro (/gopro-gps-extract keeps its own page + video view).
 1b. Separate the viewer from the landing pages. Build ONE generic viewer module (e.g. assets/js/viewer/), not tied to any format: map shell, track layer, chart dock, controls. It only accepts the shared track model. Landing pages (/gpx-viewer, /kml-viewer, /kmz-viewer, /fit-viewer, /gopro-gps-extract) are SEO pages: they hold the content + drop zone, run the matching parser, then hand the track model to the viewer. Refactor the current gpx-viewer code into that generic viewer (rename, strip GPX specifics into the GPX parser). GoPro uses the same viewer and only adds its GPMF parser and the video view on top. No duplicated map/chart code anywhere.
 2. ONE editor at /gpx-editor (meta tool): input one or more files of any supported format (GPX, KML, KMZ, FIT); map + chart preview that is edited live; merge, split, trim, simplify, reverse, elevation fix; export to any supported writable format. Move the existing GPX edit tools here; /gpx-viewer stays view-only and links to the editor.

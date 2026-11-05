@@ -1,8 +1,8 @@
-<!-- Source of truth: this file in /var/www/gpstoolset/docs/ (repo). Older /workspace copies may lag. -->
+<!-- Source of truth: this file in-repo under docs/. -->
 
 # GPS Toolset · Design direction
 **Site:** gpstoolset.com · **Author:** Design & UX · **Date:** 2026-11-01 (Europe/Tallinn)  
-**Updated:** 2026-11-02 (no accent stripes, minimal shadow, no contact/email; corrected 09:57) · **Status:** Handoff for Cursor (site not built yet) · **Layout:** full-screen map tools (Paul 2026-11-01) · **Source plan:** `/workspace/gpstoolset/manager/plan.md`
+**Updated:** 2026-11-02 (no accent stripes, minimal shadow, no contact/email; corrected 09:57) · **Status:** Handoff for Cursor (site not built yet) · **Layout:** full-screen map tools (Paul 2026-11-01) · **Source roadmap:** `docs/roadmap.md`
 
 ---
 

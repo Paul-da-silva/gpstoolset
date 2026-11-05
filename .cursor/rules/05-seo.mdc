@@ -1,0 +1,27 @@
+---
+description: Shared standards for this project
+globs: config/**/*.php,controllers/**/*.php,services/**/*.php,views/**/*.php,public/**/*.php
+alwaysApply: false
+---
+
+<!-- rules-version: 1.0.0-draft · 2026-11-04 -->
+
+# SEO
+
+## Every public page
+- Unique `<title>` (≈60 chars when possible) and meta description.
+- Canonical URL from env-aware `base_url` / site config.
+- Open Graph: `og:title`, `og:description`, `og:url`, **`og:image`** (required).
+- English only (see this-project-core).
+
+## Registry → sitemap
+- List indexable routes in a config registry (`tools.php`, `games.php`, guides, …).
+- `/sitemap.xml` is **generated** from that registry — never hand-edit the XML.
+- `robots.txt` (or robots action) includes a `Sitemap:` line pointing at the sitemap.
+- One canonical host per site (www or bare — match redirects). Never change a public path without a **301**.
+
+## Structured data
+- JSON-LD on the home page and on key entity pages (tool, game, FAQ) when natural.
+
+## Noindex
+- Results, thank-you, empty search, and pure utility query URLs: `noindex` when they should not rank.

@@ -1,0 +1,27 @@
+---
+description: Shared standards for this project
+globs: config/ads.php,views/partials/ads.php,views/partials/consent.php,controllers/**/*.php,public/ads.txt
+alwaysApply: false
+---
+
+<!-- rules-version: 1.1.0-draft · 2026-11-05 -->
+
+# Ads & consent
+
+## Hold (2026-11-05)
+- **No new ads** until the site has meaningful traffic. No formal deadline — Paul decides when.
+- Ship with `ads.enabled` / `ads_enabled` **false** on this site until Paul lifts the hold.
+- Do not add AdSense (or other network) snippets, and do not publish a live `ads.txt`, while the hold is on.
+
+
+## Before any new ad network goes live
+1. `ads.txt` present at site root and correct.
+2. Consent / CMP banner live (Google CMP or equivalent).
+3. Privacy page accurate for ads + analytics.
+4. Config flag flipped on **only after** 1–3.
+
+## Placement (when eventually on)
+- Render through `views/partials/ads.php` (consent via `consent.php`).
+- Cap slots per page (site config `max_slots`).
+- Full-screen map / active game board pages may force ads off.
+- Skip age-gated / play-money sections when the network forbids them.

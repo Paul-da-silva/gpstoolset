@@ -1,0 +1,42 @@
+---
+description: Shared standards for this project
+globs: public/**/*.{js,css,php},views/**/*,assets/**/*.{js,css}
+alwaysApply: false
+---
+
+<!-- rules-version: 1.1.0-draft · 2026-11-05 -->
+
+# Frontend
+
+## JS
+- **Vanilla JS only.** No React/Vue/Svelte/etc. unless Paul says so.
+- **ES modules.** One concern per file — no god `app.js` / `main.js` that owns the whole site.
+- Page-specific JS loads **only** on that page (script tag or dynamic import from the page shell).
+- Shared helpers live under `public/assets/js/` (or project equivalent); games/tools keep their own folder.
+
+## CSS
+- `tokens.css` → `base.css` → `components.css` (see 02-design.mdc). Page/tool CSS is extra, not a dump of tokens.
+- Prefer large tap targets (`--tap-min` or ≥44px) and calm UI over flashy effects, neon glow, or emoji clutter.
+
+## Page shell
+- Server-rendered layout + partials (`views/layouts/`, `views/partials/` — or project equivalent until migrated).
+- Chrome (header/nav/footer/SEO head) must paint without waiting on JS.
+- Prefer `<details>` (or equivalent) for menus that must work without JS.
+
+## Layout stability
+- Reserved heights for tip/score/status rows; use `scrollbar-gutter: stable` where a board scrollbar would reflow the page.
+- Build the shell once; change content inside fixed-size regions. Do not grow/shrink the board on every state change.
+
+## Motion (compositor)
+- A frame loop must **not** write `left` / `top` / `right` / `bottom` / `width` / `height`, and must **not** read `clientWidth` or `getBoundingClientRect` every frame.
+- Move with `transform` or `translate`. Set size once, then only from a `ResizeObserver`. One-time placement may use `left`/`top`; do not transition those.
+- No `filter` (incl. `drop-shadow`) and no `box-shadow` transition on a **moving** layer. Draw shadow in artwork or on a static shape.
+- Prefer a plain color over `color-mix()` on a surface that repaints on every tap.
+- Pause motion loops when the tab is hidden or the board is off screen.
+- After UI changes: verify in the browser; hard-refresh if stale JS/CSS is suspected.
+
+## Analytics
+- GA4 on **every public page** via one partial (e.g. `views/partials/analytics.php`), driven by config / `Env`.
+- Do not paste gtag snippets into individual pages.
+- GA4 measurement ID for this site: `G-6M37SHK4H5` (from config / Env; do not hardcode elsewhere).
+

@@ -1,0 +1,26 @@
+---
+description: Shared standards for this project
+globs: public/**/*.{css,js,php},views/**
+alwaysApply: false
+---
+
+<!-- rules-version: 1.0.0-draft · 2026-11-04 -->
+
+# Design
+
+## CSS
+- Colours, type, spacing: `public/assets/css/tokens.css`.
+- Reset/typography: `base.css`. Reusable UI: `components.css`.
+- Hand-written CSS. No Bootstrap/Tailwind/etc. unless Paul says so.
+- Vanilla JS. No frontend frameworks unless Paul says so.
+
+## Borders & shadows
+- **Normal borders and normal shadows are fine.**
+- **Forbidden:** heavy coloured one-sided accent borders / AI-style stripes
+  (example: `border-left: 4px solid red`, thick coloured side bars).
+- Thin structural rules and underlines are OK.
+- A brand underline (e.g. `border-bottom: 3px solid var(--gold)`) is a **project call** — ask if unsure.
+
+## First paint
+- Server-rendered chrome. Pages must not stay empty until JS fills the shell.
+- Progressive JS is fine for boards, maps, and games after first paint.

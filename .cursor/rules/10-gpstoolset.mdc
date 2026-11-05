@@ -1,0 +1,108 @@
+---
+description: What GPS Toolset is — product intent, stack, non-negotiables, and structure
+alwaysApply: true
+---
+
+# GPS Toolset
+
+Free GPS file tools at [gpstoolset.com](https://gpstoolset.com). Client-side parsing (no uploads). Clear · Private · Practical.
+
+Shared rules in this folder (`00-*.mdc` … `07-*.mdc`) cover git, tree, PHP, design, frontend, SEO, ads hold, and review. This file is **product-only** (map shell, brand, SEO landings, guides).
+
+## Environments
+
+- **Dev:** http://gpstoolset.lan/ → this repo’s `public/` on the host
+- **Prod:** https://gpstoolset.com
+- `base_url` env-aware (moving toward `config/env.php` + `Env::get` per `04-tree.mdc`). Never hardcode prod for local.
+
+## Docs
+
+- `docs/architecture.md` — thin product map (modules + registries)
+- `docs/roadmap.md` · `docs/cursor-prompts.md` · `docs/guides-brief.md` · `docs/design-direction.md` · `docs/seo-keywords.md`
+
+## Stack
+
+- PHP 8.4 · Apache · `.htaccess` / front controller · **no framework · no build step**
+- Only `public/` is docroot; `config/`, `includes/`, `tools/`, `guides/`, `docs/` stay above it
+- Vendored libs under `public/assets/vendor/` (Leaflet 1.9.4, Chart.js 4.4.7, GoPro GPMF bundles)
+- Vanilla ES modules or plain scripts; no React/Vue. Leaflet only via vendored 1.9.4 + central `tiles.js`. Prefer Chart.js (MIT) or canvas for graphs — **not** Highcharts.
+
+## Product structure
+
+```
+config/tools.php          ← HTML route registry (viewers generated from formats.php)
+config/formats.php        ← format registry (parser, exporter, detection, landing meta)
+config/convert.php        ← converter SEO pairs
+includes/router.php seo.php bootstrap.php
+includes/layout/ pages/ partials/
+tools/<slug>/{content,page}.php
+public/index.php          ← front controller + /sitemap.xml
+public/assets/js/core|map|parsers|video|viewer|editor|converter|tools/
+public/assets/css/{tokens,base,components,tool-landing,map-shell}.css
+guides/ · config/guides.php · includes/guides/<slug>.php
+```
+
+- Shared **Track** model; edits in `core/edit.js` (used by `/gpx-editor`)
+- **One generic viewer** (`assets/js/viewer/`), **editor** (`assets/js/editor/`), **converter** (`assets/js/converter/`): SEO landings parse then hand off. **No duplicated map/chart code**
+- **Menu:** Viewers (GPX, KML, KMZ, FIT, More → GoPro) · Tools (Coordinate converter, Measure distance, Antipodes, Converter)
+- Converter SEO pairs under `/convert/<pair>`; old `/kml-to-gpx` etc. 301 → `/convert/...`
+- Adding a **format** or convert pair = config + content only (no new JS)
+- Native ES modules; tiles only via `config/tiles.php` + `map/tiles.js`
+- Sitemap from registry via `includes/seo.php` (also `05-seo.mdc`)
+
+## Privacy / chrome / maps
+
+- Parse in the browser only. Never upload user files.
+- Privacy line OK on empty/pre-upload; **not** in header after load
+- Privacy/About **footer only**. No contact. No email / `mailto:` (also `00-core.mdc`).
+- No “Report a map issue” anywhere.
+- Central tile module only. Attribution **on the map only**. No © OSM in footer.
+- Thin neutral borders OK. **Forbidden:** heavy coloured one-sided borders / accent stripes (also `02-design.mdc`). Drag-over / active drop = background tint (normal border OK).
+
+## Map shell / layout
+
+- Slim top bar only (~48–56px); map fills the rest; graph dock under the map (not overlay)
+- Dock: drag handle ≥24px; min 120px · default 180px · max 45vh / 40vh mobile
+- Persist dock/graph/units/chips/view/overlays in `localStorage` key **`gpstoolset.ui.v1`**
+- Floating chips for Open / Stats / graphs / Export / **Map|Video** — never cover the fitted track by default
+- File drop: whole-map overlay; empty state centered card; privacy chip in empty state only
+- **No sample file** and no Sample button. Empty state is drop or choose a file only.
+- Pre-upload SEO content sits **below** the drop zone and **hides after load**
+- Ads: central partial; off site-wide until traffic (`06-ads-consent.mdc`); map/viewer pages `isMapPage=true` → **zero ads**
+
+## Video view (`/gopro-gps-extract`)
+
+- Full-screen `<video>` via object URL; mini Leaflet map + metric overlays (toggleable)
+- Sync with GPMF timestamps relative to video start; waiting-for-GPS-fix before first valid sample
+- Fullscreen API; mobile-friendly
+- SEO landing → generic viewer for map · Video overlay (GPMF + video only)
+
+## SEO landings (product)
+
+Baseline title/desc/canonical/OG/sitemap: `05-seo.mdc`. Product extras:
+
+- Format landings (`/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`, `/gopro-gps-extract`) are **SEO landings** (H1, intro, how-to, FAQ + drop zone). They run the matching parser, then hand the **track model** to `assets/js/viewer/`. View-only (GoPro also has video). Edit CTAs → `/gpx-editor`. Link matching format guide and `/convert/<pair>` where useful.
+- `/gpx-editor` and `/convert` + `/convert/<pair>` are SEO landings (content + drop zone → parse → `assets/js/editor/` or `converter/`). Editor shares map/chart with viewer.
+- Converter hub `/convert`; pairs: `kml-to-gpx`, `gpx-to-kml`, `fit-to-gpx`, `kmz-to-gpx`, `gpx-to-kmz`, `kmz-to-kml`. Each: short **unique** intro + FAQ · **self-canonical**. Footer/guides point at `/convert/<pair>` (never old `/kml-to-gpx` paths).
+- `/gopro-gps-extract` pre-upload: drop zone first; rich original content below (intro, how-it-works, what you get incl. Video view, supported HERO GPS as compatibility, privacy, FAQ, links to `/gpx-editor` / `/convert/...` + guides). Primary KW: `gopro gps extractor` (see `docs/seo-keywords.md`). Optional 301 `/gopro` → `/gopro-gps-extract`.
+
+## Guides (`/guides/`)
+
+- Brief: `docs/guides-brief.md` — Wave A/B slugs, angles, H2 outlines, internal links, keyword labels
+- Prefer how-to / compare over pure definitions; distinct angle per page; cross-link instead of repeating
+- Link targets: converters → `/convert/<pair>` · open/view → format landings · edit → `/gpx-editor`
+- Link tools ↔ guides both ways. Never invent Planner volumes; follow verified vs unverified labels in the brief.
+
+## Brand / content
+
+- Tokens in `public/assets/css/tokens.css` (light + `[data-theme="dark"]`): teal `#115e59` / dark `#2dd4a0` · orange `#c2410c` · route/link `#0369a1`. System font stacks only.
+- “Telemetry extractor” / “GoPro telemetry” fine as keywords. **Never** name **FlySight** → say “GNSS logger CSV exports”.
+- GoPro/DJI = compatibility wording only; brand URL exception `/gopro-gps-extract` only. Copy must differ from competing extractors (privacy / multi-tool hub angle).
+- May COPY from a sibling reference tree on the host; **never edit** that source.
+- **Example coordinates / default map view:** never Tallinn or near Paul. Use Eiffel Tower (48.8584, 2.2945; KML lon,lat 2.2945,48.8584) or another famous neutral landmark, or a world view. Same for demo tracks, placeholders, and test files.
+
+## Workflow
+
+- Verify at http://gpstoolset.lan/
+- Leave changes uncommitted; Paul commits (`00-core.mdc` / `07-review.mdc`)
+- Do not edit `/etc/apache2` unless Paul asks
