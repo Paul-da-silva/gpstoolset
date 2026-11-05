@@ -27,17 +27,33 @@ return [
         'ext' => 'gpx',
         'landing' => '/gpx-viewer',
         'slug' => 'gpx-viewer',
-        'title' => 'Free Online GPX Viewer',
-        'description' => 'Open a GPX file on a map in your browser. See the path, speed, and altitude, then download GPX, KML, KMZ, or CSV. Nothing is uploaded.',
-        'schemaName' => 'GPX Viewer',
+        'title' => 'Free Online GPX Viewer & Reader — Open GPX Files in Your Browser',
+        'description' => 'Open and read GPX files in your browser. Free online GPX viewer — drop a track, see it on the map. No upload to our servers, no install.',
+        'schemaName' => 'GPX Viewer & Reader',
         'faq' => [
             [
                 'q' => 'Does the GPX file get uploaded?',
                 'a' => 'No. The browser reads the file where it already is. GPS Toolset does not receive a copy.',
             ],
             [
+                'q' => 'What is a GPX reader?',
+                'a' => 'A browser tool that opens and reads a .gpx file and shows the track on a map. Same job as a GPX viewer.',
+            ],
+            [
+                'q' => 'GPX reader vs GPX viewer?',
+                'a' => 'Same thing for most people; this page does both.',
+            ],
+            [
                 'q' => 'What is a GPX file?',
                 'a' => 'GPX is a common file for a GPS track: a list of positions, often with time and elevation. Watches, phones, loggers, and some cameras can save one. This page opens it on a map.',
+            ],
+            [
+                'q' => 'How do I open a GPX file online?',
+                'a' => 'Drop a .gpx or choose a file. The track shows on the map. Then use Stats or Graphs under the map, or Export to save GPX, KML, KMZ, or CSV. Nothing is uploaded.',
+            ],
+            [
+                'q' => 'Do I need to install an app?',
+                'a' => 'No. It runs in the browser on desktop and phone.',
             ],
             [
                 'q' => 'Can I edit the track here?',

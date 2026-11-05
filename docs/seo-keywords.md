@@ -7,7 +7,8 @@
 - Volumes are **ranges**, not exact numbers (no ad spend → Google shows buckets only).
 - **Competition** = advertiser competition for paid ads, **not** SEO difficulty.
 - Labels: **CHECKED** (Planner), **FIRST-PASS** / **GUESS** (AC / SERP judgment). No invented volumes.
-- Banned wording rows (e.g. “Telemetry Extractor”) stay in Planner data as research only — never use on the site.
+- “Telemetry extractor” / “GoPro telemetry” are **allowed target keywords** (Paul, 2026-11-04).
+- All volumes are **first-pass** and need a verifier before big decisions.
 - Target page / status in Planner tables comes only from SEO briefs where clearly stated; blank = undecided.
 - Site: gpstoolset.com (PHP, browser-side file parsing). Roadmap: `docs/roadmap.md`.
 
@@ -16,6 +17,7 @@
 1. **2026-11-01** — extract/converter cluster (working name gpsextract.com) — covers October 1, 2024 - September 30, 2026 — 39 terms — `gpsextract-kp-historical-2026-11-01.tsv`
 2. **2026-11-01** — utility tools — covers October 1, 2024 - September 30, 2026 — 40 terms — `gpstoolset-kp-historical-2026-11-01.tsv`
 3. **2026-11-02** — guides — covers October 1, 2024 - September 30, 2026 — 56 terms — `gpstoolset-guides-kp-historical-2026-11-02.tsv`
+4. **2026-11-05** — gpx reader cluster — covers October 1, 2025 - September 30, 2026 — **France only** — 83 terms — `gpx-reader-kp-2026-11-05.csv`
 
 ## Planner data
 
@@ -40,18 +42,18 @@ Source: `gpsextract-kp-historical-2026-11-01.tsv` · Period: October 1, 2024 - S
 | dji flight log viewer | 100–1K | Low | 0% | 0% |  |
 | dji srt file | 100–1K | Low | 0% | 0% | later: /guides/dji-srt |
 | garmin export gpx | 100–1K | Low | 0% | 0% |  |
-| gopro gps data | 100–1K | Low | 0% | 0% |  |
-| gopro telemetry extractor | 100–1K | Low | 0% | 0% | research only, banned wording: never use on the site |
+| gopro gps data | 100–1K | Low | 0% | 0% | /gopro-gps-extract |
+| gopro telemetry extractor | 100–1K | Low | 0% | 0% | /gopro-gps-extract (allowed target keyword) |
 | gpx to csv | 100–1K | Low | 0% | 0% |  |
 | merge gpx files | 100–1K | Low | -90% | -90% |  |
 | tcx to gpx | 100–1K | Low | 0% | 0% |  |
-| telemetry extractor | 100–1K | Low | 0% | 0% | research only, banned wording: never use on the site |
-| telemetry extractor free | 100–1K | Low | -90% | -90% | research only, banned wording: never use on the site |
+| telemetry extractor | 100–1K | Low | 0% | 0% | /gopro-gps-extract (allowed target keyword) |
+| telemetry extractor free | 100–1K | Low | -90% | -90% | /gopro-gps-extract (allowed target keyword) |
 | exif gps viewer | 10–100 | Low | 0% | 0% |  |
-| extract gps from gopro video | 10–100 | Low | 0% | 0% |  |
+| extract gps from gopro video | 10–100 | Low | 0% | 0% | /gopro-gps-extract |
 | google timeline to gpx | 10–100 | Low | 0% | 0% |  |
-| gopro gps extractor | 10–100 | Low | 0% | 0% |  |
-| gopro gpx | 10–100 | Low | 0% | 0% |  |
+| gopro gps extractor | 10–100 | Low | 0% | 0% | /gopro-gps-extract |
+| gopro gpx | 10–100 | Low | 0% | 0% | /gopro-gps-extract |
 | insta360 gpx | 10–100 | Low | 0% | 0% |  |
 | remove gps from photo | 10–100 | Low | 0% | 0% |  |
 | viofo gps | 10–100 | Low | 0% | 900% |  |
@@ -153,9 +155,9 @@ Source: `gpstoolset-guides-kp-historical-2026-11-02.tsv` · Period: October 1, 2
 | what is kmz | 100–1K | Low | 0% | 0% | secondary on /guides/kmz-file |
 | what is navic | 100–1K | Low | -90% | 0% |  |
 | what is nmea | 100–1K | Low | 0% | 0% |  |
-| extract gps from gopro video | 10–100 | Low | 0% | 0% |  |
-| gopro gpmf | 10–100 | Low | 0% | 0% |  |
-| gopro metadata format | 10–100 | Low | 0% | 0% |  |
+| extract gps from gopro video | 10–100 | Low | 0% | 0% | /gopro-gps-extract |
+| gopro gpmf | 10–100 | Low | 0% | 0% | /gopro-gps-extract |
+| gopro metadata format | 10–100 | Low | 0% | 0% | /gopro-gps-extract |
 | gps file formats | 10–100 | Low | 0% | 0% | do not target (hub /guides/gps-file-formats is nav only) |
 | gpx vs geojson | 10–100 | Low | 0% | 0% | skip for now |
 | how to convert fit to gpx | 10–100 | Low | 0% | 0% |  |
@@ -175,9 +177,106 @@ Source: `gpstoolset-guides-kp-historical-2026-11-02.tsv` · Period: October 1, 2
 | ublox gps csv | no data | — | — | — |  |
 | what is gpmf | no data | — | — | — |  |
 
+## Run 2026-11-05: gpx reader cluster (France only)
+
+Source: `gpx-reader-kp-2026-11-05.csv` (Keyword Planner, via SEO bot master Run 4) · Period: October 1, 2025 - September 30, 2026 · **Segmentation: France only** · 83 terms · **FIRST-PASS: needs verification**
+
+- `gpx reader` and `gpx viewer` both 1K–10K (France), identical change columns → Planner close-variant grouping. Worldwide Run 1 had `gpx viewer` at **10K–100K**. Don't treat France buckets as global.
+- Decision (2026-11-05): **no separate `/gpx-reader` page**; reader/viewer web intent → `/gpx-viewer` (title/H1/intro/FAQ).
+- App / download / Android / iPhone / Windows / Mac / PC terms: **skip as primary** (wrong intent for a browser tool).
+- 3D terms (~10–100/mo each, France) → **future 3D track viewer** on the roadmap.
+- Elevation / profile / visualiser terms → secondary only on `/gpx-viewer`.
+
+| Keyword | Avg monthly searches (range) | Competition | 3-month change | YoY change | Target page / status |
+|---|---|---|---|---|---|
+| gpx reader | 1K–10K | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx viewer | 1K–10K | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) (also Run 1 worldwide 10K–100K) |
+| gpx file viewer online | 100–1K | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx online viewer | 100–1K | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx reader online | 100–1K | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| 3d gpx viewer | 10–100 | Low | 0% | 0% | future 3D track viewer (roadmap) |
+| 3d gpx visualizer | 10–100 | — | -100% | 0% | future 3D track viewer (roadmap) |
+| app gpx viewer | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| app to open gpx file | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| app to read gpx files | 10–100 | — | -100% | -100% | skip (app/download/OS intent) |
+| app to view gpx files | 10–100 | — | 0% | 0% | skip (app/download/OS intent) |
+| apps that open gpx files | 10–100 | Low | ∞ | ∞ | skip (app/download/OS intent) |
+| apps that read gpx files | 10–100 | — | 0% | 0% | skip (app/download/OS intent) |
+| ara gpx viewer | 10–100 | — | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| best android gpx viewer | 10–100 | — | 0% | 0% | skip (app/download/OS intent) |
+| best free gpx viewer | 10–100 | — | 0% | -100% | /gpx-viewer (reader+viewer cluster) |
+| best free gpx viewer iphone | 10–100 | Low | ∞ | ∞ | skip (app/download/OS intent) |
+| best gpx viewer | 10–100 | Low | ∞ | 0% | /gpx-viewer (reader+viewer cluster) |
+| best gpx viewer android | 10–100 | Low | ∞ | 0% | skip (app/download/OS intent) |
+| best gpx viewer windows | 10–100 | Low | ∞ | ∞ | skip (app/download/OS intent) |
+| download gpx viewer | 10–100 | Medium | ∞ | ∞ | skip (app/download/OS intent) |
+| download gpx viewer for pc | 10–100 | — | 0% | 0% | skip (app/download/OS intent) |
+| free gpx file viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| free gpx reader | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| free gpx viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| free gpx viewer android | 10–100 | Low | ∞ | ∞ | skip (app/download/OS intent) |
+| garmin gpx viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| google gpx viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| google map gpx viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gps file reader | 10–100 | — | 0% | -100% | /gpx-viewer (reader+viewer cluster) |
+| gps file viewer | 10–100 | Low | ∞ | 0% | /gpx-viewer (reader+viewer cluster) |
+| gps viewer online | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx 3d viewer | 10–100 | Low | 0% | 0% | future 3D track viewer (roadmap) |
+| gpx 3d viewer online | 10–100 | — | 0% | 0% | future 3D track viewer (roadmap) |
+| gpx 3d visualizer | 10–100 | Low | 0% | 0% | future 3D track viewer (roadmap) |
+| gpx data viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx elevation viewer | 10–100 | — | -100% | -100% | secondary on /gpx-viewer (elevation/profile) |
+| gpx file reader | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx file viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx file viewer android | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx file viewer iphone | 10–100 | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx map viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx profile viewer | 10–100 | Low | 0% | 0% | secondary on /gpx-viewer (elevation/profile) |
+| gpx reader android | 10–100 | Medium | 0% | 0% | skip (app/download/OS intent) |
+| gpx reader app | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx route viewer | 10–100 | — | -100% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx track viewer | 10–100 | Low | 0% | ∞ | /gpx-viewer (reader+viewer cluster) |
+| gpx viewer 3d | 10–100 | Low | 0% | 0% | future 3D track viewer (roadmap) |
+| gpx viewer android | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer app | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer app android | 10–100 | Low | ∞ | ∞ | skip (app/download/OS intent) |
+| gpx viewer download | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer download for pc | 10–100 | — | 0% | -100% | skip (app/download/OS intent) |
+| gpx viewer download windows 10 | 10–100 | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer elevation profile | 10–100 | — | -100% | 0% | secondary on /gpx-viewer (elevation/profile) |
+| gpx viewer for android | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer for mac | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer for pc | 10–100 | Low | ∞ | ∞ | skip (app/download/OS intent) |
+| gpx viewer for windows | 10–100 | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer free download | 10–100 | — | -100% | 0% | skip (app/download/OS intent) |
+| gpx viewer online free | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx viewer pc | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer pro | 10–100 | Low | 0% | -90% | /gpx-viewer (reader+viewer cluster) |
+| gpx viewer reader | 10–100 | Low | 0% | ∞ | /gpx-viewer (reader+viewer cluster) |
+| gpx viewer web | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx viewer windows | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer windows 10 | 10–100 | — | -100% | -100% | skip (app/download/OS intent) |
+| gpx viewer windows 11 | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer windows 7 | 10–100 | — | -100% | -100% | skip (app/download/OS intent) |
+| gpx viewer with drive | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| gpx visualiser | 10–100 | Low | 0% | 900% | secondary on /gpx-viewer (elevation/profile) |
+| online gpx file viewer | 10–100 | — | 0% | -100% | /gpx-viewer (reader+viewer cluster) |
+| openstreetmap gpx viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
+| reverse gpx route | 10–100 | Low | 0% | ∞ | /gpx-viewer (reader+viewer cluster) |
+| app file gpx | no data | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx file viewer windows 10 | no data | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx reader windows 10 | no data | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer 4pda | no data | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer for windows 10 | no data | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer per pc | no data | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer pro 4pda | no data | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer windows 10 download | no data | — | 0% | 0% | skip (app/download/OS intent) |
+| gpx viewer windows 10 free | no data | — | 0% | 0% | skip (app/download/OS intent) |
+
 ## Update log
 
 - 2026-11-04: created from all runs so far.
+- 2026-11-05: merged Run 4 (gpx reader, France only); GoPro rows → `/gopro-gps-extract`; telemetry keywords allowed; 3D terms → roadmap.
 
 ## Page map
 
@@ -186,7 +285,8 @@ Titles ≤60 chars; no brand names in URL or title brand-stuffing beyond necessa
 | Page | Primary (Planner) | Secondaries | Suggested title (≤60) |
 |---|---|---|---|
 | `/gopro-gps-extract` | `gopro gps extractor` **10–100** | `gopro gps data` **100–1K** · `extract gps from gopro video` **10–100** · `gopro gpx` **10–100** · (`video gps extractor` GSC only, not in Planner) | GoPro GPS Extractor — Free, No Upload |
-| `/gpx-viewer` | `gpx viewer` **10K–100K** | `gpx viewer online` **1K–10K** · `gpx to csv` **100–1K** | Free Online GPX Viewer |
+| `/gpx-viewer` | `gpx viewer` **10K–100K** (worldwide) + `gpx reader` **1K–10K** (France) | `gpx viewer online` **1K–10K** · `gpx reader online` / `gpx online viewer` / `gpx file viewer online` **100–1K** (France) · free gpx reader · open gpx file online · `gpx to csv` **100–1K** | Free Online GPX Viewer & Reader |
+| future 3D track viewer (roadmap) | `3d gpx viewer` **10–100** (France) | `gpx 3d viewer online` · `gpx 3d visualizer` · `gpx viewer 3d` **10–100** | — |
 | `/gpx-editor` | `gpx editor online` **1K–10K** | split / trim / simplify / reverse mostly **10–100** | Free Online GPX / Track Editor |
 | `/my-coordinates` | `my coordinates` **10K–100K** | `gps coordinates` **10K–100K** · `lat long finder` **10K–100K** · `find coordinates on map` **1K–10K** | My Coordinates — Find Lat & Long on a Map |
 | `/measure-distance` | `measure distance on map` **10K–100K** | `distance calculator map` **10K–100K** · `route distance calculator` **1K–10K** | Measure Distance on a Map — Free Tool |
@@ -197,7 +297,7 @@ Titles ≤60 chars; no brand names in URL or title brand-stuffing beyond necessa
 | `/convert/fit-to-gpx` | `fit to gpx` **1K–10K** | `tcx to gpx` **100–1K** · `garmin export gpx` **100–1K** (how-to lean) | FIT to GPX Converter — Free, No Upload |
 | `/convert/kmz-to-gpx` | `kmz to gpx` **10K–100K** | | KMZ to GPX Converter — Free |
 
-**Avoid on `/gopro-gps-extract`:** targeting `telemetry extractor` / `gopro telemetry extractor` as product phrasing (Planner has them; brand/product risk). Compatibility: say “reads GoPro video GPS (GPMF)” in body.
+**`/gopro-gps-extract`:** `telemetry extractor` / `gopro telemetry` / `gopro telemetry extractor` are allowed target keywords (Paul, 2026-11-04). Since 2026-11-05 the sibling site's GoPro page 301s here (GPX/FIT viewers stay there). Compatibility: say “reads GoPro video GPS (GPMF)” in body.
 
 **Note:** `/gopro-gps-extract` primary is small in Planner but sibling GSC still shows real clicks for that cluster — keep as anchor tool; don’t expect head-term volume.
 
@@ -281,7 +381,7 @@ Definitional “what is …” queries are usually owned by **Wikipedia / gov / 
 | | |
 |---|---|
 | **Primary (FIRST-PASS)** | `gopro gpmf` (AC thin) · support with Planner/GSC extract cluster |
-| **Secondary** | `extract gps from gopro video` **10–100** · `gopro gps data` **100–1K** · avoid “telemetry extractor” product phrasing |
+| **Secondary** | `extract gps from gopro video` **10–100** · `gopro gps data` **100–1K** · `telemetry extractor` / `gopro telemetry` OK |
 | **AC** | `what is gpmf` empty; `gopro gpmf` few suggests — FIRST-PASS **weak head term** |
 | **Who ranks** | [gopro.github.io/gpmf-parser](https://gopro.github.io/gpmf-parser/), GitHub — niche/dev |
 | **Angle** | Plain-language “GPS inside GoPro video” → use `/gopro-gps-extract` tool (no upload). Don’t chase GPMF as a volume keyword |
@@ -304,7 +404,7 @@ Definitional “what is …” queries are usually owned by **Wikipedia / gov / 
 | **Secondary** | `ublox csv` (AC empty) · generic “GPS CSV format” |
 | **AC** | Very weak for logger-specific strings — FIRST-PASS |
 | **Who ranks** | Sparse; converter pages for CSV→GPX |
-| **Angle** | Describe **GNSS logger CSV exports** (columns: time, lat, lon, alt…) **without naming FlySight or other competitor-only brands**. Link CSV→GPX when available; else `/gpx-viewer` after user converts |
+| **Angle** | Describe **GNSS logger CSV exports** (columns: time, lat, lon, alt…) **without naming competitor-only logger brands**. Link CSV→GPX when available; else `/gpx-viewer` after user converts |
 | **Links to** | `/gpx-viewer`; future CSV tool; `csv to gpx` intent |
 
 ---
@@ -331,9 +431,10 @@ Paste file: `gpstoolset-guides-kw-list.txt` (≤60 lines; keep beside this doc o
 
 ## Decisions / bans
 
-- No inbound 301s from sibling products (they keep their own viewers; keyword overlap is fine).
-- Never name **FlySight**.
+- Inbound 301: **only** the sibling product's GoPro page → `/gopro-gps-extract` (live 2026-11-05). Its GPX and FIT viewers stay there with links out.
+- No separate `/gpx-reader` page; reader cluster lives on `/gpx-viewer`.
+- Never name the GNSS logger brand; say “GNSS logger CSV exports”.
 - No brand names in URLs except `/gopro-gps-extract`.
-- Never use “Telemetry Extractor” / “GoPro telemetry extractor” as on-site product phrasing (Planner rows kept as research only).
+- “Telemetry extractor” / “GoPro telemetry” = allowed target keywords.
 - GoPro/DJI = compatibility wording only.
-- Labels: Planner ranges = **CHECKED**. Autocomplete / SERP judgment = **FIRST-PASS** / **GUESS**. No invented volumes.
+- Labels: Planner ranges = **CHECKED** (but first-pass, needs verifier). Autocomplete / SERP judgment = **FIRST-PASS** / **GUESS**. No invented volumes.

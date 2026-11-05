@@ -23,7 +23,8 @@
 - `/my-coordinates` (planned; primary KW `my coordinates`).
 - Guides Wave B (educational): `/guides/how-gps-works`, `/guides/gnss-vs-gps`, `/guides/gps-accuracy`, optional `/guides/gps-history`.
 - More convert pairs / NMEA·CSV when formats land in the registry.
-- Later product ideas already recorded: GPS video overlay (social bait, watermark free tier), DJI telemetry viewer, 3D view option for viewers, live GNSS satellite globe (CelesTrak TLEs in-browser), time zone tools (converter, world clock / day-night map, zone from coordinates, UTC/GPS-time helpers), geotag-photos.
+- Later product ideas already recorded: GPS video overlay (social bait, watermark free tier), DJI telemetry viewer, 3D view option for viewers (see 3D track viewer below), live GNSS satellite globe (CelesTrak TLEs in-browser), time zone tools (converter, world clock / day-night map, zone from coordinates, UTC/GPS-time helpers), geotag-photos.
+- 3D track viewer (like FlySync's 3D view): drop a GPX → track drawn as a 3D tube over a flat OSM street-tile ground (Web Mercator, same as Leaflet), drop-lines to the ground, orbit camera; Three.js (FlySync uses three@0.160.1); no terrain at first (FlySync has none either), optional free DEM later (e.g. AWS Terrarium terrain tiles, unverified); street tiles only, no satellite; targets `3d gpx viewer` / `gpx 3d viewer online` / `gpx 3d visualizer`
 - Guide keyword paste: most guide head terms stay unverified until Paul pastes the Keyword Planner list.
 
 ## Done
@@ -52,4 +53,4 @@
 
 ---
 
-*GPS Toolset Manager · Europe/Tallinn · remapped from former plan doc 2026-11-05*
+*GPS Toolset Manager · Europe/Tallinn · remapped from former plan doc 2026-11-05 · 3D track viewer added*

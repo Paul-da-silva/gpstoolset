@@ -16,8 +16,8 @@ $faq = $route['faq'];
   <section class="tool-hero">
     <div class="tool-wrap tool-hero-grid">
       <div>
-        <h1>GPX Viewer</h1>
-        <p class="tool-lead">Open a GPX file on a map and read the speed and altitude. The file stays on your device.</p>
+        <h1>Online GPX Viewer &amp; Reader</h1>
+        <p class="tool-lead">View and read GPX files online — drop a .gpx to open the track, see waypoints, and check the route. A free GPX reader; nothing is uploaded to our servers.</p>
         <ul class="tool-pills">
           <li>GPX viewer online</li>
           <li>Speed and altitude</li>
@@ -74,8 +74,8 @@ $faq = $route['faq'];
 
   <section class="tool-section">
     <div class="tool-wrap tool-prose">
-      <h2>A GPX viewer online</h2>
-      <p>Drop the file and the route fills the map. Start and end are marked. Open Graphs for speed, altitude, distance, and time. Heart rate is listed when the file includes it. If the file has several tracks, each one is listed and the map shows the one you pick.</p>
+      <h2>A GPX file viewer online</h2>
+      <p>Drop the file and the route fills the map. Start and end are marked. This GPX reader online shows speed, altitude, distance, and time under Graphs. Heart rate is listed when the file includes it. If the file has several tracks, each one is listed and the map shows the one you pick.</p>
       <p>Waypoints stay as points on the map. They are not joined into a line. A route with no track is drawn as the line.</p>
     </div>
   </section>
