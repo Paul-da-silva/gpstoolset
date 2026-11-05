@@ -1,0 +1,14 @@
+sitemap_status=200
+sitemap_content_type=application/xml; charset=UTF-8
+sitemap_loc_count=27
+sitemap_body_sha256_norm=a9d12d05b247e9148666648b134fa186ad7775c95650b6e774225d16dcd0b5bc
+robots_status=200
+robots_content_type=text/plain
+robots_sitemap_line=https://gpstoolset.com/sitemap.xml
+robots_body_sha256_norm=37a97f40ecd4a0afcf0526802830558020c87a16c1428839d8ea7923887c2e24
+base=http://gpstoolset.lan
+pages=27
+generated_at_utc=2026-11-05T08:38:08+00:00
+outfile=/var/www/kuiper/gpstoolset/docs/migration/recheck-phase3.tsv
+redirects_file=/var/www/kuiper/gpstoolset/docs/migration/recheck-phase3-redirects.tsv
+body_norm=strip HTML comments; CRLF→LF; trim trailing spaces per line; no CSRF expected

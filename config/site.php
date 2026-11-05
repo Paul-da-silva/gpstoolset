@@ -4,8 +4,8 @@ declare(strict_types=1);
 /**
  * Origin for canonical links, with no trailing slash.
  *
- * GPS_BASE_URL (environment variable or Apache SetEnv) wins when set.
- * Otherwise the request host decides:
+ * Prefers Env::get('BASE_URL') (which falls back to GPS_BASE_URL in core Env
+ * until Phase 6 confirms production BASE_URL). Otherwise the request host:
  *   gpstoolset.lan       -> http://gpstoolset.lan
  *   gpstoolset.com       -> https://gpstoolset.com
  *   www.gpstoolset.com   -> https://gpstoolset.com
@@ -14,11 +14,12 @@ declare(strict_types=1);
 if (!function_exists('site_base_origin')) {
     function site_base_origin(): string
     {
-        $fromEnv = getenv('GPS_BASE_URL');
-        if (!is_string($fromEnv) || trim($fromEnv) === '') {
-            $fromEnv = $_SERVER['GPS_BASE_URL'] ?? $_ENV['GPS_BASE_URL'] ?? '';
+        $fromEnv = '';
+        if (class_exists(\Kuiper\Core\Env::class, false)
+            || class_exists(\Kuiper\Core\Env::class)
+        ) {
+            $fromEnv = trim((string) \Kuiper\Core\Env::get('BASE_URL', ''));
         }
-        $fromEnv = trim((string) $fromEnv);
         if ($fromEnv !== '') {
             return rtrim($fromEnv, '/');
         }

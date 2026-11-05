@@ -43,7 +43,8 @@ No CSRF tokens or per-request timestamps expected in this app today. If a later 
 | 0 | Golden artefacts committed |
 | 1 | `recheck-phase1.tsv` — **MATCH** (core + Composer + `plan()` fallthrough) |
 | 2 | `recheck-phase2.tsv` — **MATCH** (registry routes + thin controllers) |
-| 3–5 | pending |
+| 3 | `recheck-phase3.tsv` — **MATCH** (env.php / BASE_URL + GPS_BASE_URL alias) |
+| 4–5 | pending |
 | 6 | prod only — after Phase 5 |
 
 ## Phase 0 snapshot (2026-11-05)
@@ -57,9 +58,11 @@ No CSRF tokens or per-request timestamps expected in this app today. If a later 
 
 ## Env / BASE_URL (Phases 3 + 6)
 
-- Local (Phase 3): `config/env.php` (gitignored) sets `APP_ENV=dev`, `BASE_URL=http://gpstoolset.lan`, `STRICT_ERRORS=0`.
-- App code reads `Env::get('BASE_URL')`. Core keeps a temporary alias: if `BASE_URL` is unset, `GPS_BASE_URL` is returned.
-- Production (Phase 6, pre-deploy): set `BASE_URL=https://gpstoolset.com` and `APP_ENV=prod`. Optionally keep `GPS_BASE_URL` as belt-and-suspenders until confirmed. Do not rely on `.lan` values on prod.
+- **Committed:** `config/env.example.php` (same keys, fake/local sample values).
+- **Local (gitignored):** `config/env.php` — `APP_ENV=dev`, `BASE_URL=http://gpstoolset.lan`, `STRICT_ERRORS=0`, `TRUST_CF_CONNECTING_IP=false`. www-data must be able to read it (`chmod 644` locally is fine with no secrets; prefer `chmod 640` + `chgrp www-data` when you can sudo).
+- **App code:** `site_base_origin()` / `base_url()` read `Kuiper\Core\Env::get('BASE_URL')` only — no direct `getenv('GPS_BASE_URL')` / `$_SERVER['GPS_BASE_URL']` in app code.
+- **Core alias (keep until Phase 6):** if `BASE_URL` is unset, `Env::get('BASE_URL')` returns `GPS_BASE_URL` from server env / getenv / env.php. Do not remove the alias in `core/Env.php`.
+- **Production (Phase 6, pre-deploy — not committed env.php):** set `BASE_URL=https://gpstoolset.com`, `APP_ENV=prod`, `STRICT_ERRORS=0` (or omit). Optionally keep `GPS_BASE_URL=https://gpstoolset.com` as belt-and-suspenders. Do not rely on `.lan` values on prod.
 
 ## Gates
 
