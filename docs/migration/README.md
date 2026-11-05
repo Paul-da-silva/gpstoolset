@@ -48,8 +48,8 @@ No CSRF tokens or per-request timestamps expected in this app today. If a later 
 | 2 | `recheck-phase2.tsv` — **MATCH** (registry routes + thin controllers) |
 | 3 | `recheck-phase3.tsv` — **MATCH** (env.php / BASE_URL + GPS_BASE_URL alias) |
 | 4 | `recheck-phase4.tsv` — **MATCH** (shared rules install + docs scrub) |
-| 5 | pending |
-| 6 | prod only — after Phase 5 |
+| 5 | `recheck-phase5.tsv` — **MATCH** (final local verify) |
+| 6 | prod only — ready when Paul deploys |
 
 ## Phase 0 snapshot (2026-11-05)
 
