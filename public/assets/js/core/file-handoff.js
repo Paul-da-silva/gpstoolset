@@ -2,15 +2,31 @@
  * Hands one File from the home drop zone to a viewer.
  * The File stays in this browser (IndexedDB). It is not uploaded.
  * The viewer takes it once, then the copy is removed.
+ * For GPS files only — do not stash large videos here.
  */
 var DB_NAME = 'gpstoolset.handoff';
 var STORE = 'files';
 var KEY = 'pending';
 var MAX_AGE_MS = 2 * 60 * 1000;
 var MAX_BYTES = 64 * 1024 * 1024;
+var TOO_LARGE =
+  'That file is too large to open from this page in the browser. Open the tool and drop it there.';
+var QUOTA =
+  'This browser does not have enough space to open that file from this page. Open the tool and drop it there.';
 
 function tooLarge(file) {
   return !!(file && file.size > MAX_BYTES);
+}
+
+function isQuotaError(err) {
+  if (!err) {
+    return false;
+  }
+  if (err.name === 'QuotaExceededError') {
+    return true;
+  }
+  var msg = String(err.message || err);
+  return /quota/i.test(msg);
 }
 
 function openDb() {
@@ -51,7 +67,7 @@ function txDone(tx) {
 
 export function stash(file, slug) {
   if (tooLarge(file)) {
-    return Promise.reject(new Error('That file is larger than 64 MB.'));
+    return Promise.reject(new Error(TOO_LARGE));
   }
   return openDb().then(function (db) {
     var tx = db.transaction(STORE, 'readwrite');
@@ -64,6 +80,12 @@ export function stash(file, slug) {
     }, KEY);
     return txDone(tx).then(function () {
       db.close();
+    }, function (err) {
+      db.close();
+      if (isQuotaError(err)) {
+        throw new Error(QUOTA);
+      }
+      throw err;
     });
   });
 }

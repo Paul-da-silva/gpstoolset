@@ -266,6 +266,59 @@ a.nav-link:hover {
   font-weight: 700;
 }
 
+.home-lead {
+  margin: 0.75rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--text) 82%, transparent);
+}
+
+.home-section {
+  margin-top: 2.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.home-section h2 {
+  margin: 0 0 0.45rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+.home-section > p {
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--text) 88%, transparent);
+}
+
+.home-section > p + p {
+  margin-top: -0.25rem;
+}
+
+.home-link-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  line-height: 1.5;
+}
+
+.home-link-list li + li {
+  margin-top: 0.4rem;
+}
+
+.home-link-list a {
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.home-link-list a:hover {
+  text-decoration: underline;
+}
+
+.home-link-list code {
+  font-size: 0.92em;
+}
+
 .page h1 {
   font-size: 1.85rem;
   letter-spacing: -0.02em;
@@ -353,6 +406,27 @@ a.nav-link:hover {
   color: #b91c1c;
   font-weight: 650;
   line-height: 1.4;
+}
+
+.dropzone-error a {
+  color: inherit;
+  font-weight: 700;
+}
+
+.home-gopro {
+  margin: 0.85rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--text) 72%, transparent);
+}
+
+.home-gopro a {
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.home-gopro a:hover {
+  text-decoration: underline;
 }
 
 .home-guides {

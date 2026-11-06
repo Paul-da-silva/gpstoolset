@@ -1,7 +1,7 @@
 /**
  * Home drop zone. Detects a GPS file and opens its viewer.
- * GoPro video (.mp4 / .lrv) still opens the GoPro page.
- * The File is handed off in this browser. It is not uploaded.
+ * Videos are not handed off (too large for IndexedDB). Point to the GoPro tool.
+ * GPX / KML / KMZ / FIT stay in this browser via IndexedDB. Nothing is uploaded.
  */
 import { stash } from './core/file-handoff.js';
 import { detect, extensionOf } from './core/detect.js';
@@ -11,6 +11,8 @@ var input = document.getElementById('home-file');
 var errorEl = document.getElementById('home-drop-error');
 var titleEl = zone ? zone.querySelector('.dropzone-title') : null;
 var busy = false;
+var GOPRO_HINT =
+  'GoPro videos open on the <a href="/gopro-gps-extract">GoPro GPS extractor</a>. Drop the file there — nothing is uploaded.';
 
 function hasFiles(event) {
   var types = event.dataTransfer && event.dataTransfer.types;
@@ -31,6 +33,14 @@ function showError(message) {
   }
   errorEl.hidden = !message;
   errorEl.textContent = message || '';
+}
+
+function showErrorHtml(html) {
+  if (!errorEl) {
+    return;
+  }
+  errorEl.hidden = !html;
+  errorEl.innerHTML = html || '';
 }
 
 function setBusy(on, label) {
@@ -61,15 +71,17 @@ function send(file) {
   }
   showError('');
   var ext = extensionOf(file);
-  if (ext === 'mp4' || ext === 'lrv') {
-    go(file, 'gopro-gps-extract', '/gopro-gps-extract');
+  if (ext === 'mp4' || ext === 'lrv' || String(file.type || '').slice(0, 6) === 'video/') {
+    showErrorHtml(GOPRO_HINT);
     return;
   }
   setBusy(true, 'Checking the file…');
   detect(file).then(function (format) {
     if (!format || !format.landing || !format.slug) {
       setBusy(false);
-      showError('Drop a GPX, KML, KMZ, or FIT file, or a GoPro .MP4 or .LRV.');
+      showErrorHtml(
+        'Drop a GPX, KML, KMZ, or FIT file. For a GoPro video, use the <a href="/gopro-gps-extract">GoPro GPS extractor</a>.'
+      );
       return;
     }
     go(file, format.slug, format.landing);

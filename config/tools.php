@@ -19,11 +19,29 @@ $tools = [
     'home' => [
         'slug' => 'home',
         'path' => '/',
-        'title' => 'GPS Toolset',
-        'description' => 'Browser tools for GPS files. Your file never leaves your device.',
+        'title' => 'Free GPS File Tools',
+        'description' => 'View, convert, and edit GPX, KML, KMZ, and FIT in your browser. Free online GPS tools — your file never leaves your device.',
         'inSitemap' => true,
         'entry' => 'includes/pages/home.php',
         'flags' => ['map' => false, 'video' => false, 'ads' => true],
+        'faq' => [
+            [
+                'q' => 'Does my GPS file get uploaded?',
+                'a' => 'No. Parsing, maps, edits, and exports run in your browser. The file stays on your device.',
+            ],
+            [
+                'q' => 'What file formats can I open?',
+                'a' => 'Drop GPX, KML, KMZ, or FIT on this page to open the matching viewer. Convert between those formats on the converter. For a GoPro video with GPS, use the GoPro GPS extractor.',
+            ],
+            [
+                'q' => 'How do I convert KML to GPX?',
+                'a' => 'Open the KML to GPX converter, drop the .kml file, and download the GPX. The conversion stays in your browser.',
+            ],
+            [
+                'q' => 'Can I edit a GPX track online?',
+                'a' => 'Yes. The GPX editor can trim, simplify, reverse, merge, or split a track, then you download the result.',
+            ],
+        ],
     ],
     'privacy' => [
         'slug' => 'privacy',
