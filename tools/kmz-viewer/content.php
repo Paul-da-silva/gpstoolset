@@ -13,8 +13,8 @@ $faq = $route['faq'];
   <section class="tool-hero">
     <div class="tool-wrap tool-hero-grid">
       <div>
-        <h1>KMZ Viewer</h1>
-        <p class="tool-lead">Open a KMZ file on a map. The browser reads the KML inside the zip. Nothing is uploaded.</p>
+        <h1>Online KMZ Viewer, Reader &amp; 3D</h1>
+        <p class="tool-lead">Open a KMZ file on a map. The browser reads the KML inside the zip. Switch Map / 3D to see the track in 3D over the street map. A free KMZ reader; nothing is uploaded.</p>
         <ul class="tool-pills">
           <li>KMZ viewer online</li>
           <li>Zipped KML</li>
@@ -58,7 +58,7 @@ $faq = $route['faq'];
         <li class="tool-step">
           <span class="tool-step-num">2</span>
           <h3>Read it here</h3>
-          <p>Paths and point placemarks are drawn on the map. Pictures in the zip are skipped. Nothing is sent to a server.</p>
+          <p>Paths and point placemarks are drawn on the map. After it loads, use Map / 3D for a KMZ 3D viewer over the street map. Pictures in the zip are skipped. Nothing is sent to a server.</p>
         </li>
         <li class="tool-step">
           <span class="tool-step-num">3</span>

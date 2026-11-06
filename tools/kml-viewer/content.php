@@ -13,8 +13,8 @@ $faq = $route['faq'];
   <section class="tool-hero">
     <div class="tool-wrap tool-hero-grid">
       <div>
-        <h1>KML Viewer</h1>
-        <p class="tool-lead">Open a KML file on a map. Lines and point placemarks stay on your device.</p>
+        <h1>Online KML Viewer, Reader &amp; 3D</h1>
+        <p class="tool-lead">Open a KML file on a map. Lines and point placemarks stay on your device. Switch Map / 3D to see the track in 3D over the street map. A free KML reader; nothing is uploaded.</p>
         <ul class="tool-pills">
           <li>KML viewer online</li>
           <li>Lines and placemarks</li>
@@ -58,7 +58,7 @@ $faq = $route['faq'];
         <li class="tool-step">
           <span class="tool-step-num">2</span>
           <h3>Read it here</h3>
-          <p>The browser draws each line and each point. Nothing is sent to a server.</p>
+          <p>The browser draws each line and each point. After it loads, use Map / 3D for a KML 3D viewer over the street map. Nothing is sent to a server.</p>
         </li>
         <li class="tool-step">
           <span class="tool-step-num">3</span>

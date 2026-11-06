@@ -27,9 +27,9 @@ return [
         'ext' => 'gpx',
         'landing' => '/gpx-viewer',
         'slug' => 'gpx-viewer',
-        'title' => 'Free Online GPX Viewer & Reader — Open GPX Files in Your Browser',
-        'description' => 'Open and read GPX files in your browser. Free online GPX viewer — drop a track, see it on the map. No upload to our servers, no install.',
-        'schemaName' => 'GPX Viewer & Reader',
+        'title' => 'Free Online GPX Viewer & Reader — Open and View GPX in 3D',
+        'description' => 'Open and read GPX files in your browser. View the track in 2D or 3D on a map. Free online GPX viewer — no upload, no install.',
+        'schemaName' => 'GPX Viewer, Reader & 3D',
         'faq' => [
             [
                 'q' => 'Does the GPX file get uploaded?',
@@ -42,6 +42,18 @@ return [
             [
                 'q' => 'GPX reader vs GPX viewer?',
                 'a' => 'Same thing for most people; this page does both.',
+            ],
+            [
+                'q' => 'What is a 3D GPX viewer / 3D GPX reader?',
+                'a' => 'A browser tool that opens a .gpx and shows the track in 3D over a map. Same page as the 2D GPX viewer and reader.',
+            ],
+            [
+                'q' => 'How do I view a GPX file in 3D?',
+                'a' => 'Drop or choose a .gpx. When the track is on the map, tap 3D. Orbit the view. Switch back with Map. Nothing is uploaded.',
+            ],
+            [
+                'q' => 'Does this work as a GPX 3D visualizer online?',
+                'a' => 'Yes. It runs in the browser with no install. The track sits over a street map. There is no terrain model and no satellite layer.',
             ],
             [
                 'q' => 'What is a GPX file?',
@@ -86,17 +98,45 @@ return [
         'ext' => 'kml',
         'landing' => '/kml-viewer',
         'slug' => 'kml-viewer',
-        'title' => 'Free Online KML Viewer',
-        'description' => 'Open a KML file on a map in your browser. Lines and point placemarks stay on your device. Download GPX, KML, KMZ, or CSV. Nothing is uploaded.',
-        'schemaName' => 'KML Viewer',
+        'title' => 'Free Online KML Viewer & Reader — Open and View KML in 3D',
+        'description' => 'Open and read KML files in your browser. View the track in 2D or 3D on a map. Free online KML viewer — no upload, no install.',
+        'schemaName' => 'KML Viewer, Reader & 3D',
         'faq' => [
             [
                 'q' => 'Does the KML file get uploaded?',
                 'a' => 'No. The browser reads the file where it already is. GPS Toolset does not receive a copy.',
             ],
             [
+                'q' => 'What is a KML reader?',
+                'a' => 'A browser tool that opens and reads a .kml file and shows the track on a map. Same job as a KML viewer.',
+            ],
+            [
+                'q' => 'KML reader vs KML viewer?',
+                'a' => 'Same thing for most people; this page does both.',
+            ],
+            [
+                'q' => 'What is a 3D KML viewer / 3D KML reader?',
+                'a' => 'A browser tool that opens a .kml and shows the track in 3D over a map. Same page as the 2D KML viewer and reader.',
+            ],
+            [
+                'q' => 'How do I view a KML file in 3D?',
+                'a' => 'Drop or choose a .kml. When the track is on the map, tap 3D. Orbit the view. Switch back with Map. Nothing is uploaded.',
+            ],
+            [
+                'q' => 'Does this work as a KML 3D visualizer online?',
+                'a' => 'Yes. It runs in the browser with no install. The track sits over a street map. There is no terrain model and no satellite layer.',
+            ],
+            [
                 'q' => 'What is a KML file?',
                 'a' => 'KML is a map file used by Google Earth and many other maps. A line is a path. A point placemark is a single place. This page draws both.',
+            ],
+            [
+                'q' => 'How do I open a KML file online?',
+                'a' => 'Drop a .kml or choose a file. Lines and point placemarks show on the map. Then use Map / 3D, Stats or Graphs, or Export to save GPX, KML, KMZ, or CSV. Nothing is uploaded.',
+            ],
+            [
+                'q' => 'Do I need to install an app?',
+                'a' => 'No. It runs in the browser on desktop and phone.',
             ],
             [
                 'q' => 'I have a KMZ file, not a KML. Where does it open?',
@@ -129,17 +169,45 @@ return [
         'ext' => 'kmz',
         'landing' => '/kmz-viewer',
         'slug' => 'kmz-viewer',
-        'title' => 'Free Online KMZ Viewer',
-        'description' => 'Open a KMZ file on a map in your browser. The zipped KML is read on your device. Download GPX, KML, KMZ, or CSV. Nothing is uploaded.',
-        'schemaName' => 'KMZ Viewer',
+        'title' => 'Free Online KMZ Viewer & Reader — Open and View KMZ in 3D',
+        'description' => 'Open and read KMZ files in your browser. The zipped KML is read on your device — view in 2D or 3D. Free online KMZ viewer — no upload, no install.',
+        'schemaName' => 'KMZ Viewer, Reader & 3D',
         'faq' => [
             [
                 'q' => 'Does the KMZ file get uploaded?',
                 'a' => 'No. The browser unzips and reads the file where it already is. GPS Toolset does not receive a copy.',
             ],
             [
+                'q' => 'What is a KMZ reader?',
+                'a' => 'A browser tool that opens and reads a .kmz file and shows the track on a map. Same job as a KMZ viewer.',
+            ],
+            [
+                'q' => 'KMZ reader vs KMZ viewer?',
+                'a' => 'Same thing for most people; this page does both.',
+            ],
+            [
+                'q' => 'What is a 3D KMZ viewer / 3D KMZ reader?',
+                'a' => 'A browser tool that opens a .kmz and shows the track in 3D over a map. Same page as the 2D KMZ viewer and reader.',
+            ],
+            [
+                'q' => 'How do I view a KMZ file in 3D?',
+                'a' => 'Drop or choose a .kmz. When the track is on the map, tap 3D. Orbit the view. Switch back with Map. Nothing is uploaded.',
+            ],
+            [
+                'q' => 'Does this work as a KMZ 3D visualizer online?',
+                'a' => 'Yes. It runs in the browser with no install. The track sits over a street map. There is no terrain model and no satellite layer.',
+            ],
+            [
                 'q' => 'What is the difference between KMZ and KML?',
                 'a' => 'KML is the map file. KMZ is that file zipped, sometimes with pictures beside it. This page reads the KML inside the zip.',
+            ],
+            [
+                'q' => 'How do I open a KMZ file online?',
+                'a' => 'Drop a .kmz or choose a file. The browser reads the KML inside the zip and draws the track. Then use Map / 3D, Stats or Graphs, or Export to save GPX, KML, KMZ, or CSV. Nothing is uploaded.',
+            ],
+            [
+                'q' => 'Do I need to install an app?',
+                'a' => 'No. It runs in the browser on desktop and phone.',
             ],
             [
                 'q' => 'Are the pictures in the KMZ shown?',
@@ -168,17 +236,45 @@ return [
         'ext' => 'fit',
         'landing' => '/fit-viewer',
         'slug' => 'fit-viewer',
-        'title' => 'Free Online FIT Viewer',
-        'description' => 'Open a FIT activity file on a map in your browser. See the GPS path, then download GPX, KML, KMZ, or CSV. Nothing is uploaded.',
-        'schemaName' => 'FIT Viewer',
+        'title' => 'Free Online FIT Viewer & Reader — Open and View FIT in 3D',
+        'description' => 'Open and read FIT activity files in your browser. View the GPS path in 2D or 3D on a map. Free online FIT viewer — no upload, no install.',
+        'schemaName' => 'FIT Viewer, Reader & 3D',
         'faq' => [
             [
                 'q' => 'Does the FIT file get uploaded?',
                 'a' => 'No. The browser reads the file where it already is. GPS Toolset does not receive a copy.',
             ],
             [
+                'q' => 'What is a FIT reader?',
+                'a' => 'A browser tool that opens and reads a .fit activity file and shows the GPS path on a map. Same job as a FIT viewer.',
+            ],
+            [
+                'q' => 'FIT reader vs FIT viewer?',
+                'a' => 'Same thing for most people; this page does both.',
+            ],
+            [
+                'q' => 'What is a 3D FIT viewer / 3D FIT reader?',
+                'a' => 'A browser tool that opens a .fit and shows the GPS path in 3D over a map. Same page as the 2D FIT viewer and reader.',
+            ],
+            [
+                'q' => 'How do I view a FIT file in 3D?',
+                'a' => 'Drop or choose a .fit. When the path is on the map, tap 3D. Orbit the view. Switch back with Map. Nothing is uploaded.',
+            ],
+            [
+                'q' => 'Does this work as a FIT 3D visualizer online?',
+                'a' => 'Yes. It runs in the browser with no install. The track sits over a street map. There is no terrain model and no satellite layer.',
+            ],
+            [
                 'q' => 'What is a FIT file?',
                 'a' => 'FIT is the activity file saved by many watches and bike computers. This page reads the GPS positions and draws the path.',
+            ],
+            [
+                'q' => 'How do I open a FIT file online?',
+                'a' => 'Drop a .fit or choose a file. The GPS path shows on the map. Then use Map / 3D, Stats or Graphs, or Export to save GPX, KML, KMZ, or CSV. Nothing is uploaded.',
+            ],
+            [
+                'q' => 'Do I need to install an app?',
+                'a' => 'No. It runs in the browser on desktop and phone.',
             ],
             [
                 'q' => 'Where are heart rate, cadence, and power?',

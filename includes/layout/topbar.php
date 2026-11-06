@@ -15,20 +15,20 @@ declare(strict_types=1);
         <span class="nav-link">Viewers</span>
         <div class="nav-sub" role="group" aria-label="Viewers">
           <a class="nav-sublink<?= nav_active('/gpx-viewer') ?>" href="/gpx-viewer">
-            <span class="nav-sublink-title">GPX</span>
-            <span class="nav-sublink-note">View a GPX file on the map</span>
+            <span class="nav-sublink-title">GPX reader</span>
+            <span class="nav-sublink-note">View a GPX file on a map</span>
           </a>
           <a class="nav-sublink<?= nav_active('/kml-viewer') ?>" href="/kml-viewer">
-            <span class="nav-sublink-title">KML</span>
-            <span class="nav-sublink-note">View a KML file on the map</span>
+            <span class="nav-sublink-title">KML reader</span>
+            <span class="nav-sublink-note">View a KML file on a map</span>
           </a>
           <a class="nav-sublink<?= nav_active('/kmz-viewer') ?>" href="/kmz-viewer">
-            <span class="nav-sublink-title">KMZ</span>
-            <span class="nav-sublink-note">View a KMZ file on the map</span>
+            <span class="nav-sublink-title">KMZ reader</span>
+            <span class="nav-sublink-note">View a KMZ file on a map</span>
           </a>
           <a class="nav-sublink<?= nav_active('/fit-viewer') ?>" href="/fit-viewer">
-            <span class="nav-sublink-title">FIT</span>
-            <span class="nav-sublink-note">View a FIT activity on the map</span>
+            <span class="nav-sublink-title">FIT reader</span>
+            <span class="nav-sublink-note">View a FIT activity on a map</span>
           </a>
           <p class="nav-subhead">More</p>
           <a class="nav-sublink<?= nav_active('/gopro-gps-extract') ?>" href="/gopro-gps-extract">

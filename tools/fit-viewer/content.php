@@ -13,8 +13,8 @@ $faq = $route['faq'];
   <section class="tool-hero">
     <div class="tool-wrap tool-hero-grid">
       <div>
-        <h1>FIT Viewer</h1>
-        <p class="tool-lead">Open a FIT activity file on a map. The GPS path stays on your device.</p>
+        <h1>Online FIT Viewer, Reader &amp; 3D</h1>
+        <p class="tool-lead">Open a FIT activity file on a map. The GPS path stays on your device. Switch Map / 3D to see the track in 3D over the street map. A free FIT reader; nothing is uploaded.</p>
         <ul class="tool-pills">
           <li>FIT viewer online</li>
           <li>Watch and bike computer</li>
@@ -58,7 +58,7 @@ $faq = $route['faq'];
         <li class="tool-step">
           <span class="tool-step-num">2</span>
           <h3>Read it here</h3>
-          <p>Drop the file. The browser reads the positions. Nothing is sent to a server.</p>
+          <p>Drop the file. The browser reads the positions. After it loads, use Map / 3D for a FIT 3D viewer over the street map. Nothing is sent to a server.</p>
         </li>
         <li class="tool-step">
           <span class="tool-step-num">3</span>
