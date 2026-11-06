@@ -16,7 +16,7 @@
  * view, metricsLayout). The mini map layer comes from map/tiles.js only.
  */
 import * as uiState from '../core/ui-state.js';
-import * as mapShell from '../map/map-shell.js';
+import * as viewSwitch from '../map/view-switch.js';
 import { createTileLayer } from '../map/tiles.js';
 import { displayLatLngs } from '../core/track.js';
 import {
@@ -49,24 +49,6 @@ function overlayOn(key) {
   var saved = uiState.load();
   var overlay = saved && saved.videoOverlay;
   return !!(overlay && overlay[key]);
-}
-
-function showViewSwitch(on) {
-  var switcher = document.getElementById('view-switch');
-  if (switcher) {
-    switcher.hidden = !on;
-  }
-}
-
-function paintViewSwitch(videoOn) {
-  var mapBtn = document.getElementById('view-map');
-  var videoBtn = document.getElementById('view-video');
-  if (mapBtn) {
-    mapBtn.setAttribute('aria-pressed', videoOn ? 'false' : 'true');
-  }
-  if (videoBtn) {
-    videoBtn.setAttribute('aria-pressed', videoOn ? 'true' : 'false');
-  }
 }
 
 function videoEl() {
@@ -474,30 +456,28 @@ function paintVideo() {
   showMiniMarker(fix.lat, fix.lon);
 }
 
-function applyView(mode, persist) {
-  var app = document.getElementById('map-app');
-  var stage = document.getElementById('video-stage');
+function pauseLeavingVideo() {
   var video = videoEl();
-  if (!app || !stage) {
-    return;
-  }
-  var want = mode === 'video' && !!videoUrl;
-  if (!want && video && !video.paused) {
+  if (video && !video.paused) {
     resumePlay = true;
     video.pause();
   }
-  app.classList.toggle('is-video', want);
-  stage.hidden = !want;
-  paintViewSwitch(want);
-  if (persist) {
-    uiState.update(function (current) {
-      current.view = want ? 'video' : 'map';
-    });
+  stopLoop();
+}
+
+function leaveVideoStage() {
+  var stage = document.getElementById('video-stage');
+  if (stage) {
+    stage.hidden = true;
   }
-  if (!want) {
-    stopLoop();
-    mapShell.invalidate();
-    return;
+  stopLoop();
+}
+
+function enterVideoStage() {
+  var stage = document.getElementById('video-stage');
+  var video = videoEl();
+  if (stage) {
+    stage.hidden = false;
   }
   syncMiniMap();
   paintVideo();
@@ -510,6 +490,10 @@ function applyView(mode, persist) {
   } else if (video && !video.paused) {
     startLoop();
   }
+}
+
+function applyView(mode, persist) {
+  viewSwitch.applyView(mode, persist);
 }
 
 function releaseVideo() {
@@ -525,8 +509,8 @@ function releaseVideo() {
     URL.revokeObjectURL(videoUrl);
     videoUrl = null;
   }
-  showViewSwitch(false);
-  applyView('map', false);
+  viewSwitch.setVideoAttached(false);
+  viewSwitch.applyView('map', false);
 }
 
 function attachVideoFile(file) {
@@ -538,19 +522,18 @@ function attachVideoFile(file) {
   video.src = videoUrl;
 }
 
-/** A Track is ready: draw it on the mini map and show the Map | Video switch. */
+/** A Track is ready: draw it on the mini map and show the Map | Video | 3D switch. */
 export function setTrack(next) {
   track = next;
   paintOverlayToggles();
   drawMiniTrack();
+  viewSwitch.setTrack(next);
+  viewSwitch.setVideoAttached(!!videoUrl);
   if (!videoUrl) {
-    showViewSwitch(false);
-    applyView('map', false);
+    viewSwitch.applyView('map', false);
     return;
   }
-  showViewSwitch(true);
-  var saved = uiState.load();
-  applyView(saved && saved.view === 'video' ? 'video' : 'map', false);
+  viewSwitch.restoreSaved();
 }
 
 function metricsLayout() {
@@ -641,21 +624,21 @@ function setVideoMenu(open) {
 /** Build the overlay toggles and bind the video controls (once). */
 export function init() {
   selfCheckSync();
-  var switcher = document.getElementById('view-switch');
   var toggles = document.getElementById('video-toggles');
   var metrics = document.getElementById('video-metrics');
   var video = videoEl();
-  if (!switcher || !toggles || !metrics || !video || switcher.getAttribute('data-bound')) {
+  if (!toggles || !metrics || !video || toggles.getAttribute('data-bound')) {
     return;
   }
-  switcher.setAttribute('data-bound', 'true');
-  document.getElementById('view-map').addEventListener('click', function () {
-    applyView('map', true);
-  });
-  document.getElementById('view-video').addEventListener('click', function () {
-    if (videoUrl) {
-      applyView('video', true);
-    }
+  toggles.setAttribute('data-bound', 'true');
+  viewSwitch.init();
+  viewSwitch.registerVideo({
+    canEnter: function () {
+      return !!videoUrl;
+    },
+    pauseLeaving: pauseLeavingVideo,
+    onLeave: leaveVideoStage,
+    onEnter: enterVideoStage
   });
 
   var i;
@@ -769,6 +752,7 @@ export function detach() {
 export function clearTrack() {
   track = null;
   clearMiniTrack();
+  viewSwitch.setTrack(null);
 }
 
 /** Repaint the overlays, for example after a unit change. */

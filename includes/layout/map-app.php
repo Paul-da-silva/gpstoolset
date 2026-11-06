@@ -49,12 +49,13 @@ $mapAppHidden = !empty($mapAppHidden);
 $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
 ?>
 <div class="map-app" id="map-app"<?php if ($mapAppHidden) : ?> hidden<?php endif; ?>>
-<?php if ($mapShellVideo) : ?>
   <div id="view-switch" class="view-switch" role="group" aria-label="View" hidden>
     <button type="button" id="view-map" aria-pressed="true">Map</button>
-    <button type="button" id="view-video" aria-pressed="false">Video</button>
-  </div>
+<?php if ($mapShellVideo) : ?>
+    <button type="button" id="view-video" aria-pressed="false" hidden>Video</button>
 <?php endif; ?>
+    <button type="button" id="view-3d" aria-pressed="false">3D</button>
+  </div>
   <div class="map-stage" id="map-stage">
     <div id="map" role="region" aria-label="Map"></div>
 
@@ -237,6 +238,10 @@ $mapAppFileInput = !isset($mapAppFileInput) || (bool) $mapAppFileInput;
     </div>
   </div>
 <?php endif; ?>
+
+  <div id="track3d-stage" class="track3d-stage" hidden>
+    <div id="track3d-host" class="track3d-host" role="region" aria-label="3D track"></div>
+  </div>
 
   <section id="graph-dock" class="graph-dock" aria-label="Graphs" hidden>
     <div

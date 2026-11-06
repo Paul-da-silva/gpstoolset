@@ -184,7 +184,7 @@ Source: `gpx-reader-kp-2026-11-05.csv` (Keyword Planner, via SEO bot master Run 
 - `gpx reader` and `gpx viewer` both 1K–10K (France), identical change columns → Planner close-variant grouping. Worldwide Run 1 had `gpx viewer` at **10K–100K**. Don't treat France buckets as global.
 - Decision (2026-11-05): **no separate `/gpx-reader` page**; reader/viewer web intent → `/gpx-viewer` (title/H1/intro/FAQ).
 - App / download / Android / iPhone / Windows / Mac / PC terms: **skip as primary** (wrong intent for a browser tool).
-- 3D terms (~10–100/mo each, France) → **future 3D track viewer** on the roadmap.
+- 3D terms (~10–100/mo each, France) → **`/gpx-viewer`** (3D Map|3D UI shipped 2026-11-06; no separate `/gpx-3d` page). Also target Paul's wording **gpx reader 3d** (not in Planner export; first-pass).
 - Elevation / profile / visualiser terms → secondary only on `/gpx-viewer`.
 
 | Keyword | Avg monthly searches (range) | Competition | 3-month change | YoY change | Target page / status |
@@ -194,8 +194,9 @@ Source: `gpx-reader-kp-2026-11-05.csv` (Keyword Planner, via SEO bot master Run 
 | gpx file viewer online | 100–1K | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
 | gpx online viewer | 100–1K | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
 | gpx reader online | 100–1K | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
-| 3d gpx viewer | 10–100 | Low | 0% | 0% | future 3D track viewer (roadmap) |
-| 3d gpx visualizer | 10–100 | — | -100% | 0% | future 3D track viewer (roadmap) |
+| gpx reader 3d | — | — | — | — | /gpx-viewer (3D cluster; Paul wording, not in FR Planner export) |
+| 3d gpx viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (3D cluster) |
+| 3d gpx visualizer | 10–100 | — | -100% | 0% | /gpx-viewer (3D cluster) |
 | app gpx viewer | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
 | app to open gpx file | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
 | app to read gpx files | 10–100 | — | -100% | -100% | skip (app/download/OS intent) |
@@ -221,9 +222,9 @@ Source: `gpx-reader-kp-2026-11-05.csv` (Keyword Planner, via SEO bot master Run 
 | gps file reader | 10–100 | — | 0% | -100% | /gpx-viewer (reader+viewer cluster) |
 | gps file viewer | 10–100 | Low | ∞ | 0% | /gpx-viewer (reader+viewer cluster) |
 | gps viewer online | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
-| gpx 3d viewer | 10–100 | Low | 0% | 0% | future 3D track viewer (roadmap) |
-| gpx 3d viewer online | 10–100 | — | 0% | 0% | future 3D track viewer (roadmap) |
-| gpx 3d visualizer | 10–100 | Low | 0% | 0% | future 3D track viewer (roadmap) |
+| gpx 3d viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (3D cluster) |
+| gpx 3d viewer online | 10–100 | — | 0% | 0% | /gpx-viewer (3D cluster) |
+| gpx 3d visualizer | 10–100 | Low | 0% | 0% | /gpx-viewer (3D cluster) |
 | gpx data viewer | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
 | gpx elevation viewer | 10–100 | — | -100% | -100% | secondary on /gpx-viewer (elevation/profile) |
 | gpx file reader | 10–100 | Low | 0% | 0% | /gpx-viewer (reader+viewer cluster) |
@@ -236,7 +237,7 @@ Source: `gpx-reader-kp-2026-11-05.csv` (Keyword Planner, via SEO bot master Run 
 | gpx reader app | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
 | gpx route viewer | 10–100 | — | -100% | 0% | /gpx-viewer (reader+viewer cluster) |
 | gpx track viewer | 10–100 | Low | 0% | ∞ | /gpx-viewer (reader+viewer cluster) |
-| gpx viewer 3d | 10–100 | Low | 0% | 0% | future 3D track viewer (roadmap) |
+| gpx viewer 3d | 10–100 | Low | 0% | 0% | /gpx-viewer (3D cluster) |
 | gpx viewer android | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
 | gpx viewer app | 10–100 | Low | 0% | 0% | skip (app/download/OS intent) |
 | gpx viewer app android | 10–100 | Low | ∞ | ∞ | skip (app/download/OS intent) |
@@ -277,6 +278,7 @@ Source: `gpx-reader-kp-2026-11-05.csv` (Keyword Planner, via SEO bot master Run 
 
 - 2026-11-04: created from all runs so far.
 - 2026-11-05: merged Run 4 (gpx reader, France only); GoPro rows → `/gopro-gps-extract`; telemetry keywords allowed; 3D terms → roadmap.
+- 2026-11-06: 3D UI shipped (Map|3D); retarget 3D cluster (+ `gpx reader 3d`) to `/gpx-viewer`; drop separate “future 3D track viewer” page-map row.
 
 ## Page map
 
@@ -285,8 +287,7 @@ Titles ≤60 chars; no brand names in URL or title brand-stuffing beyond necessa
 | Page | Primary (Planner) | Secondaries | Suggested title (≤60) |
 |---|---|---|---|
 | `/gopro-gps-extract` | `gopro gps extractor` **10–100** | `gopro gps data` **100–1K** · `extract gps from gopro video` **10–100** · `gopro gpx` **10–100** · (`video gps extractor` GSC only, not in Planner) | GoPro GPS Extractor — Free, No Upload |
-| `/gpx-viewer` | `gpx viewer` **10K–100K** (worldwide) + `gpx reader` **1K–10K** (France) | `gpx viewer online` **1K–10K** · `gpx reader online` / `gpx online viewer` / `gpx file viewer online` **100–1K** (France) · free gpx reader · open gpx file online · `gpx to csv` **100–1K** | Free Online GPX Viewer & Reader |
-| future 3D track viewer (roadmap) | `3d gpx viewer` **10–100** (France) | `gpx 3d viewer online` · `gpx 3d visualizer` · `gpx viewer 3d` **10–100** | — |
+| `/gpx-viewer` | `gpx viewer` **10K–100K** (worldwide) + `gpx reader` **1K–10K** (France) | `gpx viewer online` **1K–10K** · `gpx reader online` / `gpx online viewer` / `gpx file viewer online` **100–1K** (France) · free gpx reader · open gpx file online · `gpx to csv` **100–1K** · **3D:** `3d gpx viewer` / `gpx 3d viewer` / `gpx 3d viewer online` / `gpx 3d visualizer` / `gpx viewer 3d` **10–100** (France) · `gpx reader 3d` (Paul) | Free Online GPX Viewer & Reader — … in 3D |
 | `/gpx-editor` | `gpx editor online` **1K–10K** | split / trim / simplify / reverse mostly **10–100** | Free Online GPX / Track Editor |
 | `/my-coordinates` | `my coordinates` **10K–100K** | `gps coordinates` **10K–100K** · `lat long finder` **10K–100K** · `find coordinates on map` **1K–10K** | My Coordinates — Find Lat & Long on a Map |
 | `/measure-distance` | `measure distance on map` **10K–100K** | `distance calculator map` **10K–100K** · `route distance calculator` **1K–10K** | Measure Distance on a Map — Free Tool |
@@ -432,7 +433,7 @@ Paste file: `gpstoolset-guides-kw-list.txt` (≤60 lines; keep beside this doc o
 ## Decisions / bans
 
 - Inbound 301: **only** the sibling product's GoPro page → `/gopro-gps-extract` (live 2026-11-05). Its GPX and FIT viewers stay there with links out.
-- No separate `/gpx-reader` page; reader cluster lives on `/gpx-viewer`.
+- No separate `/gpx-reader` or `/gpx-3d` page; reader + 3D clusters live on `/gpx-viewer`.
 - Never name the GNSS logger brand; say “GNSS logger CSV exports”.
 - No brand names in URLs except `/gopro-gps-extract`.
 - “Telemetry extractor” / “GoPro telemetry” = allowed target keywords.

@@ -57,7 +57,7 @@ body.is-map .topbar-inner {
 }
 
 .map-app:has(#view-switch:not([hidden])) .video-metrics:not(.is-column) {
-  left: 12.5rem;
+  left: 16rem;
 }
 
 .view-switch button {
@@ -984,8 +984,52 @@ body.is-resizing #map {
 }
 
 .map-app.is-video .map-stage,
-.map-app.is-video .graph-dock {
+.map-app.is-video .graph-dock,
+.map-app.is-video .track3d-stage {
   display: none;
+}
+
+.map-app.is-3d .map-stage,
+.map-app.is-3d .graph-dock,
+.map-app.is-3d .video-stage {
+  display: none;
+}
+
+.track3d-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--bg);
+  touch-action: none;
+}
+
+.track3d-host,
+.track3d-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.track3d-credit {
+  position: absolute;
+  z-index: 2;
+  right: 0.5rem;
+  bottom: 0.35rem;
+  margin: 0;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--text);
+  font-size: 0.7rem;
+  line-height: 1.3;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.track3d-credit:hover {
+  text-decoration: underline;
 }
 
 .video-stage {

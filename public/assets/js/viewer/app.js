@@ -10,6 +10,7 @@ import * as mapShell from '../map/map-shell.js';
 import * as trackLayer from '../map/track-layer.js';
 import * as charts from '../map/track-charts.js';
 import * as panels from '../map/panels.js';
+import * as viewSwitch from '../map/view-switch.js';
 
 var doc = null;
 var fileLabel = '';
@@ -17,6 +18,7 @@ var active = 0;
 var track = null;
 var mounted = false;
 var onUnits = null;
+var viewsEnabled = true;
 
 function segmentAt(index) {
   if (!doc || !doc.segments || !doc.segments[index]) {
@@ -126,6 +128,13 @@ function paintMap(refit) {
     panels.setExportEnabled(true, exportNote());
     mapShell.setEmpty(false);
     charts.paintSeriesAvailability();
+    if (viewsEnabled) {
+      var firstTrack = !viewSwitch.hasTrack();
+      viewSwitch.setTrack(track);
+      if (!document.getElementById('view-video') && firstTrack) {
+        viewSwitch.restoreSaved();
+      }
+    }
   } else {
     track = null;
     trackLayer.removeLayers();
@@ -133,6 +142,9 @@ function paintMap(refit) {
     panels.renderStats(null);
     panels.setExportEnabled(!!waypoints.length, exportNote());
     mapShell.setEmpty(!waypoints.length);
+    if (viewsEnabled) {
+      viewSwitch.clear();
+    }
   }
   trackLayer.drawMarks(waypoints);
   if (refit !== false && (points.length || waypoints.length)) {
@@ -151,7 +163,8 @@ function onExport(kind) {
 
 /**
  * Prepare charts, export, and the dock. Call once, before open().
- * options: { noun, exports: [{ id, label }], onUnits }
+ * options: { noun, exports: [{ id, label }], onUnits, views }
+ * views: false disables the Map | 3D switcher (editor).
  */
 export function mount(options) {
   if (mounted) {
@@ -160,6 +173,10 @@ export function mount(options) {
   mounted = true;
   var opts = options || {};
   onUnits = opts.onUnits;
+  viewsEnabled = opts.views !== false;
+  if (viewsEnabled) {
+    viewSwitch.init();
+  }
   charts.mountCharts(opts.noun || 'a file');
   panels.mount(opts.noun || 'a file', opts.exports);
   panels.bindUnits(function () {
@@ -228,6 +245,10 @@ export function clear() {
   fileLabel = '';
   showName('');
   paintParts();
+  if (viewsEnabled) {
+    viewSwitch.clear();
+    viewSwitch.applyView('map', false);
+  }
   if (!mapShell.getMap()) {
     return;
   }

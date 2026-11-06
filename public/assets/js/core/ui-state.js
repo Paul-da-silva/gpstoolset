@@ -131,7 +131,11 @@ function sanitize(raw) {
     next.videoMiniMap = { x: mx, y: my, w: mw, h: mh };
   }
 
-  next.view = data.view === 'video' ? 'video' : 'map';
+  if (data.view === 'video' || data.view === '3d') {
+    next.view = data.view;
+  } else {
+    next.view = 'map';
+  }
   next.metricsLayout = data.metricsLayout === 'column' ? 'column' : 'row';
   var overlay = data.videoOverlay && typeof data.videoOverlay === 'object' ? data.videoOverlay : {};
   Object.keys(next.videoOverlay).forEach(function (key) {

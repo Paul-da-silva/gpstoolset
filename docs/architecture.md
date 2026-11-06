@@ -11,7 +11,7 @@ Browser-side GPS file tools (no uploads). Three **generic modules** plus SEO lan
 
 | Module | Path | SEO landings hand off from |
 |---|---|---|
-| Viewer | `public/assets/js/viewer/` | `/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`, `/gopro-gps-extract` (map); GoPro also has a Video view |
+| Viewer | `public/assets/js/viewer/` | `/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`, `/gopro-gps-extract` (map); Map \| 3D via `map/track-3d.js` + `map/view-switch.js`; GoPro adds Video |
 | Editor | `public/assets/js/editor/` | `/gpx-editor` |
 | Converter | `public/assets/js/converter/` | `/convert`, `/convert/<pair>` |
 
