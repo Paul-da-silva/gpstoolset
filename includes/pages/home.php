@@ -29,11 +29,11 @@ if ($faq !== []) {
   <p class="privacy-line">Your file never leaves your device.</p>
   <button type="button" class="dropzone" id="home-drop">
     <span class="dropzone-title">Drop a file here</span>
-    <span class="dropzone-note">or choose one. GPX, KML, KMZ, or FIT.</span>
+    <span class="dropzone-note">or choose one. GPX, KML, KMZ, FIT, or UBX.</span>
   </button>
   <p class="dropzone-error" id="home-drop-error" hidden></p>
   <p class="home-gopro">GoPro video? Open the <a href="/gopro-gps-extract">GoPro GPS extractor</a> and drop it there.</p>
-  <input type="file" id="home-file" accept=".gpx,.kml,.kmz,.fit,application/gpx+xml,application/vnd.google-earth.kml+xml,application/vnd.google-earth.kmz" hidden>
+  <input type="file" id="home-file" accept=".gpx,.kml,.kmz,.fit,.ubx,application/gpx+xml,application/vnd.google-earth.kml+xml,application/vnd.google-earth.kmz" hidden>
   <?php render_ad('ad-home-mid'); ?>
 
   <section class="home-section" aria-labelledby="home-tools-heading">
@@ -44,6 +44,7 @@ if ($faq !== []) {
       <li><a href="/kml-viewer">KML viewer</a> — lines and placemarks from Google Earth / Maps</li>
       <li><a href="/kmz-viewer">KMZ viewer</a> — zipped KML packages</li>
       <li><a href="/fit-viewer">FIT viewer</a> — sports-watch and bike-computer activity files</li>
+      <li><a href="/ubx-viewer">UBX viewer</a> — u-blox binary GNSS logs</li>
     </ul>
   </section>
 
@@ -51,8 +52,8 @@ if ($faq !== []) {
     <h2 id="home-convert-heading">Convert and edit</h2>
     <p>Change format or clean up a path, then download the result. Everything runs in this browser.</p>
     <ul class="home-link-list">
-      <li><a href="/convert">GPS file converter</a> — GPX, KML, KMZ, and FIT</li>
-      <li><a href="/convert/kml-to-gpx">KML to GPX</a> · <a href="/convert/gpx-to-kml">GPX to KML</a> · <a href="/convert/fit-to-gpx">FIT to GPX</a></li>
+      <li><a href="/convert">GPS file converter</a> — GPX, KML, KMZ, FIT, and UBX</li>
+      <li><a href="/convert/kml-to-gpx">KML to GPX</a> · <a href="/convert/gpx-to-kml">GPX to KML</a> · <a href="/convert/fit-to-gpx">FIT to GPX</a> · <a href="/convert/ubx-to-gpx">UBX to GPX</a></li>
       <li><a href="/convert/kmz-to-gpx">KMZ to GPX</a> · <a href="/convert/gpx-to-kmz">GPX to KMZ</a> · <a href="/convert/kmz-to-kml">KMZ to KML</a></li>
       <li><a href="/gpx-editor">GPX editor</a> — trim, simplify, reverse, merge, or split a track</li>
     </ul>
@@ -69,7 +70,7 @@ if ($faq !== []) {
 
   <section class="home-section" aria-labelledby="home-how-heading">
     <h2 id="home-how-heading">How it works</h2>
-    <p>Drop a GPX, KML, KMZ, or FIT file above. The browser detects the format and opens the matching tool. Parsing stays on your device — there is no account and no upload. Map pictures load from OpenStreetMap so the path can be drawn; your GPS file is not sent with those tile requests.</p>
+    <p>Drop a GPX, KML, KMZ, FIT, or UBX file above. The browser detects the format and opens the matching tool. Parsing stays on your device — there is no account and no upload. Map pictures load from OpenStreetMap so the path can be drawn; your GPS file is not sent with those tile requests.</p>
     <p>For a GoPro clip that recorded GPS, use the <a href="/gopro-gps-extract">GoPro GPS extractor</a>. That page reads the track in the video and can save GPX, CSV, or KML.</p>
   </section>
 
@@ -96,6 +97,7 @@ if ($faq !== []) {
       <li><a href="/guides/kml-file">KML</a></li>
       <li><a href="/guides/kmz-file">KMZ</a></li>
       <li><a href="/guides/fit-file">FIT</a></li>
+      <li><a href="/guides/ubx-file">UBX</a></li>
       <li><a href="/guides/gpx-vs-kml">GPX vs KML</a></li>
       <li><a href="/guides/gps-file-formats">GPS file formats</a></li>
     </ul>

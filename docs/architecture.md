@@ -11,11 +11,13 @@ Browser-side GPS file tools (no uploads). Three **generic modules** plus SEO lan
 
 | Module | Path | SEO landings hand off from |
 |---|---|---|
-| Viewer | `public/assets/js/viewer/` | `/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`, `/gopro-gps-extract` (map); Map \| 3D via `map/track-3d.js` + `map/view-switch.js`; GoPro adds Video |
+| Viewer | `public/assets/js/viewer/` | `/gpx-viewer`, `/kml-viewer`, `/kmz-viewer`, `/fit-viewer`, `/ubx-viewer`, `/gopro-gps-extract` (map); Map \| 3D via `map/track-3d.js` + `map/view-switch.js`; GoPro adds Video |
 | Editor | `public/assets/js/editor/` | `/gpx-editor` |
 | Converter | `public/assets/js/converter/` | `/convert`, `/convert/<pair>` |
 
-**Menu:** Viewers (GPX · KML · KMZ · FIT · More → GoPro) · Tools (Coordinate converter · Measure distance · Antipodes · Converter).
+**Menu:** Viewers (GPX · KML · KMZ · FIT · UBX · More → GoPro) · Tools (Coordinate converter · Measure distance · Antipodes · Converter).
+
+**Formats:** GPX · KML · KMZ · FIT · UBX (read-only; `parsers/ubx.js` scans `B5 62` frames, NAV-PVT / NAV-POSLLH). Detection magic types in `detect.js`: `xml-root`, `zip`, `ascii`, `ubx-frame`.
 
 **Registries (one place each):**
 

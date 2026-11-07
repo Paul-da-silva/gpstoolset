@@ -8,7 +8,7 @@ $convertCardTitle = 'Convert a file';
 $convertDropTitle = 'Drop a FIT file here';
 $convertDropNote = 'or choose a file. Nothing is uploaded.';
 $convertChoose = 'Choose FIT';
-$convertAccept = '.fit,.gpx,.kml,.kmz';
+$convertAccept = '.fit,.ubx,.gpx,.kml,.kmz';
 $convertDownload = 'Download GPX';
 $convertView = 'View on the map';
 ?>

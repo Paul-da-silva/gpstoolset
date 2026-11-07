@@ -11,7 +11,7 @@ declare(strict_types=1);
     <input type="checkbox" id="nav-toggle" class="nav-toggle">
     <label for="nav-toggle" class="nav-burger"><span class="nav-burger-bar"></span>Menu</label>
     <nav class="site-nav" aria-label="Primary">
-      <div class="nav-group<?= nav_active('/gpx-viewer') ?><?= nav_active('/kml-viewer') ?><?= nav_active('/kmz-viewer') ?><?= nav_active('/fit-viewer') ?><?= nav_active('/gopro-gps-extract') ?>">
+      <div class="nav-group<?= nav_active('/gpx-viewer') ?><?= nav_active('/kml-viewer') ?><?= nav_active('/kmz-viewer') ?><?= nav_active('/fit-viewer') ?><?= nav_active('/ubx-viewer') ?><?= nav_active('/gopro-gps-extract') ?>">
         <span class="nav-link">Viewers</span>
         <div class="nav-sub" role="group" aria-label="Viewers">
           <a class="nav-sublink<?= nav_active('/gpx-viewer') ?>" href="/gpx-viewer">
@@ -29,6 +29,10 @@ declare(strict_types=1);
           <a class="nav-sublink<?= nav_active('/fit-viewer') ?>" href="/fit-viewer">
             <span class="nav-sublink-title">FIT reader</span>
             <span class="nav-sublink-note">View a FIT activity on a map</span>
+          </a>
+          <a class="nav-sublink<?= nav_active('/ubx-viewer') ?>" href="/ubx-viewer">
+            <span class="nav-sublink-title">UBX reader</span>
+            <span class="nav-sublink-note">View a u-blox UBX log on a map</span>
           </a>
           <p class="nav-subhead">More</p>
           <a class="nav-sublink<?= nav_active('/gopro-gps-extract') ?>" href="/gopro-gps-extract">
@@ -54,7 +58,7 @@ declare(strict_types=1);
           </a>
           <a class="nav-sublink<?= nav_active('/convert') ?>" href="/convert">
             <span class="nav-sublink-title">Converter</span>
-            <span class="nav-sublink-note">GPX, KML, KMZ, and FIT</span>
+            <span class="nav-sublink-note">GPX, KML, KMZ, FIT, and UBX</span>
           </a>
         </div>
       </div>

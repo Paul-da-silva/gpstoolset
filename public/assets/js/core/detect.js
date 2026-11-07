@@ -4,7 +4,7 @@
  *
  * An extension that names a format wins, except .xml, .zip, .txt, and a
  * missing extension: those follow the magic hint (xml root, ZIP header,
- * or the .FIT signature).
+ * the .FIT signature, or a full UBX frame with a valid checksum).
  */
 
 function list() {
@@ -86,6 +86,35 @@ function isZip(bytes) {
     bytes[2] === 0x03 && bytes[3] === 0x04;
 }
 
+/** True when the head contains one full UBX frame (B5 62…) with a valid checksum. */
+function hasUbxFrame(bytes) {
+  var i = 0;
+  while (i + 8 <= bytes.length) {
+    if (bytes[i] !== 0xb5 || bytes[i + 1] !== 0x62) {
+      i += 1;
+      continue;
+    }
+    var length = bytes[i + 4] | (bytes[i + 5] << 8);
+    var end = i + 6 + length + 2;
+    if (end > bytes.length) {
+      i += 1;
+      continue;
+    }
+    var cka = 0;
+    var ckb = 0;
+    var j;
+    for (j = i + 2; j < i + 6 + length; j++) {
+      cka = (cka + bytes[j]) & 0xff;
+      ckb = (ckb + cka) & 0xff;
+    }
+    if (bytes[end - 2] === cka && bytes[end - 1] === ckb) {
+      return true;
+    }
+    i += 1;
+  }
+  return false;
+}
+
 function magicMatches(bytes, magic) {
   if (!magic || !magic.type) {
     return false;
@@ -98,6 +127,9 @@ function magicMatches(bytes, magic) {
   }
   if (magic.type === 'ascii') {
     return asciiAt(bytes, Number(magic.offset) || 0, magic.value);
+  }
+  if (magic.type === 'ubx-frame') {
+    return hasUbxFrame(bytes);
   }
   return false;
 }

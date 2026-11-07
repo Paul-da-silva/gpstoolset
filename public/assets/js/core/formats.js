@@ -122,7 +122,7 @@ export function parseWith(format, file) {
 export function parseFile(file) {
   return detect(file).then(function (format) {
     if (!format) {
-      throw new Error('Drop a GPX, KML, KMZ, or FIT file.');
+      throw new Error('Drop a GPX, KML, KMZ, FIT, or UBX file.');
     }
     return parseWith(format, file);
   });

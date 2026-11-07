@@ -12,10 +12,10 @@ return [
     'gps-file-formats' => [
         'slug' => 'gps-file-formats',
         'title' => 'GPS File Formats — GPX, KML, KMZ, FIT & More',
-        'description' => 'Quick map of GPS file formats: GPX, KML, KMZ, FIT, NMEA and more. Pick a format guide or convert in the browser with no upload.',
+        'description' => 'Quick map of GPS file formats: GPX, KML, KMZ, FIT, UBX, NMEA and more. Pick a format guide or convert in the browser with no upload.',
         'inSitemap' => true,
         'published' => true,
-        'updated' => '2026-11-03',
+        'updated' => '2026-11-07',
         'hub' => true,
         'content' => 'includes/guides/gps-file-formats.php',
         'internal_links' => [
@@ -24,11 +24,13 @@ return [
                 '/kml-viewer',
                 '/kmz-viewer',
                 '/fit-viewer',
+                '/ubx-viewer',
                 '/gpx-editor',
                 '/convert/kmz-to-gpx',
                 '/convert/kml-to-gpx',
                 '/convert/gpx-to-kml',
                 '/convert/fit-to-gpx',
+                '/convert/ubx-to-gpx',
                 '/gopro-gps-extract',
             ],
             'guides' => [
@@ -37,6 +39,7 @@ return [
                 '/guides/kml-file',
                 '/guides/kml-vs-kmz',
                 '/guides/fit-file',
+                '/guides/ubx-file',
                 '/guides/nmea-0183',
                 '/guides/gpx-vs-kml',
                 '/guides/coordinate-formats',
@@ -130,6 +133,27 @@ return [
             'guides' => [
                 '/guides/gpx-file',
                 '/guides/gps-file-formats',
+            ],
+        ],
+    ],
+    'ubx-file' => [
+        'slug' => 'ubx-file',
+        'title' => 'What Is a UBX File? Open u-blox GPS Logs Online',
+        'description' => 'A UBX file is a binary log from u-blox GNSS receivers. Learn what the frames contain and how to open or convert UBX to GPX in your browser—no upload.',
+        'inSitemap' => true,
+        'published' => true,
+        'updated' => '2026-11-07',
+        'content' => 'includes/guides/ubx-file.php',
+        'internal_links' => [
+            'tools' => [
+                '/ubx-viewer',
+                '/convert/ubx-to-gpx',
+                '/gpx-viewer',
+                '/gpx-editor',
+            ],
+            'guides' => [
+                '/guides/gps-file-formats',
+                '/guides/gpx-file',
             ],
         ],
     ],

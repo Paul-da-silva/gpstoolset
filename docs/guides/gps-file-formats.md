@@ -11,12 +11,14 @@ internal_links:
     - /kml-viewer
     - /kmz-viewer
     - /fit-viewer
+    - /ubx-viewer
     - /gpx-editor
     - /kmz-viewer
     - /convert/kmz-to-gpx
     - /convert/kml-to-gpx
     - /convert/gpx-to-kml
     - /convert/fit-to-gpx
+    - /convert/ubx-to-gpx
     - /convert/kmz-to-gpx
     - /gopro-gps-extract
   guides:
@@ -25,6 +27,7 @@ internal_links:
     - /guides/kml-file
     - /guides/kml-vs-kmz
     - /guides/fit-file
+    - /guides/ubx-file
     - /guides/nmea-0183
     - /guides/gpx-vs-kml
     - /guides/coordinate-formats
@@ -43,6 +46,7 @@ Pick a format below for the full guide, or jump straight to a converter. This pa
 | **KMZ** | ZIP package of KML (usually `doc.kml` + optional images) | [/guides/kmz-file](/guides/kmz-file) | [/kmz-viewer](/kmz-viewer) · [/convert/kmz-to-gpx](/convert/kmz-to-gpx) |
 | **KML** | Google Earth / Maps geographic markup (XML) | [/guides/kml-file](/guides/kml-file) | [/kml-viewer](/kml-viewer) · [/convert/kml-to-gpx](/convert/kml-to-gpx) |
 | **FIT** | Binary sports-activity file from many watches | [/guides/fit-file](/guides/fit-file) | [/fit-viewer](/fit-viewer) · [/convert/fit-to-gpx](/convert/fit-to-gpx) |
+| **UBX** | Binary log from u-blox GNSS receivers (`B5 62` frames) | [/guides/ubx-file](/guides/ubx-file) | [/ubx-viewer](/ubx-viewer) · [/convert/ubx-to-gpx](/convert/ubx-to-gpx) |
 | **NMEA 0183** | Line-based GPS text sentences from receivers / loggers | [/guides/nmea-0183](/guides/nmea-0183) | GPX via future converter · [/gpx-viewer](/gpx-viewer) |
 | **TCX** | Older XML activity format (Training Center family) | See FIT guide | Export GPX from your platform when possible |
 | **Video GPS** | GPS embedded in action-cam video (e.g. GoPro) | — | [/gopro-gps-extract](/gopro-gps-extract) |
@@ -62,7 +66,7 @@ Native activity files are often **FIT**. Convert for maps with [/convert/fit-to-
 
 ## Logger & video exports
 
-Action-cam GPS: [/gopro-gps-extract](/gopro-gps-extract). Raw receiver text: [/guides/nmea-0183](/guides/nmea-0183). Spreadsheet exports from GNSS loggers: converter planned (never upload tracks you care about to random sites).
+u-blox binary logs: [/ubx-viewer](/ubx-viewer) · [/convert/ubx-to-gpx](/convert/ubx-to-gpx) · [/guides/ubx-file](/guides/ubx-file). Action-cam GPS: [/gopro-gps-extract](/gopro-gps-extract). Raw receiver text: [/guides/nmea-0183](/guides/nmea-0183). Spreadsheet exports from GNSS loggers: converter planned (never upload tracks you care about to random sites).
 
 ## Convert without uploading
 
@@ -72,6 +76,7 @@ Action-cam GPS: [/gopro-gps-extract](/gopro-gps-extract). Raw receiver text: [/g
 | KMZ → GPX | [/convert/kmz-to-gpx](/convert/kmz-to-gpx) |
 | GPX → KML | [/convert/gpx-to-kml](/convert/gpx-to-kml) |
 | FIT → GPX | [/convert/fit-to-gpx](/convert/fit-to-gpx) |
+| UBX → GPX | [/convert/ubx-to-gpx](/convert/ubx-to-gpx) |
 | View GPX | [/gpx-viewer](/gpx-viewer) |
 | Edit track | [/gpx-editor](/gpx-editor) |
 | Video → track | [/gopro-gps-extract](/gopro-gps-extract) |
@@ -85,4 +90,5 @@ Action-cam GPS: [/gopro-gps-extract](/gopro-gps-extract). Raw receiver text: [/g
 - [/guides/nmea-0183](/guides/nmea-0183) — NMEA 0183  
 - [/guides/gpx-vs-kml](/guides/gpx-vs-kml) — GPX vs KML  
 - [/guides/fit-file](/guides/fit-file) — What is a FIT file  
+- [/guides/ubx-file](/guides/ubx-file) — What is a UBX file  
 - [/guides/coordinate-formats](/guides/coordinate-formats) — Coordinate formats  

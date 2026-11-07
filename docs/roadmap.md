@@ -10,7 +10,7 @@ Runs on the shared Kuiper PHP shell. Follow `.cursor/rules/` `00`–`07` + `10-g
 
 - Free GPS file tools in the browser: parse on the device (no uploads), Leaflet + OSM street tiles only (no satellite — cost).
 - Three generic modules — `viewer/` · `editor/` · `converter/` — plus per-format SEO landings that parse a file and hand a shared track model to the module.
-- Menu: Viewers (GPX, KML, KMZ, FIT, More → GoPro) · Tools (Coordinate converter, Measure distance, Antipodes, Converter).
+- Menu: Viewers (GPX, KML, KMZ, FIT, UBX, More → GoPro) · Tools (Coordinate converter, Measure distance, Antipodes, Converter).
 - Format registry (`config/formats.php`): a new format or convert pair is config + content, not new JS.
 - Brand: Clear · Private · Practical. Tokens teal `#115e59` · orange `#c2410c`. Map tools = full-screen map + slim top bar; graphs dock under the map (`gpstoolset.ui.v1`).
 - Hard rules: no email / `mailto:` · no contact page · Privacy/About in the footer only · thin borders OK, no heavy one-sided accent borders · OSM credit on the map / 3D stage only · never git commit (Paul only) · ads off until traffic · no demo coordinates near Paul (use the Eiffel Tower `48.8584, 2.2945`) · never name competitor logger brands; say “GNSS logger CSV exports”.
@@ -25,6 +25,7 @@ Runs on the shared Kuiper PHP shell. Follow `.cursor/rules/` `00`–`07` + `10-g
 - **`/my-coordinates`** (planned; primary keyword “my coordinates”).
 - **Guides Wave B** (educational): `/guides/how-gps-works`, `/guides/gnss-vs-gps`, `/guides/gps-accuracy`, optional `/guides/gps-history`. Head terms stay unverified until a Keyword Planner paste is checked.
 - **Time zone tools:** zone converter with DST, world clock / day-night map, time zone from coordinates, UTC vs GPS time helpers.
+- **Sun & moon tools:** sunrise, sunset, golden hour, and moon phase — computed in the browser on gpstoolset (not a separate Kuiper site). Lives alongside the time zone tools.
 - **More convert pairs** / NMEA · CSV once those formats are in the registry.
 - **3D polish** (not blocking): vertical exaggeration so heights don’t look flat on Web Mercator; hide the unused Map/3D switcher markup on `/gpx-editor`; lazy-import `track-3d.js` (Three.js itself is already lazy).
 - **Elevation / profile view** as a real UI before chasing “gpx elevation viewer” / “gpx profile viewer” in copy.
@@ -39,6 +40,7 @@ Runs on the shared Kuiper PHP shell. Follow `.cursor/rules/` `00`–`07` + `10-g
 
 ## Done (recent)
 
+- **UBX reader (2026-11-07):** `/ubx-viewer`, `/convert/ubx-to-gpx`, `/guides/ubx-file`. JS parser scans `B5 62` frames, checksums, NAV-PVT (NAV-POSLLH fallback); mixed UBX+NMEA OK; no RXM/RTK; magic type `ubx-frame` in `detect.js`. Read-only (no editor write-back).
 - Kuiper shared-core move (repo is `/var/www/kuiper/gpstoolset`; site-specific code stays out of `core/*`).
 - FlySync GoPro page 301 → `/gopro-gps-extract` (live 2026-11-05), after a parity check. GoPro FAQ names HERO5 and newer (including MAX) and excludes HERO12; stats include max vertical speed and a GPS coverage note.
 - **3D track view (2026-11-06):** Map | 3D on format viewers; Map | Video | 3D on GoPro; `map/track-3d.js` + vendored three@0.160.1 (lazy); street tiles as a flat plane; track as a `#0369a1` tube; no 3D in the editor. Review fixes landed (WebGL `forceContextLoss`, tile cap 64, failed load returns to Map) — Code Reviewer signed off.

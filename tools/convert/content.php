@@ -6,9 +6,9 @@ declare(strict_types=1);
 $faq = $route['faq'];
 $convertCardTitle = 'Convert a file';
 $convertDropTitle = 'Drop a GPS file here';
-$convertDropNote = 'GPX, KML, KMZ, or FIT. Nothing is uploaded.';
+$convertDropNote = 'GPX, KML, KMZ, FIT, or UBX. Nothing is uploaded.';
 $convertChoose = 'Choose a file';
-$convertAccept = '.gpx,.kml,.kmz,.fit';
+$convertAccept = '.gpx,.kml,.kmz,.fit,.ubx';
 $convertDownload = 'Download';
 $convertView = 'View on the map';
 ?>
@@ -21,7 +21,7 @@ $convertView = 'View on the map';
     <div class="tool-wrap tool-hero-grid">
       <div>
         <h1>GPS file converter</h1>
-        <p class="tool-lead">Convert GPX, KML, KMZ, and FIT in the browser. Pick the formats. The file stays on your device.</p>
+        <p class="tool-lead">Convert GPX, KML, KMZ, FIT, and UBX in the browser. Pick the formats. The file stays on your device.</p>
         <ul class="tool-pills">
           <li>Any GPS file in</li>
           <li>GPX, KML, or KMZ out</li>
@@ -42,7 +42,7 @@ $convertView = 'View on the map';
         <li class="tool-step">
           <span class="tool-step-num">1</span>
           <h3>Choose the formats</h3>
-          <p>From is the file you have. To is the file you want. FIT can be read. GPX, KML, and KMZ can be saved.</p>
+          <p>From is the file you have. To is the file you want. FIT and UBX can be read. GPX, KML, and KMZ can be saved.</p>
         </li>
         <li class="tool-step">
           <span class="tool-step-num">2</span>
@@ -65,6 +65,7 @@ $convertView = 'View on the map';
         <li><a href="/convert/kml-to-gpx">KML to GPX</a></li>
         <li><a href="/convert/gpx-to-kml">GPX to KML</a></li>
         <li><a href="/convert/fit-to-gpx">FIT to GPX</a></li>
+        <li><a href="/convert/ubx-to-gpx">UBX to GPX</a></li>
         <li><a href="/convert/kmz-to-gpx">KMZ to GPX</a></li>
         <li><a href="/convert/gpx-to-kmz">GPX to KMZ</a></li>
         <li><a href="/convert/kmz-to-kml">KMZ to KML</a></li>

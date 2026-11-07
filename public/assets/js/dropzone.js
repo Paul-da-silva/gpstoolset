@@ -1,7 +1,7 @@
 /**
  * Home drop zone. Detects a GPS file and opens its viewer.
  * Videos are not handed off (too large for IndexedDB). Point to the GoPro tool.
- * GPX / KML / KMZ / FIT stay in this browser via IndexedDB. Nothing is uploaded.
+ * GPX / KML / KMZ / FIT / UBX stay in this browser via IndexedDB. Nothing is uploaded.
  */
 import { stash } from './core/file-handoff.js';
 import { detect, extensionOf } from './core/detect.js';
@@ -80,7 +80,7 @@ function send(file) {
     if (!format || !format.landing || !format.slug) {
       setBusy(false);
       showErrorHtml(
-        'Drop a GPX, KML, KMZ, or FIT file. For a GoPro video, use the <a href="/gopro-gps-extract">GoPro GPS extractor</a>.'
+        'Drop a GPX, KML, KMZ, FIT, or UBX file. For a GoPro video, use the <a href="/gopro-gps-extract">GoPro GPS extractor</a>.'
       );
       return;
     }

@@ -20,7 +20,7 @@ $tools = [
         'slug' => 'home',
         'path' => '/',
         'title' => 'Free GPS File Tools',
-        'description' => 'View, convert, and edit GPX, KML, KMZ, and FIT in your browser. Free online GPS tools — your file never leaves your device.',
+        'description' => 'View, convert, and edit GPX, KML, KMZ, FIT, and UBX in your browser. Free online GPS tools — your file never leaves your device.',
         'inSitemap' => true,
         'entry' => 'includes/pages/home.php',
         'flags' => ['map' => false, 'video' => false, 'ads' => true],
@@ -31,7 +31,7 @@ $tools = [
             ],
             [
                 'q' => 'What file formats can I open?',
-                'a' => 'Drop GPX, KML, KMZ, or FIT on this page to open the matching viewer. Convert between those formats on the converter. For a GoPro video with GPS, use the GoPro GPS extractor.',
+                'a' => 'Drop GPX, KML, KMZ, FIT, or UBX on this page to open the matching viewer. Convert between those formats on the converter. For a GoPro video with GPS, use the GoPro GPS extractor.',
             ],
             [
                 'q' => 'How do I convert KML to GPX?',
@@ -54,7 +54,7 @@ $tools = [
     'about' => [
         'slug' => 'about',
         'title' => 'About',
-        'description' => 'About GPS Toolset. Free browser tools for GPX, KML, KMZ, and FIT. Your file stays on your device.',
+        'description' => 'About GPS Toolset. Free browser tools for GPX, KML, KMZ, FIT, and UBX. Your file stays on your device.',
         'inSitemap' => true,
         'entry' => 'includes/pages/about.php',
         'flags' => ['map' => false, 'video' => false, 'ads' => true],
@@ -110,7 +110,7 @@ foreach ($formats as $id => $format) {
 $tools['gpx-editor'] = [
     'slug' => 'gpx-editor',
     'title' => 'Free Online GPX / Track Editor',
-    'description' => 'Merge, split, trim, or simplify a GPS track in your browser. Open GPX, KML, KMZ, or FIT, then download GPX, KML, KMZ, or CSV. Nothing is uploaded.',
+    'description' => 'Merge, split, trim, or simplify a GPS track in your browser. Open GPX, KML, KMZ, FIT, or UBX, then download GPX, KML, KMZ, or CSV. Nothing is uploaded.',
     'inSitemap' => true,
     'entry' => 'tools/gpx-editor/page.php',
     'content' => 'tools/gpx-editor/content.php',
@@ -125,7 +125,7 @@ $tools['gpx-editor'] = [
         ],
         [
             'q' => 'Which files can I open?',
-            'a' => 'GPX, KML, KMZ, and FIT. Drop one file or several. Each file is added as a track you can edit.',
+            'a' => 'GPX, KML, KMZ, FIT, and UBX. Drop one file or several. Each file is added as a track you can edit.',
         ],
         [
             'q' => 'What can I change?',
@@ -133,7 +133,7 @@ $tools['gpx-editor'] = [
         ],
         [
             'q' => 'What can I download?',
-            'a' => 'GPX, KML, KMZ, or CSV. GPX, KML, and KMZ keep every part and the waypoints. CSV is the part you are viewing. FIT can be opened here but is not written back.',
+            'a' => 'GPX, KML, KMZ, or CSV. GPX, KML, and KMZ keep every part and the waypoints. CSV is the part you are viewing. FIT and UBX can be opened here but are not written back.',
         ],
         [
             'q' => 'Will this work on a phone?',
@@ -145,7 +145,7 @@ $tools['gpx-editor'] = [
 $tools['convert'] = [
     'slug' => 'convert',
     'title' => 'GPS File Converter — Free, No Upload',
-    'description' => 'Convert GPX, KML, KMZ, and FIT in your browser. Pick the formats, then download the file. Nothing is uploaded.',
+    'description' => 'Convert GPX, KML, KMZ, FIT, and UBX in your browser. Pick the formats, then download the file. Nothing is uploaded.',
     'inSitemap' => true,
     'entry' => 'tools/convert/page.php',
     'styles' => ['/assets/css/tool-landing.css'],
@@ -161,7 +161,7 @@ $tools['convert'] = [
         ],
         [
             'q' => 'Which formats can I convert?',
-            'a' => 'Open GPX, KML, KMZ, or FIT. Save GPX, KML, or KMZ. FIT can be read and turned into one of those. It is not written back.',
+            'a' => 'Open GPX, KML, KMZ, FIT, or UBX. Save GPX, KML, or KMZ. FIT and UBX can be read and turned into one of those. They are not written back.',
         ],
         [
             'q' => 'Can I choose the formats in the address?',
@@ -205,7 +205,7 @@ $tools['guides'] = [
     'slug' => 'guides',
     'path' => '/guides',
     'title' => 'GPS Guides',
-    'description' => 'Practical guides for GPX, KML, KMZ, FIT and converting GPS files in your browser. No upload.',
+    'description' => 'Practical guides for GPX, KML, KMZ, FIT, UBX and converting GPS files in your browser. No upload.',
     'inSitemap' => true,
     'entry' => 'includes/pages/guides-index.php',
     'styles' => ['/assets/css/guides.css'],

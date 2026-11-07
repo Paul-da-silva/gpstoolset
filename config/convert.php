@@ -192,4 +192,30 @@ return [
             ],
         ],
     ],
+    [
+        'slug' => 'ubx-to-gpx',
+        'from' => 'ubx',
+        'to' => 'gpx',
+        'title' => 'UBX to GPX Converter — Free, No Upload',
+        'description' => 'Convert a u-blox UBX log to GPX in your browser. Save the GPX or open it on a map. The file never leaves your device.',
+        'schemaName' => 'UBX to GPX Converter',
+        'faq' => [
+            [
+                'q' => 'Does the UBX file get uploaded?',
+                'a' => 'No. The browser reads the file where it already is. GPS Toolset does not receive a copy.',
+            ],
+            [
+                'q' => 'What is kept in the GPX?',
+                'a' => 'Positions, time, elevation, and speed when NAV-PVT recorded them. Other UBX messages, including raw measurements, are skipped.',
+            ],
+            [
+                'q' => 'The page says no track was found. What now?',
+                'a' => 'Turn on NAV-PVT output on the receiver and record again. This converter needs those navigation messages.',
+            ],
+            [
+                'q' => 'Can I see it on a map?',
+                'a' => 'Yes. View on the map opens the GPX in the GPX viewer. The download stays on this device either way.',
+            ],
+        ],
+    ],
 ];

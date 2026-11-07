@@ -13,6 +13,7 @@ declare(strict_types=1);
 <tr><td><strong>KMZ</strong></td><td>ZIP package of KML (usually <code>doc.kml</code> + optional images)</td><td><?= site_link('/guides/kmz-file', '/guides/kmz-file') ?></td><td><?= site_link('/kmz-viewer', '/kmz-viewer') ?> · <?= site_link('/convert/kmz-to-gpx', '/convert/kmz-to-gpx') ?></td></tr>
 <tr><td><strong>KML</strong></td><td>Google Earth / Maps geographic markup (XML)</td><td><?= site_link('/guides/kml-file', '/guides/kml-file') ?></td><td><?= site_link('/kml-viewer', '/kml-viewer') ?> · <?= site_link('/convert/kml-to-gpx', '/convert/kml-to-gpx') ?></td></tr>
 <tr><td><strong>FIT</strong></td><td>Binary sports-activity file from many watches</td><td><?= site_link('/guides/fit-file', '/guides/fit-file') ?></td><td><?= site_link('/fit-viewer', '/fit-viewer') ?> · <?= site_link('/convert/fit-to-gpx', '/convert/fit-to-gpx') ?></td></tr>
+<tr><td><strong>UBX</strong></td><td>Binary log from u-blox GNSS receivers (<code>B5 62</code> frames)</td><td><?= site_link('/guides/ubx-file', '/guides/ubx-file') ?></td><td><?= site_link('/ubx-viewer', '/ubx-viewer') ?> · <?= site_link('/convert/ubx-to-gpx', '/convert/ubx-to-gpx') ?></td></tr>
 <tr><td><strong>NMEA 0183</strong></td><td>Line-based GPS text sentences from receivers / loggers</td><td><?= site_link('/guides/nmea-0183', '/guides/nmea-0183') ?></td><td>GPX via future converter · <?= site_link('/gpx-viewer', '/gpx-viewer') ?></td></tr>
 <tr><td><strong>TCX</strong></td><td>Older XML activity format (Training Center family)</td><td>See FIT guide</td><td>Export GPX from your platform when possible</td></tr>
 <tr><td><strong>Video GPS</strong></td><td>GPS embedded in action-cam video (e.g. GoPro)</td><td>—</td><td><?= site_link('/gopro-gps-extract', '/gopro-gps-extract') ?></td></tr>
@@ -25,7 +26,7 @@ declare(strict_types=1);
 <h2>Sports watch files</h2>
 <p>Native activity files are often <strong>FIT</strong>. Convert for maps with <?= site_link('/convert/fit-to-gpx', '/convert/fit-to-gpx') ?>. Guide: <?= site_link('/guides/fit-file', '/guides/fit-file') ?>.</p>
 <h2>Logger &amp; video exports</h2>
-<p>Action-cam GPS: <?= site_link('/gopro-gps-extract', '/gopro-gps-extract') ?>. Raw receiver text: <?= site_link('/guides/nmea-0183', '/guides/nmea-0183') ?>. Spreadsheet exports from GNSS loggers: converter planned (never upload tracks you care about to random sites).</p>
+<p>u-blox binary logs: <?= site_link('/ubx-viewer', '/ubx-viewer') ?> · <?= site_link('/convert/ubx-to-gpx', '/convert/ubx-to-gpx') ?> · <?= site_link('/guides/ubx-file', '/guides/ubx-file') ?>. Action-cam GPS: <?= site_link('/gopro-gps-extract', '/gopro-gps-extract') ?>. Raw receiver text: <?= site_link('/guides/nmea-0183', '/guides/nmea-0183') ?>. Spreadsheet exports from GNSS loggers: converter planned (never upload tracks you care about to random sites).</p>
 <h2>Convert without uploading</h2>
 <div class="guide-table-wrap"><table class="guide-table">
 <thead><tr><th>From → to</th><th>Tool</th></tr></thead>
@@ -34,6 +35,7 @@ declare(strict_types=1);
 <tr><td>KMZ → GPX</td><td><?= site_link('/convert/kmz-to-gpx', '/convert/kmz-to-gpx') ?></td></tr>
 <tr><td>GPX → KML</td><td><?= site_link('/convert/gpx-to-kml', '/convert/gpx-to-kml') ?></td></tr>
 <tr><td>FIT → GPX</td><td><?= site_link('/convert/fit-to-gpx', '/convert/fit-to-gpx') ?></td></tr>
+<tr><td>UBX → GPX</td><td><?= site_link('/convert/ubx-to-gpx', '/convert/ubx-to-gpx') ?></td></tr>
 <tr><td>View GPX</td><td><?= site_link('/gpx-viewer', '/gpx-viewer') ?></td></tr>
 <tr><td>Edit track</td><td><?= site_link('/gpx-editor', '/gpx-editor') ?></td></tr>
 <tr><td>Video → track</td><td><?= site_link('/gopro-gps-extract', '/gopro-gps-extract') ?></td></tr>
@@ -47,5 +49,6 @@ declare(strict_types=1);
 <li><?= site_link('/guides/nmea-0183', '/guides/nmea-0183') ?> — NMEA 0183  </li>
 <li><?= site_link('/guides/gpx-vs-kml', '/guides/gpx-vs-kml') ?> — GPX vs KML  </li>
 <li><?= site_link('/guides/fit-file', '/guides/fit-file') ?> — What is a FIT file  </li>
+<li><?= site_link('/guides/ubx-file', '/guides/ubx-file') ?> — What is a UBX file  </li>
 <li><?= site_link('/guides/coordinate-formats', '/guides/coordinate-formats') ?> — Coordinate formats  </li>
 </ul>

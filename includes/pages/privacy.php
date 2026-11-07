@@ -13,7 +13,7 @@ require APP_ROOT . '/includes/layout/topbar.php';
   <p><?= e(site('name')) ?> runs GPS file tools in your browser. We do not require an account.</p>
 
   <h2>Files you open</h2>
-  <p>Your file never leaves your device. A file you open — GPX, KML, KMZ, FIT, a GoPro video, or anything else — is read in your browser. Parsing, the map, charts, edits, and exports stay on your device. A file you download is saved by your browser.</p>
+  <p>Your file never leaves your device. A file you open — GPX, KML, KMZ, FIT, UBX, a GoPro video, or anything else — is read in your browser. Parsing, the map, charts, edits, and exports stay on your device. A file you download is saved by your browser.</p>
   <p>If you drop a file on the home page, the browser may keep a short-lived copy in IndexedDB so the next tool can open it. That copy stays on your device. The tool removes it as soon as it has been read, and it expires after a couple of minutes if it is left behind.</p>
 
   <h2>Information we collect</h2>

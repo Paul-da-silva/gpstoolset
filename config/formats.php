@@ -9,8 +9,8 @@ declare(strict_types=1);
  * plus tools/<slug>/content.php. The viewer, editor, and converter JS
  * do not change.
  *
- * magic.type is xml-root, zip, or ascii. detect.js implements those three.
- * writable formats can be exported. FIT is read-only.
+ * magic.type is xml-root, zip, ascii, or ubx-frame. detect.js implements those.
+ * writable formats can be exported. FIT and UBX are read-only.
  * parser is an ES module that exports parse(file) → { name, segments, waypoints }.
  */
 return [
@@ -291,6 +291,69 @@ return [
             [
                 'q' => 'The file has more than one sport. What is shown?',
                 'a' => 'When the FIT file marks each sport separately, each one is its own part. Pick a part to see it on the map. A GPX download keeps every part.',
+            ],
+        ],
+    ],
+    'ubx' => [
+        'id' => 'ubx',
+        'label' => 'UBX',
+        'extensions' => ['ubx'],
+        'accept' => '.ubx',
+        'magic' => ['type' => 'ubx-frame'],
+        'parser' => '/assets/js/parsers/ubx.js',
+        'exporter' => '',
+        'writable' => false,
+        'mime' => 'application/octet-stream',
+        'ext' => 'ubx',
+        'landing' => '/ubx-viewer',
+        'slug' => 'ubx-viewer',
+        'title' => 'Free Online UBX Viewer & Reader — Open and View UBX in 3D',
+        'description' => 'Open and read u-blox UBX log files in your browser. See the GPS track in 2D or 3D on a map. Free online UBX viewer — nothing uploaded.',
+        'schemaName' => 'UBX Viewer, Reader & 3D',
+        'faq' => [
+            [
+                'q' => 'Does the UBX file get uploaded?',
+                'a' => 'No. The browser reads the file where it already is. GPS Toolset does not receive a copy.',
+            ],
+            [
+                'q' => 'What is a UBX reader?',
+                'a' => 'A browser tool that opens and reads a .ubx log and shows the GPS track on a map. Same job as a UBX viewer.',
+            ],
+            [
+                'q' => 'UBX reader vs UBX viewer?',
+                'a' => 'Same thing for most people; this page does both.',
+            ],
+            [
+                'q' => 'What is a 3D UBX viewer / 3D UBX reader?',
+                'a' => 'A browser tool that opens a .ubx and shows the track in 3D over a map. Same page as the 2D UBX viewer and reader.',
+            ],
+            [
+                'q' => 'How do I view a UBX file in 3D?',
+                'a' => 'Drop or choose a .ubx. When the track is on the map, tap 3D. Orbit the view. Switch back with Map. Nothing is uploaded.',
+            ],
+            [
+                'q' => 'What is a UBX file?',
+                'a' => 'UBX is a binary log from u-blox GNSS receivers. Frames start with bytes B5 62 and carry class, id, payload, and a checksum. This page draws the positions from those messages.',
+            ],
+            [
+                'q' => 'Which UBX messages are read?',
+                'a' => 'NAV-PVT for position, time, elevation, and speed. If there is no NAV-PVT, NAV-POSLLH is used as a fallback. Raw measurement messages are skipped.',
+            ],
+            [
+                'q' => 'The page says no track was found. What now?',
+                'a' => 'Turn on NAV-PVT output on the receiver and record again. This page needs those navigation messages; raw measurements alone are not enough.',
+            ],
+            [
+                'q' => 'Can I edit the track here?',
+                'a' => 'This page is for viewing. Convert the file to GPX, then open the GPX editor to trim, simplify, reverse, merge, or split it.',
+            ],
+            [
+                'q' => 'Can I convert UBX to GPX, KML, or CSV?',
+                'a' => 'Yes. After the track loads, Export can save GPX, KML, KMZ, or CSV on this device. There is also a dedicated UBX to GPX converter.',
+            ],
+            [
+                'q' => 'Will this work on a phone?',
+                'a' => 'Yes. Choose a .ubx file from your phone. The map fills the screen.',
             ],
         ],
     ],

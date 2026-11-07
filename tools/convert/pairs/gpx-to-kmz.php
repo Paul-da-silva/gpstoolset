@@ -8,7 +8,7 @@ $convertCardTitle = 'Convert a file';
 $convertDropTitle = 'Drop a GPX file here';
 $convertDropNote = 'or choose a file. Nothing is uploaded.';
 $convertChoose = 'Choose GPX';
-$convertAccept = '.gpx,.kml,.kmz,.fit';
+$convertAccept = '.gpx,.kml,.kmz,.fit,.ubx';
 $convertDownload = 'Download KMZ';
 $convertView = 'View on the map';
 ?>
